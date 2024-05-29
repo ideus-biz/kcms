@@ -1,0 +1,27 @@
+{
+  "name": "kcms/core",
+  "description": "KCMS Core library",
+  "keywords": ["kcms"],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ultimus",
+      "homepage": "https://ideus.biz"
+    }
+  ],
+  "require": {
+    "php": "8.1 - 8.3"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Kcms\\Core\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+    }
+  }
+}
