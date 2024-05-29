@@ -45,5 +45,7 @@ final class KCMS
 	 */
 	static public function Init()
 	{
+		var_dump(__METHOD__);
+		exit;
 	}
 }
