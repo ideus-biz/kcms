@@ -18,7 +18,10 @@
   "autoload": {
     "psr-4": {
       "Kcms\\Core\\": "src/"
-    }
+    },
+    "files": [
+      "loader.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
