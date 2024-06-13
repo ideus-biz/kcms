@@ -32,9 +32,9 @@ final class KCMS
 	static private string
 		$_BasePath = '';
 	static private ?array
-		$_Classes,
+		$_Classes = null,
 		$_Modules,
-		$_Paths,
+		$_Paths = [],
 		$_Files,
 		$_Providers = [],
 		$_ClassResolvers = [];
