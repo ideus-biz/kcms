@@ -1,6 +1,6 @@
 <?php
 
-use Kcms\Core\KCMS;
+use Kcms\KCMS;
 
 
 const NS_SLASH = '\\';
