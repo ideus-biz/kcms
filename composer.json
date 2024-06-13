@@ -1,6 +1,6 @@
 {
   "name": "ideus-biz/kcms",
-  "version": "5.5",
+  "version": "0.1",
   "description": "KCMS Core library",
   "keywords": ["kcms"],
   "type": "library",
