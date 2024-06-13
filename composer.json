@@ -1,5 +1,6 @@
 {
   "name": "ideus-biz/kcms",
+  "version": "5.5",
   "description": "KCMS Core library",
   "keywords": ["kcms"],
   "type": "library",
@@ -17,17 +18,24 @@
   },
   "autoload": {
     "psr-4": {
-      "Kcms\\Core\\": "src/"
+      "Kcms\\": "src/"
     },
     "psr-0": {
-      "Kcms\\Core\\": "src/"
+      "Kcms\\": "src/"
     },
     "files": [
-      "loader.php"
+      "loader.php",
+      "helpers.php"
     ]
   },
   "autoload-dev": {
     "psr-4": {
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_frontend.git"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kcms\Core;
+namespace Kcms;
 
 
 final class KCMS
