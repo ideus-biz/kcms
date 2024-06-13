@@ -24,8 +24,7 @@
       "Kcms\\": "src/"
     },
     "files": [
-      "loader.php",
-      "helpers.php"
+      "loader.php"
     ]
   },
   "autoload-dev": {
