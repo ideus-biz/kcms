@@ -11,6 +11,20 @@
       "homepage": "https://ideus.biz"
     }
   ],
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "kcms/frontend",
+        "version": "5.5",
+        "source": {
+          "type": "git",
+          "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_frontend.git",
+          "reference": "v5.5"
+        }
+      }
+    }
+  ],
   "require": {
     "php": "8.1 - 8.3",
     "kcms/frontend": "5.5"
@@ -31,19 +45,5 @@
   "autoload-dev": {
     "psr-4": {
     }
-  },
-  "repositories": [
-    {
-      "type": "package",
-      "package": {
-        "name": "kcms/frontend",
-        "version": "5.5",
-        "source": {
-          "type": "git",
-          "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_frontend.git",
-          "reference": "v5.5"
-        }
-      }
-    }
-  ]
+  }
 }
