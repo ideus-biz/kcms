@@ -21,7 +21,7 @@
         "source": {
           "type": "git",
           "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_package.git",
-          "reference": "e4ada3bc0dd0c5a695107eec72a5eee798cc2e80"
+          "reference": "0c47d638bf43305ec635a0b598345c6e3c39b175"
         }
       }
     }
@@ -36,8 +36,12 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
+      "Kcms\\Core\\": "vendor/kcms/package/core/src/",
       "Database\\Seeders\\": "database/seeders/"
-    }
+    },
+    "files": [
+      "vendor/kcms/package/autoload.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
