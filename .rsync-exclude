@@ -1,0 +1,33 @@
+### Server specific
+.htpasswd
+###
+
+### Project files
+### Uncomment next lines after the first deploy
+#.htaccess
+#.env
+#/storage
+#/public/files
+
+# Always ignore
+.rsync-exclude
+.rsync-include
+.git
+.idea
+.assets
+/*.sh
+/public/res/frontend/dev
+/public/res/backend/dev
+/database/ECRSync/*.done
+###
+
+### React
+node_modules
+/react
+/src
+/webpack
+/public/static
+/public/index.html
+###
+
+### Project specific
