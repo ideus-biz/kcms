@@ -36,10 +36,10 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
+      "Kcms\\Core\\": "vendor/kcms/package/core/src/",
       "Database\\Seeders\\": "database/seeders/"
     },
     "classmap": [
-      "vendor/kcms/package/core/src/KCMS.php",
       "app/Backend/",
       "app/Frontend/"
     ],
