@@ -8,7 +8,7 @@
 <ol>
     <li>
         <strong>Name your project!</strong><br>
-        Open <span class="refer">/.env</span> file and set a new value for <span class="refer">APP_NAME</span> directive.br <br>
+        Open <span class="refer">/.env</span> file and set a new value for <span class="refer">APP_NAME</span> directive. <br>
         Update the page to see the changes.
     </li>
     <li>
