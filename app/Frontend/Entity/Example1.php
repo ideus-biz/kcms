@@ -77,7 +77,7 @@ class SchemeEntity_Example1 extends Scheme
 }
 
 
-class Entity_Example1 extends Entity
+abstract class Entity_Example1 extends Entity
 {
 	
 }

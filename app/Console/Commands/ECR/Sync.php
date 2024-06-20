@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Kcms\Core\Arr;
 use Kcms\Core\Date;
 use Kcms\Core\FS_File;
+use Kcms\Core\KCMS;
 use Kcms\Ecr\Database;
 use Kcms\Ecr\Database_Exception_SourceNotFound;
 use Kcms\Ecr\Entity;
 use Kcms\Ecr\Scheme;
 use Kcms\Ecr\Scheme_Relation_HasMany;
 use Kcms\Ecr\SourceProperty;
+use Kcms\Ecr\TypeBits;
 use Kcms\Ecr\TypeDate;
 use Kcms\Ecr\TypeDateTime;
 use Kcms\Ecr\TypeEnum;
@@ -52,6 +54,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @version    5.3.2023.0524
  * @version    5.3.2023.0808
  * @version    5.3.2023.1211 - support of `fulltext` index for `text` props w/o length is added
+ * @version    5.5.2024.0619 - TypeBits added
  */
 class Sync extends Command
 {
@@ -100,24 +103,108 @@ class Sync extends Command
 			return;
 		}
 		
-    	$rename = $this->option('rename')??[];
-		if ($rename)
+		$cfgName = config('database.default');
+		$cfg = config("database.connections.{$cfgName}Super");
+		if (!empty($cfg)) $this->_dbConn = DB::connection("{$cfgName}Super");
+		elseif (($s = env('DB_ADMIN_USERNAME')) != '')
 		{
-			$rename = str_replace(':', "\n", $rename);
-			$rename = Arr::FromKVP($rename, '=', ':');
+			$cfg = ['username' => $s, 'password' => env('DB_ADMIN_PASSWORD')] + (config("database.connections.{$cfgName}")?:[]);
+			$this->_dbConn = DB::connectUsing("{$cfgName}Super", $cfg);
 		}
-    	
-		$this->_dbConn = $dbConn = DB::connection('mysqlRoot');
+		else $this->_dbConn = DB::connection($cfgName);
+		unset($s);
 		
-		$s = $name;
-		$name = Scheme::EntityFQN($name);
-		if ($name == '')
+		if ($name != 'install')
 		{
-			$this->error("Given class '$s' cannot be resolved.");
+			$rename = $this->option('rename')??[];
+			if ($rename)
+			{
+				$rename = str_replace(':', "\n", $rename);
+				$rename = Arr::FromKVP($rename, '=', ':');
+			}
+			
+			$s = $name;
+			if (!class_exists($name)) $name = Scheme::EntityFQN($name);
+			if ($name == '')
+			{
+				$this->error("Given class '$s' cannot be resolved.");
+				return;
+			}
+			$this->_importEntity($name, $rename);
+		}
+		else
+		{
+			$this->_importAll();
+		}
+		
+		$this->info("\n----------------\n");
+    }
+	
+	
+	private function _importAll()
+	{
+		$apps = KCMS::Applications();
+		$classes = [];
+		$mods = KCMS::Modules();
+		
+		$readDir = function($ns, $path)use(&$classes): void
+		{
+			foreach (FS_File::BaseRoot($path.'Entity')->readDir(true) as $file)
+			{
+				if ($file->isFile())
+				{
+					$className = str_replace($path, '', str_replace(EXT, '', $file->relativePath()));
+					$className = $ns.NS_SLASH.str_replace(DIR_SLASH, '_', $className);
+					$class = new \ReflectionClass(NS_SLASH.$className);
+					$parents = class_parents(NS_SLASH.$className);
+					$classes[$className] = $class->isInstantiable();
+					$classes += $parents;
+				}
+			}
+		};
+		
+		foreach ($mods as $ns => $v)
+		{
+			if ($ns == 'App')
+			{
+				foreach ($apps as $app)
+				{
+					$s = 'app'.DIR_SLASH.$app.DIR_SLASH;
+					$readDir("App\\$app", $s);
+				}
+			}
+			else
+			{
+				$path = KCMS::ModulePath($ns);
+				foreach ($apps as $app)
+				{
+					$s = $path.'App'.DIR_SLASH.$app.DIR_SLASH;
+					$readDir("App\\$app", $s);
+				}
+				$readDir($ns, $path);
+			}
+		}
+		
+		$classes = array_keys(array_filter($classes, fn($v) => $v === true));
+		foreach ($classes as $v)
+		{
+			$this->_importEntity(NS_SLASH.$v);
+		}
+	}
+	
+	
+	private function _importEntity(string $name, array $rename = []): void
+	{
+		try
+		{
+			$class = new \ReflectionClass($name);
+		}
+		catch (\ReflectionException)
+		{
+			$this->error("Class '$name' does not exist");
 			return;
 		}
-		
-		if (class_exists($name))
+		if ($class->isInstantiable())
 		{
 			$entity = null;
 			do
@@ -126,7 +213,8 @@ class Sync extends Command
 				{
 					// ob_start();
 					$entity = new $name;
-				} catch (Database_Exception_SourceNotFound $E)
+				}
+				catch (Database_Exception_SourceNotFound $E)
 				{
 					if ($E->scheme instanceof Scheme_Relation_HasMany)
 					{
@@ -150,18 +238,6 @@ class Sync extends Command
 					}
 					else throw $E;
 				}
-				/*catch (\PDOException $E)
-				{
-					$res = null;
-					if (preg_match("/Table '\w+\.(\w+)' doesn't exis/i", $E->getMessage(), $res))
-					{
-						ob_end_clean();
-						$this->_mysqlCreate($name, $res[1]);
-						$this->info("\n----------------\n");
-						return;
-					}
-					else throw $E;
-				}*/
 			} while (!$entity);
 			
 			//
@@ -169,9 +245,9 @@ class Sync extends Command
 			{
 				$tableName = $entity->scheme()->source()->table()->name();
 				
-				$dbKeys = Database::Instance($dbConn)->listIndexKeys($tableName);
+				$dbKeys = Database::Instance($this->_dbConn)->listIndexKeys($tableName);
 				$dbSchemeKeys = $this->_dbEntityKeys($dbKeys);
-				$dbProps = Database::Instance($dbConn)->listColumns($tableName);
+				$dbProps = Database::Instance($this->_dbConn)->listColumns($tableName);
 				$dbScheme = [];
 				foreach ($dbProps as $k => $v)
 				{
@@ -268,17 +344,15 @@ class Sync extends Command
 					
 					$this->info(PHP_EOL);
 					$this->info('----- KEYS   ---------');
-					$dbKeys = Database::Instance($dbConn)->listIndexKeys($tableName);
+					$dbKeys = Database::Instance($this->_dbConn)->listIndexKeys($tableName);
 					$dbSchemeKeys = $this->_dbEntityKeys($dbKeys);
 					$this->_mysqlSyncKeys($tableName, $schemeKeys, $dbSchemeKeys);
 				}
 			}
-			else $this->error("Object '$name' must be instance of \Kcms\ECR\Entity");
+			else $this->error("Object '$name' must be successor of ".Entity::class." class");
 		}
-		else $this->error("Class '$name' does not exist");
-	
-		$this->info("\n----------------\n");
-    }
+		else $this->error("Class '$name' is not instantiable");
+	}
 	
 	
 	private function _dbEntityKeys($dbKeys)
@@ -389,7 +463,12 @@ class Sync extends Command
 		
 		if ($prop->getType()->getName() == 'int')
 		{
-			if (!isset($attrs[TypeInteger::class]) || ($attrs[TypeInteger::class]['isUnsigned']??$attrs[TypeInteger::class][0]??false)) $desc->type('INT UNSIGNED');
+			if (isset($attrs[TypeBits::class]))
+			{
+				$len = $attrs[TypeBits::class]['length']??$attrs[TypeBits::class][0]??8;
+				$desc->type('BIT('.$len.')');
+			}
+			elseif (!isset($attrs[TypeInteger::class]) || ($attrs[TypeInteger::class]['isUnsigned']??$attrs[TypeInteger::class][0]??false)) $desc->type('INT UNSIGNED');
 			else $desc->type('INT');
 		}
 		elseif ($prop->getType()->getName() == 'float')
@@ -403,7 +482,6 @@ class Sync extends Command
 		}
 		elseif ($prop->getType()->getName() == 'string')
 		{
-			
 			if (isset($attrs[TypeString::class]))
 			{
 				$len = $attrs[TypeString::class]['length']??$attrs[TypeString::class][0]??255;
@@ -644,7 +722,7 @@ class Sync extends Command
 		
 		if (empty($scheme))
 		{
-			$this->warn("Entity $entityClass has no source property defined");
+			$this->warn("Entity $entityClass has no scheme defined");
 			return;
 		}
 		
