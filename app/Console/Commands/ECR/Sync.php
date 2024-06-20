@@ -30,18 +30,18 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ECRSync
- * 
+ *
  * Command must be called via shell command-line.
- * 
+ *
  * Usage:
  * > php artisan ecr:sync --entity=ENTITY
  * or
  * > php artisan ecr:sync ENTITY
- * 
+ *
  * ENTITY is a name of an entity class in order:
  * EntityName - as own entity name if there is only one class of the given name in a project;
  * App\Frontend\EntityName - full-qualified entity name;
- * 
+ *
  *
  * @package    App\Console\Commands *
  * @author     Andrew Potapov <andrew@ideus.biz>
@@ -54,48 +54,48 @@ use Symfony\Component\Console\Input\InputOption;
  * @version    5.3.2023.0524
  * @version    5.3.2023.0808
  * @version    5.3.2023.1211 - support of `fulltext` index for `text` props w/o length is added
- * @version    5.5.2024.0619 - TypeBits added
+ * @version    5.5.2024.0620 - TypeBits added
  */
 class Sync extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'ecr:sync {entity}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Syncs ECR entity with DB';
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'ecr:sync {entity}';
+	
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Syncs ECR entity with DB';
 	
 	
 	private
 		$_dbConn;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
+	
+	/**
+	 * Create a new command instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
 		
-        $this->addOption('entity', 'entity', InputOption::VALUE_OPTIONAL, 'Entity class name');
-        $this->addOption('rename', 'rename', InputOption::VALUE_OPTIONAL, 'Rename prop instead of drop/adding. Use: oldName1=newName1:oldName2=newName2:...');
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
+		$this->addOption('entity', 'entity', InputOption::VALUE_OPTIONAL, 'Entity class name');
+		$this->addOption('rename', 'rename', InputOption::VALUE_OPTIONAL, 'Rename prop instead of drop/adding. Use: oldName1=newName1:oldName2=newName2:...');
+	}
+	
+	/**
+	 * Execute the console command.
+	 *
+	 * @return mixed
+	 */
+	public function handle()
+	{
 		$name = $this->argument('entity') ?? $this->option('entity');
 		if ($name == '')
 		{
@@ -138,7 +138,7 @@ class Sync extends Command
 		}
 		
 		$this->info("\n----------------\n");
-    }
+	}
 	
 	
 	private function _importAll()
@@ -157,7 +157,7 @@ class Sync extends Command
 					$className = $ns.NS_SLASH.str_replace(DIR_SLASH, '_', $className);
 					$class = new \ReflectionClass(NS_SLASH.$className);
 					$parents = class_parents(NS_SLASH.$className);
-					$classes[$className] = $class->isInstantiable();
+					$classes[$className] ??= $class->isInstantiable();
 					$classes += $parents;
 				}
 			}
@@ -188,7 +188,9 @@ class Sync extends Command
 		$classes = array_keys(array_filter($classes, fn($v) => $v === true));
 		foreach ($classes as $v)
 		{
+			$this->info('Importing: '.$v);
 			$this->_importEntity(NS_SLASH.$v);
+			$this->info('_________'.PHP_EOL);
 		}
 	}
 	
@@ -343,7 +345,7 @@ class Sync extends Command
 					$this->_mysqlDrop($tableName, $delete);
 					
 					$this->info(PHP_EOL);
-					$this->info('----- KEYS   ---------');
+					$this->info('----- KEYS ---------');
 					$dbKeys = Database::Instance($this->_dbConn)->listIndexKeys($tableName);
 					$dbSchemeKeys = $this->_dbEntityKeys($dbKeys);
 					$this->_mysqlSyncKeys($tableName, $schemeKeys, $dbSchemeKeys);
@@ -406,6 +408,7 @@ class Sync extends Command
 				elseif (\str_ends_with($dbProp['data_type'], 'text')) $desc->type(strtoupper($dbProp['data_type']));
 				elseif ($dbProp['data_type'] == 'varchar') $desc->type('VARCHAR('.$dbProp['character_maximum_length'].')');
 				elseif ($dbProp['data_type'] == 'char') $desc->type('CHAR('.$dbProp['character_maximum_length'].')');
+				elseif ($dbProp['data_type'] == 'bit') $desc->type('BIT('.$dbProp['character_maximum_length'].')');
 				elseif ($dbProp['data_type'] == 'enum')
 				{
 					$choice = "'".Arr::Implode($dbProp['options'], "','")."'";
@@ -413,7 +416,7 @@ class Sync extends Command
 				}
 				else
 				{
-					//x_dumpce($dbProp);
+					// x_dumpce($dbProp);
 					$this->warn("Unhandled DB datatype for `{$propName}`: {$dbProp['data_type']}");
 				}
 			}
@@ -565,7 +568,7 @@ class Sync extends Command
 			$this->_logSql($table, $query);
 		}
 	}
-    
+	
 	private function _mysqlChange(string $table, array $props)
 	{
 		if (!empty($props))
@@ -584,7 +587,7 @@ class Sync extends Command
 			$this->_logSql($table, $query);
 		}
 	}
-    
+	
 	private function _mysqlAdd(string $table, array $props)
 	{
 		if (!empty($props))
@@ -605,7 +608,7 @@ class Sync extends Command
 			$this->_logSql($table, $query);
 		}
 	}
-    
+	
 	private function _mysqlDrop(string $table, array $props)
 	{
 		if (!empty($props))
@@ -791,5 +794,5 @@ class Sync extends Command
 		
 		$this->info($query);
 	}
-    
+	
 }
