@@ -21,7 +21,7 @@
         "source": {
           "type": "git",
           "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_package.git",
-          "reference": "ca6470a24ab2310d1fc2815d76d22ad00f4c359a"
+          "reference": "41c5d6ad705dcedf373f4ef465378a999f92636b"
         }
       }
     }
@@ -42,9 +42,6 @@
     "classmap": [
       "app/Backend/",
       "app/Frontend/"
-    ],
-    "files": [
-      "vendor/kcms/package/autoload.php"
     ]
   },
   "autoload-dev": {

@@ -52,4 +52,6 @@ $app->singleton(
 |
 */
 
+require_once dirname(__DIR__).'/vendor/kcms/package/autoload.php';
+
 return $app;
