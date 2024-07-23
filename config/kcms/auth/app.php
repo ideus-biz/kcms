@@ -237,7 +237,7 @@ return array(
 					 * array(profileType => URL, ...)
 					 *
 					 * Type: string
-					 * Default: empty value
+					 * Default: empty value (redirect to the requested URL or to `redirectOnAuthenticated` URL, if the URL is the same login URL)
 					 * Options: route name
 					 */
 					'redirectOnSuccess' => '',

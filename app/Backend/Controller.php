@@ -3,12 +3,6 @@
 namespace App\Backend;
 
 
-use Kcms\App\Menu;
-use Kcms\Auth\Auth;
-use Kcms\Core\Route;
-use Kcms\Core\URL;
-
-
 /**
  * App Backend Controller
  *
@@ -25,48 +19,9 @@ use Kcms\Core\URL;
  */
 abstract class Controller extends \Kcms\Backend\Controller
 {
-	protected function _buildMainMenu(Menu $menu): void
+	/*protected function _buildMainMenu(Menu $menu): void
 	{
-		if (Auth::Instance()->isAuthenticated())
-		{
-			$routes = Route::Group();
-			$sections = [
-				// Controller_eMail_LetterTemplate::class, Controller_Mobile_SMSTemplate::class
-			];
-			foreach ($sections as $v)
-			{
-				$routeName = $v::RouteName();
-				$route = $routes[$routeName] ?? null;
-				if (isset($route))
-				{
-					if (Auth::Instance()->hasAccess($route->handler()->name, $route->handler()->method))
-					{
-						$menu->addItem($routeName)
-							->title($v::SectionTitle())
-							->target(URL::Site($route->uri()))
-							->isSelected($this->route->isLike($routeName));
-					}
-				}
-			}
-		}
-		else
-		{
-			$menu
-				->addItem('account')
-				->title('Login')
-				->target(Route::Url('account?action=login'))
-				->isSelected($this->route->isLike('account?action=login'));
-		}
-		
-		parent::_buildMainMenu($menu);
-		
-		if (Auth::Instance()->isAuthenticated())
-		{
-			$menu->addItem('account-logout')
-				->title('Logout')
-				->target(Route::Url('account?action=logout'));
-		}
-	}
+	}*/
 	
 	
 	/**

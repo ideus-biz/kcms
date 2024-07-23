@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Kcms\Frontend;
+namespace App\Frontend;
 
 use Kcms\Core\Route;
 use Kcms\Core\Route_Group;

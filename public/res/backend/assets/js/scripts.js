@@ -1,6 +1,96 @@
 "use strict";
 
-// Avoid `console` errors in browsers that lack a console.
+!function (e, t) {
+  "object" == typeof exports && "undefined" != typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define(t) : (e || self).autosize = t();
+}(void 0, function () {
+  var e = new Map();
+  function t(t) {
+    var o = e.get(t);
+    o && o.destroy();
+  }
+  function o(t) {
+    var o = e.get(t);
+    o && o.update();
+  }
+  var r = null;
+  return "undefined" == typeof window ? ((r = function (e) {
+    return e;
+  }).destroy = function (e) {
+    return e;
+  }, r.update = function (e) {
+    return e;
+  }) : ((r = function (t, o) {
+    return t && Array.prototype.forEach.call(t.length ? t : [t], function (t) {
+      return function (t) {
+        if (t && t.nodeName && "TEXTAREA" === t.nodeName && !e.has(t)) {
+          var o,
+            r = null,
+            n = window.getComputedStyle(t),
+            i = (o = t.value, function () {
+              s({
+                testForHeightReduction: "" === o || !t.value.startsWith(o),
+                restoreTextAlign: null
+              }), o = t.value;
+            }),
+            l = function (o) {
+              t.removeEventListener("autosize:destroy", l), t.removeEventListener("autosize:update", a), t.removeEventListener("input", i), window.removeEventListener("resize", a), Object.keys(o).forEach(function (e) {
+                return t.style[e] = o[e];
+              }), e.delete(t);
+            }.bind(t, {
+              height: t.style.height,
+              resize: t.style.resize,
+              textAlign: t.style.textAlign,
+              overflowY: t.style.overflowY,
+              overflowX: t.style.overflowX,
+              wordWrap: t.style.wordWrap
+            });
+          t.addEventListener("autosize:destroy", l), t.addEventListener("autosize:update", a), t.addEventListener("input", i), window.addEventListener("resize", a), t.style.overflowX = "hidden", t.style.wordWrap = "break-word", e.set(t, {
+            destroy: l,
+            update: a
+          }), a();
+        }
+        function s(e) {
+          var o,
+            i,
+            l = e.restoreTextAlign,
+            a = void 0 === l ? null : l,
+            d = e.testForHeightReduction,
+            u = void 0 === d || d,
+            f = n.overflowY;
+          if (0 !== t.scrollHeight && ("vertical" === n.resize ? t.style.resize = "none" : "both" === n.resize && (t.style.resize = "horizontal"), u && (o = function (e) {
+            for (var t = []; e && e.parentNode && e.parentNode instanceof Element;) e.parentNode.scrollTop && t.push([e.parentNode, e.parentNode.scrollTop]), e = e.parentNode;
+            return function () {
+              return t.forEach(function (e) {
+                var t = e[0],
+                  o = e[1];
+                t.style.scrollBehavior = "auto", t.scrollTop = o, t.style.scrollBehavior = null;
+              });
+            };
+          }(t), t.style.height = ""), i = "content-box" === n.boxSizing ? t.scrollHeight - (parseFloat(n.paddingTop) + parseFloat(n.paddingBottom)) : t.scrollHeight + parseFloat(n.borderTopWidth) + parseFloat(n.borderBottomWidth), "none" !== n.maxHeight && i > parseFloat(n.maxHeight) ? ("hidden" === n.overflowY && (t.style.overflow = "scroll"), i = parseFloat(n.maxHeight)) : "hidden" !== n.overflowY && (t.style.overflow = "hidden"), t.style.height = i + "px", a && (t.style.textAlign = a), o && o(), r !== i && (t.dispatchEvent(new Event("autosize:resized", {
+            bubbles: !0
+          })), r = i), f !== n.overflow && !a)) {
+            var c = n.textAlign;
+            "hidden" === n.overflow && (t.style.textAlign = "start" === c ? "end" : "start"), s({
+              restoreTextAlign: c,
+              testForHeightReduction: !0
+            });
+          }
+        }
+        function a() {
+          s({
+            testForHeightReduction: !0,
+            restoreTextAlign: null
+          });
+        }
+      }(t);
+    }), t;
+  }).destroy = function (e) {
+    return e && Array.prototype.forEach.call(e.length ? e : [e], t), e;
+  }, r.update = function (e) {
+    return e && Array.prototype.forEach.call(e.length ? e : [e], o), e;
+  }), r;
+});
+; // Avoid `console` errors in browsers that lack a console.
 (function () {
   var method;
   var noop = function () {};
@@ -16,9 +106,9 @@
     }
   }
 })();
-; /*! jQuery UI - v1.13.2 - 2023-05-16
+; /*! jQuery UI - v1.13.2 - 2024-04-02
   * http://jqueryui.com
-  * Includes: widget.js, position.js, keycode.js, unique-id.js, widgets/autocomplete.js, widgets/datepicker.js, widgets/menu.js
+  * Includes: widget.js, position.js, data.js, disable-selection.js, focusable.js, form-reset-mixin.js, jquery-patch.js, keycode.js, labels.js, scroll-parent.js, tabbable.js, unique-id.js, widgets/autocomplete.js, widgets/datepicker.js, widgets/menu.js, widgets/mouse.js, widgets/selectmenu.js
   * Copyright jQuery Foundation and other contributors; Licensed MIT */
 
 !function (e) {
@@ -30,70 +120,70 @@
 
   G.ui = G.ui || {};
   G.ui.version = "1.13.2";
-  var a,
+  var n,
     i = 0,
-    r = Array.prototype.hasOwnProperty,
-    o = Array.prototype.slice;
-  G.cleanData = (a = G.cleanData, function (e) {
+    o = Array.prototype.hasOwnProperty,
+    r = Array.prototype.slice;
+  G.cleanData = (n = G.cleanData, function (e) {
     for (var t, i, s = 0; null != (i = e[s]); s++) (t = G._data(i, "events")) && t.remove && G(i).triggerHandler("remove");
-    a(e);
+    n(e);
   }), G.widget = function (e, i, t) {
     var s,
-      a,
       n,
-      r = {},
-      o = e.split(".")[0],
-      l = o + "-" + (e = e.split(".")[1]);
-    return t || (t = i, i = G.Widget), Array.isArray(t) && (t = G.extend.apply(null, [{}].concat(t))), G.expr.pseudos[l.toLowerCase()] = function (e) {
-      return !!G.data(e, l);
-    }, G[o] = G[o] || {}, s = G[o][e], a = G[o][e] = function (e, t) {
-      if (!this || !this._createWidget) return new a(e, t);
+      a,
+      o = {},
+      r = e.split(".")[0],
+      u = r + "-" + (e = e.split(".")[1]);
+    return t || (t = i, i = G.Widget), Array.isArray(t) && (t = G.extend.apply(null, [{}].concat(t))), G.expr.pseudos[u.toLowerCase()] = function (e) {
+      return !!G.data(e, u);
+    }, G[r] = G[r] || {}, s = G[r][e], n = G[r][e] = function (e, t) {
+      if (!this || !this._createWidget) return new n(e, t);
       arguments.length && this._createWidget(e, t);
-    }, G.extend(a, s, {
+    }, G.extend(n, s, {
       version: t.version,
       _proto: G.extend({}, t),
       _childConstructors: []
-    }), (n = new i()).options = G.widget.extend({}, n.options), G.each(t, function (t, s) {
-      function a() {
+    }), (a = new i()).options = G.widget.extend({}, a.options), G.each(t, function (t, s) {
+      function n() {
         return i.prototype[t].apply(this, arguments);
       }
-      function n(e) {
+      function a(e) {
         return i.prototype[t].apply(this, e);
       }
-      r[t] = "function" == typeof s ? function () {
+      o[t] = "function" == typeof s ? function () {
         var e,
           t = this._super,
           i = this._superApply;
-        return this._super = a, this._superApply = n, e = s.apply(this, arguments), this._super = t, this._superApply = i, e;
+        return this._super = n, this._superApply = a, e = s.apply(this, arguments), this._super = t, this._superApply = i, e;
       } : s;
-    }), a.prototype = G.widget.extend(n, {
-      widgetEventPrefix: s && n.widgetEventPrefix || e
-    }, r, {
-      constructor: a,
-      namespace: o,
+    }), n.prototype = G.widget.extend(a, {
+      widgetEventPrefix: s && a.widgetEventPrefix || e
+    }, o, {
+      constructor: n,
+      namespace: r,
       widgetName: e,
-      widgetFullName: l
+      widgetFullName: u
     }), s ? (G.each(s._childConstructors, function (e, t) {
       var i = t.prototype;
-      G.widget(i.namespace + "." + i.widgetName, a, t._proto);
-    }), delete s._childConstructors) : i._childConstructors.push(a), G.widget.bridge(e, a), a;
+      G.widget(i.namespace + "." + i.widgetName, n, t._proto);
+    }), delete s._childConstructors) : i._childConstructors.push(n), G.widget.bridge(e, n), n;
   }, G.widget.extend = function (e) {
-    for (var t, i, s = o.call(arguments, 1), a = 0, n = s.length; a < n; a++) for (t in s[a]) i = s[a][t], r.call(s[a], t) && void 0 !== i && (G.isPlainObject(i) ? e[t] = G.isPlainObject(e[t]) ? G.widget.extend({}, e[t], i) : G.widget.extend({}, i) : e[t] = i);
+    for (var t, i, s = r.call(arguments, 1), n = 0, a = s.length; n < a; n++) for (t in s[n]) i = s[n][t], o.call(s[n], t) && void 0 !== i && (G.isPlainObject(i) ? e[t] = G.isPlainObject(e[t]) ? G.widget.extend({}, e[t], i) : G.widget.extend({}, i) : e[t] = i);
     return e;
-  }, G.widget.bridge = function (n, t) {
-    var r = t.prototype.widgetFullName || n;
-    G.fn[n] = function (i) {
+  }, G.widget.bridge = function (a, t) {
+    var o = t.prototype.widgetFullName || a;
+    G.fn[a] = function (i) {
       var e = "string" == typeof i,
-        s = o.call(arguments, 1),
-        a = this;
+        s = r.call(arguments, 1),
+        n = this;
       return e ? this.length || "instance" !== i ? this.each(function () {
         var e,
-          t = G.data(this, r);
-        return "instance" === i ? (a = t, !1) : t ? "function" != typeof t[i] || "_" === i.charAt(0) ? G.error("no such method '" + i + "' for " + n + " widget instance") : (e = t[i].apply(t, s)) !== t && void 0 !== e ? (a = e && e.jquery ? a.pushStack(e.get()) : e, !1) : void 0 : G.error("cannot call methods on " + n + " prior to initialization; attempted to call method '" + i + "'");
-      }) : a = void 0 : (s.length && (i = G.widget.extend.apply(null, [i].concat(s))), this.each(function () {
-        var e = G.data(this, r);
-        e ? (e.option(i || {}), e._init && e._init()) : G.data(this, r, new t(i, this));
-      })), a;
+          t = G.data(this, o);
+        return "instance" === i ? (n = t, !1) : t ? "function" != typeof t[i] || "_" === i.charAt(0) ? G.error("no such method '" + i + "' for " + a + " widget instance") : (e = t[i].apply(t, s)) !== t && void 0 !== e ? (n = e && e.jquery ? n.pushStack(e.get()) : e, !1) : void 0 : G.error("cannot call methods on " + a + " prior to initialization; attempted to call method '" + i + "'");
+      }) : n = void 0 : (s.length && (i = G.widget.extend.apply(null, [i].concat(s))), this.each(function () {
+        var e = G.data(this, o);
+        e ? (e.option(i || {}), e._init && e._init()) : G.data(this, o, new t(i, this));
+      })), n;
     };
   }, G.Widget = function () {}, G.Widget._childConstructors = [], G.Widget.prototype = {
     widgetName: "widget",
@@ -130,18 +220,18 @@
     option: function (e, t) {
       var i,
         s,
-        a,
-        n = e;
+        n,
+        a = e;
       if (0 === arguments.length) return G.widget.extend({}, this.options);
-      if ("string" == typeof e) if (n = {}, e = (i = e.split(".")).shift(), i.length) {
-        for (s = n[e] = G.widget.extend({}, this.options[e]), a = 0; a < i.length - 1; a++) s[i[a]] = s[i[a]] || {}, s = s[i[a]];
+      if ("string" == typeof e) if (a = {}, e = (i = e.split(".")).shift(), i.length) {
+        for (s = a[e] = G.widget.extend({}, this.options[e]), n = 0; n < i.length - 1; n++) s[i[n]] = s[i[n]] || {}, s = s[i[n]];
         if (e = i.pop(), 1 === arguments.length) return void 0 === s[e] ? null : s[e];
         s[e] = t;
       } else {
         if (1 === arguments.length) return void 0 === this.options[e] ? null : this.options[e];
-        n[e] = t;
+        a[e] = t;
       }
-      return this._setOptions(n), this;
+      return this._setOptions(a), this;
     },
     _setOptions: function (e) {
       for (var t in e) this._setOption(t, e[t]);
@@ -172,27 +262,27 @@
         disabled: !0
       });
     },
-    _classes: function (a) {
-      var n = [],
-        r = this;
+    _classes: function (n) {
+      var a = [],
+        o = this;
       function e(e, t) {
-        for (var i, s = 0; s < e.length; s++) i = r.classesElementLookup[e[s]] || G(), i = a.add ? (function () {
+        for (var i, s = 0; s < e.length; s++) i = o.classesElementLookup[e[s]] || G(), i = n.add ? (function () {
           var i = [];
-          a.element.each(function (e, t) {
-            G.map(r.classesElementLookup, function (e) {
+          n.element.each(function (e, t) {
+            G.map(o.classesElementLookup, function (e) {
               return e;
             }).some(function (e) {
               return e.is(t);
             }) || i.push(t);
-          }), r._on(G(i), {
+          }), o._on(G(i), {
             remove: "_untrackClassesElement"
           });
-        }(), G(G.uniqueSort(i.get().concat(a.element.get())))) : G(i.not(a.element).get()), r.classesElementLookup[e[s]] = i, n.push(e[s]), t && a.classes[e[s]] && n.push(a.classes[e[s]]);
+        }(), G(G.uniqueSort(i.get().concat(n.element.get())))) : G(i.not(n.element).get()), o.classesElementLookup[e[s]] = i, a.push(e[s]), t && n.classes[e[s]] && a.push(n.classes[e[s]]);
       }
-      return (a = G.extend({
+      return (n = G.extend({
         element: this.element,
         classes: this.options.classes || {}
-      }, a)).keys && e(a.keys.match(/\S+/g) || [], !0), a.extra && e(a.extra.match(/\S+/g) || []), n.join(" ");
+      }, n)).keys && e(n.keys.match(/\S+/g) || [], !0), n.extra && e(n.extra.match(/\S+/g) || []), a.join(" ");
     },
     _untrackClassesElement: function (i) {
       var s = this;
@@ -207,27 +297,27 @@
       return this._toggleClass(e, t, i, !0);
     },
     _toggleClass: function (e, t, i, s) {
-      var a = "string" == typeof e || null === e,
+      var n = "string" == typeof e || null === e,
         i = {
-          extra: a ? t : i,
-          keys: a ? e : t,
-          element: a ? this.element : e,
+          extra: n ? t : i,
+          keys: n ? e : t,
+          element: n ? this.element : e,
           add: s = "boolean" == typeof s ? s : i
         };
       return i.element.toggleClass(this._classes(i), s), this;
     },
-    _on: function (a, n, e) {
-      var r,
-        o = this;
-      "boolean" != typeof a && (e = n, n = a, a = !1), e ? (n = r = G(n), this.bindings = this.bindings.add(n)) : (e = n, n = this.element, r = this.widget()), G.each(e, function (e, t) {
+    _on: function (n, a, e) {
+      var o,
+        r = this;
+      "boolean" != typeof n && (e = a, a = n, n = !1), e ? (a = o = G(a), this.bindings = this.bindings.add(a)) : (e = a, a = this.element, o = this.widget()), G.each(e, function (e, t) {
         function i() {
-          if (a || !0 !== o.options.disabled && !G(this).hasClass("ui-state-disabled")) return ("string" == typeof t ? o[t] : t).apply(o, arguments);
+          if (n || !0 !== r.options.disabled && !G(this).hasClass("ui-state-disabled")) return ("string" == typeof t ? r[t] : t).apply(r, arguments);
         }
         "string" != typeof t && (i.guid = t.guid = t.guid || i.guid || G.guid++);
         var s = e.match(/^([\w:-]*)\s*(.*)$/),
-          e = s[1] + o.eventNamespace,
+          e = s[1] + r.eventNamespace,
           s = s[2];
-        s ? r.on(e, s, i) : n.on(e, i);
+        s ? o.on(e, s, i) : a.on(e, i);
       });
     },
     _off: function (e, t) {
@@ -261,39 +351,39 @@
     },
     _trigger: function (e, t, i) {
       var s,
-        a,
-        n = this.options[e];
-      if (i = i || {}, (t = G.Event(t)).type = (e === this.widgetEventPrefix ? e : this.widgetEventPrefix + e).toLowerCase(), t.target = this.element[0], a = t.originalEvent) for (s in a) s in t || (t[s] = a[s]);
-      return this.element.trigger(t, i), !("function" == typeof n && !1 === n.apply(this.element[0], [t].concat(i)) || t.isDefaultPrevented());
+        n,
+        a = this.options[e];
+      if (i = i || {}, (t = G.Event(t)).type = (e === this.widgetEventPrefix ? e : this.widgetEventPrefix + e).toLowerCase(), t.target = this.element[0], n = t.originalEvent) for (s in n) s in t || (t[s] = n[s]);
+      return this.element.trigger(t, i), !("function" == typeof a && !1 === a.apply(this.element[0], [t].concat(i)) || t.isDefaultPrevented());
     }
   }, G.each({
     show: "fadeIn",
     hide: "fadeOut"
-  }, function (n, r) {
-    G.Widget.prototype["_" + n] = function (t, e, i) {
+  }, function (a, o) {
+    G.Widget.prototype["_" + a] = function (t, e, i) {
       var s,
-        a = (e = "string" == typeof e ? {
+        n = (e = "string" == typeof e ? {
           effect: e
-        } : e) ? !0 !== e && "number" != typeof e && e.effect || r : n;
+        } : e) ? !0 !== e && "number" != typeof e && e.effect || o : a;
       "number" == typeof (e = e || {}) ? e = {
         duration: e
-      } : !0 === e && (e = {}), s = !G.isEmptyObject(e), e.complete = i, e.delay && t.delay(e.delay), s && G.effects && G.effects.effect[a] ? t[n](e) : a !== n && t[a] ? t[a](e.duration, e.easing, i) : t.queue(function (e) {
-        G(this)[n](), i && i.call(t[0]), e();
+      } : !0 === e && (e = {}), s = !G.isEmptyObject(e), e.complete = i, e.delay && t.delay(e.delay), s && G.effects && G.effects.effect[n] ? t[a](e) : n !== a && t[n] ? t[n](e.duration, e.easing, i) : t.queue(function (e) {
+        G(this)[a](), i && i.call(t[0]), e();
       });
     };
   });
-  var s, b, w, n, l, u, h, c, M;
+  var s, D, w, a, u, l, h, c, M;
   G.widget;
-  function C(e, t, i) {
+  function x(e, t, i) {
     return [parseFloat(e[0]) * (c.test(e[0]) ? t / 100 : 1), parseFloat(e[1]) * (c.test(e[1]) ? i / 100 : 1)];
   }
-  function x(e, t) {
+  function C(e, t) {
     return parseInt(G.css(e, t), 10) || 0;
   }
   function I(e) {
     return null != e && e === e.window;
   }
-  b = Math.max, w = Math.abs, n = /left|center|right/, l = /top|center|bottom/, u = /[\+\-]\d+(\.[\d]+)?%?/, h = /^\w+/, c = /%$/, M = G.fn.position, G.position = {
+  D = Math.max, w = Math.abs, a = /left|center|right/, u = /top|center|bottom/, l = /[\+\-]\d+(\.[\d]+)?%?/, h = /^\w+/, c = /%$/, M = G.fn.position, G.position = {
     scrollbarWidth: function () {
       if (void 0 !== s) return s;
       var e,
@@ -332,15 +422,15 @@
     if (!c || !c.of) return M.apply(this, arguments);
     var d,
       p,
-      g,
-      f,
       m,
+      f,
+      g,
       e,
       _ = "string" == typeof (c = G.extend({}, c)).of ? G(document).find(c.of) : G(c.of),
       v = G.position.getWithinInfo(c.within),
       y = G.position.getScrollInfo(v),
       k = (c.collision || "flip").split(" "),
-      D = {},
+      b = {},
       t = 9 === (e = (t = _)[0]).nodeType ? {
         width: t.width(),
         height: t.height(),
@@ -367,66 +457,66 @@
         height: t.outerHeight(),
         offset: t.offset()
       };
-    return _[0].preventDefault && (c.at = "left top"), p = t.width, g = t.height, m = G.extend({}, f = t.offset), G.each(["my", "at"], function () {
+    return _[0].preventDefault && (c.at = "left top"), p = t.width, m = t.height, g = G.extend({}, f = t.offset), G.each(["my", "at"], function () {
       var e,
         t,
         i = (c[this] || "").split(" ");
-      (i = 1 === i.length ? n.test(i[0]) ? i.concat(["center"]) : l.test(i[0]) ? ["center"].concat(i) : ["center", "center"] : i)[0] = n.test(i[0]) ? i[0] : "center", i[1] = l.test(i[1]) ? i[1] : "center", e = u.exec(i[0]), t = u.exec(i[1]), D[this] = [e ? e[0] : 0, t ? t[0] : 0], c[this] = [h.exec(i[0])[0], h.exec(i[1])[0]];
-    }), 1 === k.length && (k[1] = k[0]), "right" === c.at[0] ? m.left += p : "center" === c.at[0] && (m.left += p / 2), "bottom" === c.at[1] ? m.top += g : "center" === c.at[1] && (m.top += g / 2), d = C(D.at, p, g), m.left += d[0], m.top += d[1], this.each(function () {
+      (i = 1 === i.length ? a.test(i[0]) ? i.concat(["center"]) : u.test(i[0]) ? ["center"].concat(i) : ["center", "center"] : i)[0] = a.test(i[0]) ? i[0] : "center", i[1] = u.test(i[1]) ? i[1] : "center", e = l.exec(i[0]), t = l.exec(i[1]), b[this] = [e ? e[0] : 0, t ? t[0] : 0], c[this] = [h.exec(i[0])[0], h.exec(i[1])[0]];
+    }), 1 === k.length && (k[1] = k[0]), "right" === c.at[0] ? g.left += p : "center" === c.at[0] && (g.left += p / 2), "bottom" === c.at[1] ? g.top += m : "center" === c.at[1] && (g.top += m / 2), d = x(b.at, p, m), g.left += d[0], g.top += d[1], this.each(function () {
       var i,
         e,
-        r = G(this),
-        o = r.outerWidth(),
-        l = r.outerHeight(),
-        t = x(this, "marginLeft"),
-        s = x(this, "marginTop"),
-        a = o + t + x(this, "marginRight") + y.width,
-        n = l + s + x(this, "marginBottom") + y.height,
-        u = G.extend({}, m),
-        h = C(D.my, r.outerWidth(), r.outerHeight());
-      "right" === c.my[0] ? u.left -= o : "center" === c.my[0] && (u.left -= o / 2), "bottom" === c.my[1] ? u.top -= l : "center" === c.my[1] && (u.top -= l / 2), u.left += h[0], u.top += h[1], i = {
+        o = G(this),
+        r = o.outerWidth(),
+        u = o.outerHeight(),
+        t = C(this, "marginLeft"),
+        s = C(this, "marginTop"),
+        n = r + t + C(this, "marginRight") + y.width,
+        a = u + s + C(this, "marginBottom") + y.height,
+        l = G.extend({}, g),
+        h = x(b.my, o.outerWidth(), o.outerHeight());
+      "right" === c.my[0] ? l.left -= r : "center" === c.my[0] && (l.left -= r / 2), "bottom" === c.my[1] ? l.top -= u : "center" === c.my[1] && (l.top -= u / 2), l.left += h[0], l.top += h[1], i = {
         marginLeft: t,
         marginTop: s
       }, G.each(["left", "top"], function (e, t) {
-        G.ui.position[k[e]] && G.ui.position[k[e]][t](u, {
+        G.ui.position[k[e]] && G.ui.position[k[e]][t](l, {
           targetWidth: p,
-          targetHeight: g,
-          elemWidth: o,
-          elemHeight: l,
+          targetHeight: m,
+          elemWidth: r,
+          elemHeight: u,
           collisionPosition: i,
-          collisionWidth: a,
-          collisionHeight: n,
+          collisionWidth: n,
+          collisionHeight: a,
           offset: [d[0] + h[0], d[1] + h[1]],
           my: c.my,
           at: c.at,
           within: v,
-          elem: r
+          elem: o
         });
       }), c.using && (e = function (e) {
-        var t = f.left - u.left,
-          i = t + p - o,
-          s = f.top - u.top,
-          a = s + g - l,
-          n = {
+        var t = f.left - l.left,
+          i = t + p - r,
+          s = f.top - l.top,
+          n = s + m - u,
+          a = {
             target: {
               element: _,
               left: f.left,
               top: f.top,
               width: p,
-              height: g
+              height: m
             },
             element: {
-              element: r,
-              left: u.left,
-              top: u.top,
-              width: o,
-              height: l
+              element: o,
+              left: l.left,
+              top: l.top,
+              width: r,
+              height: u
             },
             horizontal: i < 0 ? "left" : 0 < t ? "right" : "center",
-            vertical: a < 0 ? "top" : 0 < s ? "bottom" : "middle"
+            vertical: n < 0 ? "top" : 0 < s ? "bottom" : "middle"
           };
-        p < o && w(t + i) < p && (n.horizontal = "center"), g < l && w(s + a) < g && (n.vertical = "middle"), b(w(t), w(i)) > b(w(s), w(a)) ? n.important = "horizontal" : n.important = "vertical", c.using.call(this, e, n);
-      }), r.offset(G.extend(u, {
+        p < r && w(t + i) < p && (a.horizontal = "center"), m < u && w(s + n) < m && (a.vertical = "middle"), D(w(t), w(i)) > D(w(s), w(n)) ? a.important = "horizontal" : a.important = "vertical", c.using.call(this, e, a);
+      }), o.offset(G.extend(l, {
         using: e
       }));
     });
@@ -435,48 +525,48 @@
       left: function (e, t) {
         var i = t.within,
           s = i.isWindow ? i.scrollLeft : i.offset.left,
-          a = i.width,
-          n = e.left - t.collisionPosition.marginLeft,
-          r = s - n,
-          o = n + t.collisionWidth - a - s;
-        t.collisionWidth > a ? 0 < r && o <= 0 ? (i = e.left + r + t.collisionWidth - a - s, e.left += r - i) : e.left = !(0 < o && r <= 0) && o < r ? s + a - t.collisionWidth : s : 0 < r ? e.left += r : 0 < o ? e.left -= o : e.left = b(e.left - n, e.left);
+          n = i.width,
+          a = e.left - t.collisionPosition.marginLeft,
+          o = s - a,
+          r = a + t.collisionWidth - n - s;
+        t.collisionWidth > n ? 0 < o && r <= 0 ? (i = e.left + o + t.collisionWidth - n - s, e.left += o - i) : e.left = !(0 < r && o <= 0) && r < o ? s + n - t.collisionWidth : s : 0 < o ? e.left += o : 0 < r ? e.left -= r : e.left = D(e.left - a, e.left);
       },
       top: function (e, t) {
         var i = t.within,
           s = i.isWindow ? i.scrollTop : i.offset.top,
-          a = t.within.height,
-          n = e.top - t.collisionPosition.marginTop,
-          r = s - n,
-          o = n + t.collisionHeight - a - s;
-        t.collisionHeight > a ? 0 < r && o <= 0 ? (i = e.top + r + t.collisionHeight - a - s, e.top += r - i) : e.top = !(0 < o && r <= 0) && o < r ? s + a - t.collisionHeight : s : 0 < r ? e.top += r : 0 < o ? e.top -= o : e.top = b(e.top - n, e.top);
+          n = t.within.height,
+          a = e.top - t.collisionPosition.marginTop,
+          o = s - a,
+          r = a + t.collisionHeight - n - s;
+        t.collisionHeight > n ? 0 < o && r <= 0 ? (i = e.top + o + t.collisionHeight - n - s, e.top += o - i) : e.top = !(0 < r && o <= 0) && r < o ? s + n - t.collisionHeight : s : 0 < o ? e.top += o : 0 < r ? e.top -= r : e.top = D(e.top - a, e.top);
       }
     },
     flip: {
       left: function (e, t) {
         var i = t.within,
           s = i.offset.left + i.scrollLeft,
-          a = i.width,
-          n = i.isWindow ? i.scrollLeft : i.offset.left,
-          r = e.left - t.collisionPosition.marginLeft,
-          o = r - n,
-          l = r + t.collisionWidth - a - n,
-          u = "left" === t.my[0] ? -t.elemWidth : "right" === t.my[0] ? t.elemWidth : 0,
+          n = i.width,
+          a = i.isWindow ? i.scrollLeft : i.offset.left,
+          o = e.left - t.collisionPosition.marginLeft,
+          r = o - a,
+          u = o + t.collisionWidth - n - a,
+          l = "left" === t.my[0] ? -t.elemWidth : "right" === t.my[0] ? t.elemWidth : 0,
           i = "left" === t.at[0] ? t.targetWidth : "right" === t.at[0] ? -t.targetWidth : 0,
-          r = -2 * t.offset[0];
-        o < 0 ? ((s = e.left + u + i + r + t.collisionWidth - a - s) < 0 || s < w(o)) && (e.left += u + i + r) : 0 < l && (0 < (n = e.left - t.collisionPosition.marginLeft + u + i + r - n) || w(n) < l) && (e.left += u + i + r);
+          o = -2 * t.offset[0];
+        r < 0 ? ((s = e.left + l + i + o + t.collisionWidth - n - s) < 0 || s < w(r)) && (e.left += l + i + o) : 0 < u && (0 < (a = e.left - t.collisionPosition.marginLeft + l + i + o - a) || w(a) < u) && (e.left += l + i + o);
       },
       top: function (e, t) {
         var i = t.within,
           s = i.offset.top + i.scrollTop,
-          a = i.height,
-          n = i.isWindow ? i.scrollTop : i.offset.top,
-          r = e.top - t.collisionPosition.marginTop,
-          o = r - n,
-          l = r + t.collisionHeight - a - n,
-          u = "top" === t.my[1] ? -t.elemHeight : "bottom" === t.my[1] ? t.elemHeight : 0,
+          n = i.height,
+          a = i.isWindow ? i.scrollTop : i.offset.top,
+          o = e.top - t.collisionPosition.marginTop,
+          r = o - a,
+          u = o + t.collisionHeight - n - a,
+          l = "top" === t.my[1] ? -t.elemHeight : "bottom" === t.my[1] ? t.elemHeight : 0,
           i = "top" === t.at[1] ? t.targetHeight : "bottom" === t.at[1] ? -t.targetHeight : 0,
-          r = -2 * t.offset[1];
-        o < 0 ? ((s = e.top + u + i + r + t.collisionHeight - a - s) < 0 || s < w(o)) && (e.top += u + i + r) : 0 < l && (0 < (n = e.top - t.collisionPosition.marginTop + u + i + r - n) || w(n) < l) && (e.top += u + i + r);
+          o = -2 * t.offset[1];
+        r < 0 ? ((s = e.top + l + i + o + t.collisionHeight - n - s) < 0 || s < w(r)) && (e.top += l + i + o) : 0 < u && (0 < (a = e.top - t.collisionPosition.marginTop + l + i + o - a) || w(a) < u) && (e.top += l + i + o);
       }
     },
     flipfit: {
@@ -489,7 +579,80 @@
     }
   };
   var e;
-  G.ui.position, G.ui.keyCode = {
+  G.ui.position, G.extend(G.expr.pseudos, {
+    data: G.expr.createPseudo ? G.expr.createPseudo(function (t) {
+      return function (e) {
+        return !!G.data(e, t);
+      };
+    }) : function (e, t, i) {
+      return !!G.data(e, i[3]);
+    }
+  }), G.fn.extend({
+    disableSelection: (e = "onselectstart" in document.createElement("div") ? "selectstart" : "mousedown", function () {
+      return this.on(e + ".ui-disableSelection", function (e) {
+        e.preventDefault();
+      });
+    }),
+    enableSelection: function () {
+      return this.off(".ui-disableSelection");
+    }
+  });
+  G.ui.focusable = function (e, t) {
+    var i,
+      s,
+      n,
+      a,
+      o = e.nodeName.toLowerCase();
+    return "area" === o ? (s = (i = e.parentNode).name, !(!e.href || !s || "map" !== i.nodeName.toLowerCase()) && 0 < (s = G("img[usemap='#" + s + "']")).length && s.is(":visible")) : (/^(input|select|textarea|button|object)$/.test(o) ? (n = !e.disabled) && (a = G(e).closest("fieldset")[0]) && (n = !a.disabled) : n = "a" === o && e.href || t, n && G(e).is(":visible") && function (e) {
+      var t = e.css("visibility");
+      for (; "inherit" === t;) e = e.parent(), t = e.css("visibility");
+      return "visible" === t;
+    }(G(e)));
+  }, G.extend(G.expr.pseudos, {
+    focusable: function (e) {
+      return G.ui.focusable(e, null != G.attr(e, "tabindex"));
+    }
+  });
+  var t, d;
+  G.ui.focusable, G.fn._form = function () {
+    return "string" == typeof this[0].form ? this.closest("form") : G(this[0].form);
+  }, G.ui.formResetMixin = {
+    _formResetHandler: function () {
+      var t = G(this);
+      setTimeout(function () {
+        var e = t.data("ui-form-reset-instances");
+        G.each(e, function () {
+          this.refresh();
+        });
+      });
+    },
+    _bindFormResetHandler: function () {
+      var e;
+      this.form = this.element._form(), this.form.length && ((e = this.form.data("ui-form-reset-instances") || []).length || this.form.on("reset.ui-form-reset", this._formResetHandler), e.push(this), this.form.data("ui-form-reset-instances", e));
+    },
+    _unbindFormResetHandler: function () {
+      var e;
+      this.form.length && ((e = this.form.data("ui-form-reset-instances")).splice(G.inArray(this, e), 1), e.length ? this.form.data("ui-form-reset-instances", e) : this.form.removeData("ui-form-reset-instances").off("reset.ui-form-reset"));
+    }
+  };
+  G.expr.pseudos || (G.expr.pseudos = G.expr[":"]), G.uniqueSort || (G.uniqueSort = G.unique), G.escapeSelector || (t = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g, d = function (e, t) {
+    return t ? "\0" === e ? "�" : e.slice(0, -1) + "\\" + e.charCodeAt(e.length - 1).toString(16) + " " : "\\" + e;
+  }, G.escapeSelector = function (e) {
+    return (e + "").replace(t, d);
+  }), G.fn.even && G.fn.odd || G.fn.extend({
+    even: function () {
+      return this.filter(function (e) {
+        return e % 2 == 0;
+      });
+    },
+    odd: function () {
+      return this.filter(function (e) {
+        return e % 2 == 1;
+      });
+    }
+  });
+  var p;
+  G.ui.keyCode = {
     BACKSPACE: 8,
     COMMA: 188,
     DELETE: 46,
@@ -506,10 +669,28 @@
     SPACE: 32,
     TAB: 9,
     UP: 38
-  }, G.fn.extend({
-    uniqueId: (e = 0, function () {
+  }, G.fn.labels = function () {
+    var e, t, i;
+    return this.length ? this[0].labels && this[0].labels.length ? this.pushStack(this[0].labels) : (t = this.eq(0).parents("label"), (e = this.attr("id")) && (i = (i = this.eq(0).parents().last()).add((i.length ? i : this).siblings()), e = "label[for='" + G.escapeSelector(e) + "']", t = t.add(i.find(e).addBack(e))), this.pushStack(t)) : this.pushStack([]);
+  }, G.fn.scrollParent = function (e) {
+    var t = this.css("position"),
+      i = "absolute" === t,
+      s = e ? /(auto|scroll|hidden)/ : /(auto|scroll)/,
+      e = this.parents().filter(function () {
+        var e = G(this);
+        return (!i || "static" !== e.css("position")) && s.test(e.css("overflow") + e.css("overflow-y") + e.css("overflow-x"));
+      }).eq(0);
+    return "fixed" !== t && e.length ? e : G(this[0].ownerDocument || document);
+  }, G.extend(G.expr.pseudos, {
+    tabbable: function (e) {
+      var t = G.attr(e, "tabindex"),
+        i = null != t;
+      return (!i || 0 <= t) && G.ui.focusable(e, i);
+    }
+  }), G.fn.extend({
+    uniqueId: (p = 0, function () {
       return this.each(function () {
-        this.id || (this.id = "ui-id-" + ++e);
+        this.id || (this.id = "ui-id-" + ++p);
       });
     }),
     removeUniqueId: function () {
@@ -598,7 +779,7 @@
       var t,
         i,
         s,
-        a = !0;
+        n = !0;
       switch (e.keyCode) {
         case G.ui.keyCode.PAGE_UP:
           this.previousPage(e);
@@ -632,11 +813,11 @@
           this.collapse(e);
           break;
         default:
-          t = this.previousFilter || "", s = a = !1, i = 96 <= e.keyCode && e.keyCode <= 105 ? (e.keyCode - 96).toString() : String.fromCharCode(e.keyCode), clearTimeout(this.filterTimer), i === t ? s = !0 : i = t + i, t = this._filterMenuItems(i), (t = s && -1 !== t.index(this.active.next()) ? this.active.nextAll(".ui-menu-item") : t).length || (i = String.fromCharCode(e.keyCode), t = this._filterMenuItems(i)), t.length ? (this.focus(e, t), this.previousFilter = i, this.filterTimer = this._delay(function () {
+          t = this.previousFilter || "", s = n = !1, i = 96 <= e.keyCode && e.keyCode <= 105 ? (e.keyCode - 96).toString() : String.fromCharCode(e.keyCode), clearTimeout(this.filterTimer), i === t ? s = !0 : i = t + i, t = this._filterMenuItems(i), (t = s && -1 !== t.index(this.active.next()) ? this.active.nextAll(".ui-menu-item") : t).length || (i = String.fromCharCode(e.keyCode), t = this._filterMenuItems(i)), t.length ? (this.focus(e, t), this.previousFilter = i, this.filterTimer = this._delay(function () {
             delete this.previousFilter;
           }, 1e3)) : delete this.previousFilter;
       }
-      a && e.preventDefault();
+      n && e.preventDefault();
     },
     _activate: function (e) {
       this.active && !this.active.is(".ui-state-disabled") && (this.active.children("[aria-haspopup='true']").length ? this.expand(e) : this.select(e));
@@ -645,7 +826,7 @@
       var e,
         t,
         s = this,
-        a = this.options.icons.submenu,
+        n = this.options.icons.submenu,
         i = this.element.find(this.options.menus);
       this._toggleClass("ui-menu-icons", null, !!this.element.find(".ui-icon").length), t = i.filter(":not(.ui-menu)").hide().attr({
         role: this.options.role,
@@ -655,7 +836,7 @@
         var e = G(this),
           t = e.prev(),
           i = G("<span>").data("ui-menu-submenu-caret", !0);
-        s._addClass(i, "ui-menu-icon", "ui-icon " + a), t.attr("aria-haspopup", "true").prepend(i), e.attr("aria-labelledby", t.attr("id"));
+        s._addClass(i, "ui-menu-icon", "ui-icon " + n), t.attr("aria-haspopup", "true").prepend(i), e.attr("aria-labelledby", t.attr("id"));
       }), this._addClass(t, "ui-menu", "ui-widget ui-widget-content ui-front"), (e = i.add(this.element).find(this.options.items)).not(".ui-menu-item").each(function () {
         var e = G(this);
         s._isDivider(e) && s._addClass(e, "ui-menu-divider", "ui-widget-content");
@@ -807,14 +988,14 @@
     _create: function () {
       var i,
         s,
-        a,
+        n,
         e = this.element[0].nodeName.toLowerCase(),
         t = "textarea" === e,
         e = "input" === e;
       this.isMultiLine = t || !e && this._isContentEditable(this.element), this.valueMethod = this.element[t || e ? "val" : "text"], this.isNewMenu = !0, this._addClass("ui-autocomplete-input"), this.element.attr("autocomplete", "off"), this._on(this.element, {
         keydown: function (e) {
-          if (this.element.prop("readOnly")) s = a = i = !0;else {
-            s = a = i = !1;
+          if (this.element.prop("readOnly")) s = n = i = !0;else {
+            s = n = i = !1;
             var t = G.ui.keyCode;
             switch (e.keyCode) {
               case t.PAGE_UP:
@@ -863,7 +1044,7 @@
           }
         },
         input: function (e) {
-          if (a) return a = !1, void e.preventDefault();
+          if (n) return n = !1, void e.preventDefault();
           this._searchTimeout(e);
         },
         focus: function () {
@@ -930,11 +1111,11 @@
     _initSource: function () {
       var i,
         s,
-        a = this;
+        n = this;
       Array.isArray(this.options.source) ? (i = this.options.source, this.source = function (e, t) {
         t(G.ui.autocomplete.filter(i, e.term));
       }) : "string" == typeof this.options.source ? (s = this.options.source, this.source = function (e, t) {
-        a.xhr && a.xhr.abort(), a.xhr = G.ajax({
+        n.xhr && n.xhr.abort(), n.xhr = G.ajax({
           url: s,
           data: e,
           dataType: "json",
@@ -1064,9 +1245,9 @@
       }, 100));
     }
   });
-  var d;
+  var m;
   G.ui.autocomplete;
-  function t() {
+  function f() {
     this._curInst = null, this._keyEvent = !1, this._disabledInputs = [], this._datepickerShowing = !1, this._inDialog = !1, this._mainDivId = "ui-datepicker-div", this._inlineClass = "ui-datepicker-inline", this._appendClass = "ui-datepicker-append", this._triggerClass = "ui-datepicker-trigger", this._dialogClass = "ui-datepicker-dialog", this._disableClass = "ui-datepicker-disabled", this._unselectableClass = "ui-datepicker-unselectable", this._currentClass = "ui-datepicker-current-day", this._dayOverClass = "ui-datepicker-days-cell-over", this.regional = [], this.regional[""] = {
       closeText: "Done",
       prevText: "Prev",
@@ -1124,18 +1305,18 @@
       showButtonPanel: !1,
       autoSize: !1,
       disabled: !1
-    }, G.extend(this._defaults, this.regional[""]), this.regional.en = G.extend(!0, {}, this.regional[""]), this.regional["en-US"] = G.extend(!0, {}, this.regional.en), this.dpDiv = p(G("<div id='" + this._mainDivId + "' class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>"));
+    }, G.extend(this._defaults, this.regional[""]), this.regional.en = G.extend(!0, {}, this.regional[""]), this.regional["en-US"] = G.extend(!0, {}, this.regional.en), this.dpDiv = g(G("<div id='" + this._mainDivId + "' class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>"));
   }
-  function p(e) {
+  function g(e) {
     var t = "button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a";
     return e.on("mouseout", t, function () {
       G(this).removeClass("ui-state-hover"), -1 !== this.className.indexOf("ui-datepicker-prev") && G(this).removeClass("ui-datepicker-prev-hover"), -1 !== this.className.indexOf("ui-datepicker-next") && G(this).removeClass("ui-datepicker-next-hover");
-    }).on("mouseover", t, g);
+    }).on("mouseover", t, _);
   }
-  function g() {
-    G.datepicker._isDisabledDatepicker((d.inline ? d.dpDiv.parent() : d.input)[0]) || (G(this).parents(".ui-datepicker-calendar").find("a").removeClass("ui-state-hover"), G(this).addClass("ui-state-hover"), -1 !== this.className.indexOf("ui-datepicker-prev") && G(this).addClass("ui-datepicker-prev-hover"), -1 !== this.className.indexOf("ui-datepicker-next") && G(this).addClass("ui-datepicker-next-hover"));
+  function _() {
+    G.datepicker._isDisabledDatepicker((m.inline ? m.dpDiv.parent() : m.input)[0]) || (G(this).parents(".ui-datepicker-calendar").find("a").removeClass("ui-state-hover"), G(this).addClass("ui-state-hover"), -1 !== this.className.indexOf("ui-datepicker-prev") && G(this).addClass("ui-datepicker-prev-hover"), -1 !== this.className.indexOf("ui-datepicker-next") && G(this).addClass("ui-datepicker-next-hover"));
   }
-  function f(e, t) {
+  function v(e, t) {
     for (var i in G.extend(e, t), t) null == t[i] && (e[i] = t[i]);
     return e;
   }
@@ -1143,20 +1324,20 @@
     datepicker: {
       version: "1.13.2"
     }
-  }), G.extend(t.prototype, {
+  }), G.extend(f.prototype, {
     markerClassName: "hasDatepicker",
     maxRows: 4,
     _widgetDatepicker: function () {
       return this.dpDiv;
     },
     setDefaults: function (e) {
-      return f(this._defaults, e || {}), this;
+      return v(this._defaults, e || {}), this;
     },
     _attachDatepicker: function (e, t) {
       var i,
         s = e.nodeName.toLowerCase(),
-        a = "div" === s || "span" === s;
-      e.id || (this.uuid += 1, e.id = "dp" + this.uuid), (i = this._newInst(G(e), a)).settings = G.extend({}, t || {}), "input" === s ? this._connectDatepicker(e, i) : a && this._inlineDatepicker(e, i);
+        n = "div" === s || "span" === s;
+      e.id || (this.uuid += 1, e.id = "dp" + this.uuid), (i = this._newInst(G(e), n)).settings = G.extend({}, t || {}), "input" === s ? this._connectDatepicker(e, i) : n && this._inlineDatepicker(e, i);
     },
     _newInst: function (e, t) {
       return {
@@ -1168,7 +1349,7 @@
         drawMonth: 0,
         drawYear: 0,
         inline: t,
-        dpDiv: t ? p(G("<div class='" + this._inlineClass + " ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>")) : this.dpDiv
+        dpDiv: t ? g(G("<div class='" + this._inlineClass + " ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>")) : this.dpDiv
       };
     },
     _connectDatepicker: function (e, t) {
@@ -1178,8 +1359,8 @@
     _attachments: function (e, t) {
       var i,
         s = this._get(t, "appendText"),
-        a = this._get(t, "isRTL");
-      t.append && t.append.remove(), s && (t.append = G("<span>").addClass(this._appendClass).text(s), e[a ? "before" : "after"](t.append)), e.off("focus", this._showDatepicker), t.trigger && t.trigger.remove(), "focus" !== (i = this._get(t, "showOn")) && "both" !== i || e.on("focus", this._showDatepicker), "button" !== i && "both" !== i || (s = this._get(t, "buttonText"), i = this._get(t, "buttonImage"), this._get(t, "buttonImageOnly") ? t.trigger = G("<img>").addClass(this._triggerClass).attr({
+        n = this._get(t, "isRTL");
+      t.append && t.append.remove(), s && (t.append = G("<span>").addClass(this._appendClass).text(s), e[n ? "before" : "after"](t.append)), e.off("focus", this._showDatepicker), t.trigger && t.trigger.remove(), "focus" !== (i = this._get(t, "showOn")) && "both" !== i || e.on("focus", this._showDatepicker), "button" !== i && "both" !== i || (s = this._get(t, "buttonText"), i = this._get(t, "buttonImage"), this._get(t, "buttonImageOnly") ? t.trigger = G("<img>").addClass(this._triggerClass).attr({
         src: i,
         alt: s,
         title: s
@@ -1187,31 +1368,31 @@
         src: i,
         alt: s,
         title: s
-      })) : t.trigger.text(s)), e[a ? "before" : "after"](t.trigger), t.trigger.on("click", function () {
+      })) : t.trigger.text(s)), e[n ? "before" : "after"](t.trigger), t.trigger.on("click", function () {
         return G.datepicker._datepickerShowing && G.datepicker._lastInput === e[0] ? G.datepicker._hideDatepicker() : (G.datepicker._datepickerShowing && G.datepicker._lastInput !== e[0] && G.datepicker._hideDatepicker(), G.datepicker._showDatepicker(e[0])), !1;
       }));
     },
     _autoSize: function (e) {
-      var t, i, s, a, n, r;
-      this._get(e, "autoSize") && !e.inline && (n = new Date(2009, 11, 20), (r = this._get(e, "dateFormat")).match(/[DM]/) && (t = function (e) {
-        for (a = s = i = 0; a < e.length; a++) e[a].length > i && (i = e[a].length, s = a);
+      var t, i, s, n, a, o;
+      this._get(e, "autoSize") && !e.inline && (a = new Date(2009, 11, 20), (o = this._get(e, "dateFormat")).match(/[DM]/) && (t = function (e) {
+        for (n = s = i = 0; n < e.length; n++) e[n].length > i && (i = e[n].length, s = n);
         return s;
-      }, n.setMonth(t(this._get(e, r.match(/MM/) ? "monthNames" : "monthNamesShort"))), n.setDate(t(this._get(e, r.match(/DD/) ? "dayNames" : "dayNamesShort")) + 20 - n.getDay())), e.input.attr("size", this._formatDate(e, n).length));
+      }, a.setMonth(t(this._get(e, o.match(/MM/) ? "monthNames" : "monthNamesShort"))), a.setDate(t(this._get(e, o.match(/DD/) ? "dayNames" : "dayNamesShort")) + 20 - a.getDay())), e.input.attr("size", this._formatDate(e, a).length));
     },
     _inlineDatepicker: function (e, t) {
       var i = G(e);
       i.hasClass(this.markerClassName) || (i.addClass(this.markerClassName).append(t.dpDiv), G.data(e, "datepicker", t), this._setDate(t, this._getDefaultDate(t), !0), this._updateDatepicker(t), this._updateAlternate(t), t.settings.disabled && this._disableDatepicker(e), t.dpDiv.css("display", "block"));
     },
-    _dialogDatepicker: function (e, t, i, s, a) {
-      var n,
-        r = this._dialogInst;
-      return r || (this.uuid += 1, n = "dp" + this.uuid, this._dialogInput = G("<input type='text' id='" + n + "' style='position: absolute; top: -100px; width: 0px;'/>"), this._dialogInput.on("keydown", this._doKeyDown), G("body").append(this._dialogInput), (r = this._dialogInst = this._newInst(this._dialogInput, !1)).settings = {}, G.data(this._dialogInput[0], "datepicker", r)), f(r.settings, s || {}), t = t && t.constructor === Date ? this._formatDate(r, t) : t, this._dialogInput.val(t), this._pos = a ? a.length ? a : [a.pageX, a.pageY] : null, this._pos || (n = document.documentElement.clientWidth, s = document.documentElement.clientHeight, t = document.documentElement.scrollLeft || document.body.scrollLeft, a = document.documentElement.scrollTop || document.body.scrollTop, this._pos = [n / 2 - 100 + t, s / 2 - 150 + a]), this._dialogInput.css("left", this._pos[0] + 20 + "px").css("top", this._pos[1] + "px"), r.settings.onSelect = i, this._inDialog = !0, this.dpDiv.addClass(this._dialogClass), this._showDatepicker(this._dialogInput[0]), G.blockUI && G.blockUI(this.dpDiv), G.data(this._dialogInput[0], "datepicker", r), this;
+    _dialogDatepicker: function (e, t, i, s, n) {
+      var a,
+        o = this._dialogInst;
+      return o || (this.uuid += 1, a = "dp" + this.uuid, this._dialogInput = G("<input type='text' id='" + a + "' style='position: absolute; top: -100px; width: 0px;'/>"), this._dialogInput.on("keydown", this._doKeyDown), G("body").append(this._dialogInput), (o = this._dialogInst = this._newInst(this._dialogInput, !1)).settings = {}, G.data(this._dialogInput[0], "datepicker", o)), v(o.settings, s || {}), t = t && t.constructor === Date ? this._formatDate(o, t) : t, this._dialogInput.val(t), this._pos = n ? n.length ? n : [n.pageX, n.pageY] : null, this._pos || (a = document.documentElement.clientWidth, s = document.documentElement.clientHeight, t = document.documentElement.scrollLeft || document.body.scrollLeft, n = document.documentElement.scrollTop || document.body.scrollTop, this._pos = [a / 2 - 100 + t, s / 2 - 150 + n]), this._dialogInput.css("left", this._pos[0] + 20 + "px").css("top", this._pos[1] + "px"), o.settings.onSelect = i, this._inDialog = !0, this.dpDiv.addClass(this._dialogClass), this._showDatepicker(this._dialogInput[0]), G.blockUI && G.blockUI(this.dpDiv), G.data(this._dialogInput[0], "datepicker", o), this;
     },
     _destroyDatepicker: function (e) {
       var t,
         i = G(e),
         s = G.data(e, "datepicker");
-      i.hasClass(this.markerClassName) && (t = e.nodeName.toLowerCase(), G.removeData(e, "datepicker"), "input" === t ? (s.append.remove(), s.trigger.remove(), i.removeClass(this.markerClassName).off("focus", this._showDatepicker).off("keydown", this._doKeyDown).off("keypress", this._doKeyPress).off("keyup", this._doKeyUp)) : "div" !== t && "span" !== t || i.removeClass(this.markerClassName).empty(), d === s && (d = null, this._curInst = null));
+      i.hasClass(this.markerClassName) && (t = e.nodeName.toLowerCase(), G.removeData(e, "datepicker"), "input" === t ? (s.append.remove(), s.trigger.remove(), i.removeClass(this.markerClassName).off("focus", this._showDatepicker).off("keydown", this._doKeyDown).off("keypress", this._doKeyPress).off("keyup", this._doKeyUp)) : "div" !== t && "span" !== t || i.removeClass(this.markerClassName).empty(), m === s && (m = null, this._curInst = null));
     },
     _enableDatepicker: function (t) {
       var e,
@@ -1253,10 +1434,10 @@
     },
     _optionDatepicker: function (e, t, i) {
       var s,
-        a,
-        n = this._getInst(e);
-      if (2 === arguments.length && "string" == typeof t) return "defaults" === t ? G.extend({}, G.datepicker._defaults) : n ? "all" === t ? G.extend({}, n.settings) : this._get(n, t) : null;
-      s = t || {}, "string" == typeof t && ((s = {})[t] = i), n && (this._curInst === n && this._hideDatepicker(), a = this._getDateDatepicker(e, !0), t = this._getMinMaxDate(n, "min"), i = this._getMinMaxDate(n, "max"), f(n.settings, s), null !== t && void 0 !== s.dateFormat && void 0 === s.minDate && (n.settings.minDate = this._formatDate(n, t)), null !== i && void 0 !== s.dateFormat && void 0 === s.maxDate && (n.settings.maxDate = this._formatDate(n, i)), "disabled" in s && (s.disabled ? this._disableDatepicker(e) : this._enableDatepicker(e)), this._attachments(G(e), n), this._autoSize(n), this._setDate(n, a), this._updateAlternate(n), this._updateDatepicker(n));
+        n,
+        a = this._getInst(e);
+      if (2 === arguments.length && "string" == typeof t) return "defaults" === t ? G.extend({}, G.datepicker._defaults) : a ? "all" === t ? G.extend({}, a.settings) : this._get(a, t) : null;
+      s = t || {}, "string" == typeof t && ((s = {})[t] = i), a && (this._curInst === a && this._hideDatepicker(), n = this._getDateDatepicker(e, !0), t = this._getMinMaxDate(a, "min"), i = this._getMinMaxDate(a, "max"), v(a.settings, s), null !== t && void 0 !== s.dateFormat && void 0 === s.minDate && (a.settings.minDate = this._formatDate(a, t)), null !== i && void 0 !== s.dateFormat && void 0 === s.maxDate && (a.settings.maxDate = this._formatDate(a, i)), "disabled" in s && (s.disabled ? this._disableDatepicker(e) : this._enableDatepicker(e)), this._attachments(G(e), a), this._autoSize(a), this._setDate(a, n), this._updateAlternate(a), this._updateDatepicker(a));
     },
     _changeDatepicker: function (e, t, i) {
       this._optionDatepicker(e, t, i);
@@ -1277,11 +1458,11 @@
       var t,
         i,
         s = G.datepicker._getInst(e.target),
-        a = !0,
-        n = s.dpDiv.is(".ui-datepicker-rtl");
+        n = !0,
+        a = s.dpDiv.is(".ui-datepicker-rtl");
       if (s._keyEvent = !0, G.datepicker._datepickerShowing) switch (e.keyCode) {
         case 9:
-          G.datepicker._hideDatepicker(), a = !1;
+          G.datepicker._hideDatepicker(), n = !1;
           break;
         case 13:
           return (i = G("td." + G.datepicker._dayOverClass + ":not(." + G.datepicker._currentClass + ")", s.dpDiv))[0] && G.datepicker._selectDay(e.target, s.selectedMonth, s.selectedYear, i[0]), (t = G.datepicker._get(s, "onSelect")) ? (i = G.datepicker._formatDate(s), t.apply(s.input ? s.input[0] : null, [i, s])) : G.datepicker._hideDatepicker(), !1;
@@ -1295,27 +1476,27 @@
           G.datepicker._adjustDate(e.target, e.ctrlKey ? +G.datepicker._get(s, "stepBigMonths") : +G.datepicker._get(s, "stepMonths"), "M");
           break;
         case 35:
-          (e.ctrlKey || e.metaKey) && G.datepicker._clearDate(e.target), a = e.ctrlKey || e.metaKey;
+          (e.ctrlKey || e.metaKey) && G.datepicker._clearDate(e.target), n = e.ctrlKey || e.metaKey;
           break;
         case 36:
-          (e.ctrlKey || e.metaKey) && G.datepicker._gotoToday(e.target), a = e.ctrlKey || e.metaKey;
+          (e.ctrlKey || e.metaKey) && G.datepicker._gotoToday(e.target), n = e.ctrlKey || e.metaKey;
           break;
         case 37:
-          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, n ? 1 : -1, "D"), a = e.ctrlKey || e.metaKey, e.originalEvent.altKey && G.datepicker._adjustDate(e.target, e.ctrlKey ? -G.datepicker._get(s, "stepBigMonths") : -G.datepicker._get(s, "stepMonths"), "M");
+          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, a ? 1 : -1, "D"), n = e.ctrlKey || e.metaKey, e.originalEvent.altKey && G.datepicker._adjustDate(e.target, e.ctrlKey ? -G.datepicker._get(s, "stepBigMonths") : -G.datepicker._get(s, "stepMonths"), "M");
           break;
         case 38:
-          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, -7, "D"), a = e.ctrlKey || e.metaKey;
+          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, -7, "D"), n = e.ctrlKey || e.metaKey;
           break;
         case 39:
-          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, n ? -1 : 1, "D"), a = e.ctrlKey || e.metaKey, e.originalEvent.altKey && G.datepicker._adjustDate(e.target, e.ctrlKey ? +G.datepicker._get(s, "stepBigMonths") : +G.datepicker._get(s, "stepMonths"), "M");
+          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, a ? -1 : 1, "D"), n = e.ctrlKey || e.metaKey, e.originalEvent.altKey && G.datepicker._adjustDate(e.target, e.ctrlKey ? +G.datepicker._get(s, "stepBigMonths") : +G.datepicker._get(s, "stepMonths"), "M");
           break;
         case 40:
-          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, 7, "D"), a = e.ctrlKey || e.metaKey;
+          (e.ctrlKey || e.metaKey) && G.datepicker._adjustDate(e.target, 7, "D"), n = e.ctrlKey || e.metaKey;
           break;
         default:
-          a = !1;
-      } else 36 === e.keyCode && e.ctrlKey ? G.datepicker._showDatepicker(this) : a = !1;
-      a && (e.preventDefault(), e.stopPropagation());
+          n = !1;
+      } else 36 === e.keyCode && e.ctrlKey ? G.datepicker._showDatepicker(this) : n = !1;
+      n && (e.preventDefault(), e.stopPropagation());
     },
     _doKeyPress: function (e) {
       var t,
@@ -1330,51 +1511,51 @@
       return !0;
     },
     _showDatepicker: function (e) {
-      var t, i, s, a;
-      "input" !== (e = e.target || e).nodeName.toLowerCase() && (e = G("input", e.parentNode)[0]), G.datepicker._isDisabledDatepicker(e) || G.datepicker._lastInput === e || (a = G.datepicker._getInst(e), G.datepicker._curInst && G.datepicker._curInst !== a && (G.datepicker._curInst.dpDiv.stop(!0, !0), a && G.datepicker._datepickerShowing && G.datepicker._hideDatepicker(G.datepicker._curInst.input[0])), !1 !== (i = (s = G.datepicker._get(a, "beforeShow")) ? s.apply(e, [e, a]) : {}) && (f(a.settings, i), a.lastVal = null, G.datepicker._lastInput = e, G.datepicker._setDateFromField(a), G.datepicker._inDialog && (e.value = ""), G.datepicker._pos || (G.datepicker._pos = G.datepicker._findPos(e), G.datepicker._pos[1] += e.offsetHeight), t = !1, G(e).parents().each(function () {
+      var t, i, s, n;
+      "input" !== (e = e.target || e).nodeName.toLowerCase() && (e = G("input", e.parentNode)[0]), G.datepicker._isDisabledDatepicker(e) || G.datepicker._lastInput === e || (n = G.datepicker._getInst(e), G.datepicker._curInst && G.datepicker._curInst !== n && (G.datepicker._curInst.dpDiv.stop(!0, !0), n && G.datepicker._datepickerShowing && G.datepicker._hideDatepicker(G.datepicker._curInst.input[0])), !1 !== (i = (s = G.datepicker._get(n, "beforeShow")) ? s.apply(e, [e, n]) : {}) && (v(n.settings, i), n.lastVal = null, G.datepicker._lastInput = e, G.datepicker._setDateFromField(n), G.datepicker._inDialog && (e.value = ""), G.datepicker._pos || (G.datepicker._pos = G.datepicker._findPos(e), G.datepicker._pos[1] += e.offsetHeight), t = !1, G(e).parents().each(function () {
         return !(t |= "fixed" === G(this).css("position"));
       }), s = {
         left: G.datepicker._pos[0],
         top: G.datepicker._pos[1]
-      }, G.datepicker._pos = null, a.dpDiv.empty(), a.dpDiv.css({
+      }, G.datepicker._pos = null, n.dpDiv.empty(), n.dpDiv.css({
         position: "absolute",
         display: "block",
         top: "-1000px"
-      }), G.datepicker._updateDatepicker(a), s = G.datepicker._checkOffset(a, s, t), a.dpDiv.css({
+      }), G.datepicker._updateDatepicker(n), s = G.datepicker._checkOffset(n, s, t), n.dpDiv.css({
         position: G.datepicker._inDialog && G.blockUI ? "static" : t ? "fixed" : "absolute",
         display: "none",
         left: s.left + "px",
         top: s.top + "px"
-      }), a.inline || (i = G.datepicker._get(a, "showAnim"), s = G.datepicker._get(a, "duration"), a.dpDiv.css("z-index", function (e) {
+      }), n.inline || (i = G.datepicker._get(n, "showAnim"), s = G.datepicker._get(n, "duration"), n.dpDiv.css("z-index", function (e) {
         for (var t, i; e.length && e[0] !== document;) {
           if (("absolute" === (t = e.css("position")) || "relative" === t || "fixed" === t) && (i = parseInt(e.css("zIndex"), 10), !isNaN(i) && 0 !== i)) return i;
           e = e.parent();
         }
         return 0;
-      }(G(e)) + 1), G.datepicker._datepickerShowing = !0, G.effects && G.effects.effect[i] ? a.dpDiv.show(i, G.datepicker._get(a, "showOptions"), s) : a.dpDiv[i || "show"](i ? s : null), G.datepicker._shouldFocusInput(a) && a.input.trigger("focus"), G.datepicker._curInst = a)));
+      }(G(e)) + 1), G.datepicker._datepickerShowing = !0, G.effects && G.effects.effect[i] ? n.dpDiv.show(i, G.datepicker._get(n, "showOptions"), s) : n.dpDiv[i || "show"](i ? s : null), G.datepicker._shouldFocusInput(n) && n.input.trigger("focus"), G.datepicker._curInst = n)));
     },
     _updateDatepicker: function (e) {
-      this.maxRows = 4, (d = e).dpDiv.empty().append(this._generateHTML(e)), this._attachHandlers(e);
+      this.maxRows = 4, (m = e).dpDiv.empty().append(this._generateHTML(e)), this._attachHandlers(e);
       var t,
         i = this._getNumberOfMonths(e),
         s = i[1],
-        a = e.dpDiv.find("." + this._dayOverClass + " a"),
-        n = G.datepicker._get(e, "onUpdateDatepicker");
-      0 < a.length && g.apply(a.get(0)), e.dpDiv.removeClass("ui-datepicker-multi-2 ui-datepicker-multi-3 ui-datepicker-multi-4").width(""), 1 < s && e.dpDiv.addClass("ui-datepicker-multi-" + s).css("width", 17 * s + "em"), e.dpDiv[(1 !== i[0] || 1 !== i[1] ? "add" : "remove") + "Class"]("ui-datepicker-multi"), e.dpDiv[(this._get(e, "isRTL") ? "add" : "remove") + "Class"]("ui-datepicker-rtl"), e === G.datepicker._curInst && G.datepicker._datepickerShowing && G.datepicker._shouldFocusInput(e) && e.input.trigger("focus"), e.yearshtml && (t = e.yearshtml, setTimeout(function () {
+        n = e.dpDiv.find("." + this._dayOverClass + " a"),
+        a = G.datepicker._get(e, "onUpdateDatepicker");
+      0 < n.length && _.apply(n.get(0)), e.dpDiv.removeClass("ui-datepicker-multi-2 ui-datepicker-multi-3 ui-datepicker-multi-4").width(""), 1 < s && e.dpDiv.addClass("ui-datepicker-multi-" + s).css("width", 17 * s + "em"), e.dpDiv[(1 !== i[0] || 1 !== i[1] ? "add" : "remove") + "Class"]("ui-datepicker-multi"), e.dpDiv[(this._get(e, "isRTL") ? "add" : "remove") + "Class"]("ui-datepicker-rtl"), e === G.datepicker._curInst && G.datepicker._datepickerShowing && G.datepicker._shouldFocusInput(e) && e.input.trigger("focus"), e.yearshtml && (t = e.yearshtml, setTimeout(function () {
         t === e.yearshtml && e.yearshtml && e.dpDiv.find("select.ui-datepicker-year").first().replaceWith(e.yearshtml), t = e.yearshtml = null;
-      }, 0)), n && n.apply(e.input ? e.input[0] : null, [e]);
+      }, 0)), a && a.apply(e.input ? e.input[0] : null, [e]);
     },
     _shouldFocusInput: function (e) {
       return e.input && e.input.is(":visible") && !e.input.is(":disabled") && !e.input.is(":focus");
     },
     _checkOffset: function (e, t, i) {
       var s = e.dpDiv.outerWidth(),
-        a = e.dpDiv.outerHeight(),
-        n = e.input ? e.input.outerWidth() : 0,
-        r = e.input ? e.input.outerHeight() : 0,
-        o = document.documentElement.clientWidth + (i ? 0 : G(document).scrollLeft()),
-        l = document.documentElement.clientHeight + (i ? 0 : G(document).scrollTop());
-      return t.left -= this._get(e, "isRTL") ? s - n : 0, t.left -= i && t.left === e.input.offset().left ? G(document).scrollLeft() : 0, t.top -= i && t.top === e.input.offset().top + r ? G(document).scrollTop() : 0, t.left -= Math.min(t.left, t.left + s > o && s < o ? Math.abs(t.left + s - o) : 0), t.top -= Math.min(t.top, t.top + a > l && a < l ? Math.abs(a + r) : 0), t;
+        n = e.dpDiv.outerHeight(),
+        a = e.input ? e.input.outerWidth() : 0,
+        o = e.input ? e.input.outerHeight() : 0,
+        r = document.documentElement.clientWidth + (i ? 0 : G(document).scrollLeft()),
+        u = document.documentElement.clientHeight + (i ? 0 : G(document).scrollTop());
+      return t.left -= this._get(e, "isRTL") ? s - a : 0, t.left -= i && t.left === e.input.offset().left ? G(document).scrollLeft() : 0, t.top -= i && t.top === e.input.offset().top + o ? G(document).scrollTop() : 0, t.left -= Math.min(t.left, t.left + s > r && s < r ? Math.abs(t.left + s - r) : 0), t.top -= Math.min(t.top, t.top + n > u && n < u ? Math.abs(n + o) : 0), t;
     },
     _findPos: function (e) {
       for (var t = this._getInst(e), i = this._get(t, "isRTL"); e && ("hidden" === e.type || 1 !== e.nodeType || G.expr.pseudos.hidden(e));) e = e[i ? "previousSibling" : "nextSibling"];
@@ -1415,8 +1596,8 @@
       e["selected" + ("M" === i ? "Month" : "Year")] = e["draw" + ("M" === i ? "Month" : "Year")] = parseInt(t.options[t.selectedIndex].value, 10), this._notifyChange(e), this._adjustDate(s);
     },
     _selectDay: function (e, t, i, s) {
-      var a = G(e);
-      G(s).hasClass(this._unselectableClass) || this._isDisabledDatepicker(a[0]) || ((a = this._getInst(a[0])).selectedDay = a.currentDay = parseInt(G("a", s).attr("data-date")), a.selectedMonth = a.currentMonth = t, a.selectedYear = a.currentYear = i, this._selectDate(e, this._formatDate(a, a.currentDay, a.currentMonth, a.currentYear)));
+      var n = G(e);
+      G(s).hasClass(this._unselectableClass) || this._isDisabledDatepicker(n[0]) || ((n = this._getInst(n[0])).selectedDay = n.currentDay = parseInt(G("a", s).attr("data-date")), n.selectedMonth = n.currentMonth = t, n.selectedYear = n.currentYear = i, this._selectDate(e, this._formatDate(n, n.currentDay, n.currentMonth, n.currentYear)));
     },
     _clearDate: function (e) {
       e = G(e);
@@ -1441,19 +1622,19 @@
       var t = new Date(e.getTime());
       return t.setDate(t.getDate() + 4 - (t.getDay() || 7)), e = t.getTime(), t.setMonth(0), t.setDate(1), Math.floor(Math.round((e - t) / 864e5) / 7) + 1;
     },
-    parseDate: function (t, a, e) {
-      if (null == t || null == a) throw "Invalid arguments";
-      if ("" === (a = "object" == typeof a ? a.toString() : a + "")) return null;
-      for (var i, s, n, r = 0, o = (e ? e.shortYearCutoff : null) || this._defaults.shortYearCutoff, o = "string" != typeof o ? o : new Date().getFullYear() % 100 + parseInt(o, 10), l = (e ? e.dayNamesShort : null) || this._defaults.dayNamesShort, u = (e ? e.dayNames : null) || this._defaults.dayNames, h = (e ? e.monthNamesShort : null) || this._defaults.monthNamesShort, c = (e ? e.monthNames : null) || this._defaults.monthNames, d = -1, p = -1, g = -1, f = -1, m = !1, _ = function (e) {
-          e = D + 1 < t.length && t.charAt(D + 1) === e;
-          return e && D++, e;
+    parseDate: function (t, n, e) {
+      if (null == t || null == n) throw "Invalid arguments";
+      if ("" === (n = "object" == typeof n ? n.toString() : n + "")) return null;
+      for (var i, s, a, o = 0, r = (e ? e.shortYearCutoff : null) || this._defaults.shortYearCutoff, r = "string" != typeof r ? r : new Date().getFullYear() % 100 + parseInt(r, 10), u = (e ? e.dayNamesShort : null) || this._defaults.dayNamesShort, l = (e ? e.dayNames : null) || this._defaults.dayNames, h = (e ? e.monthNamesShort : null) || this._defaults.monthNamesShort, c = (e ? e.monthNames : null) || this._defaults.monthNames, d = -1, p = -1, m = -1, f = -1, g = !1, _ = function (e) {
+          e = b + 1 < t.length && t.charAt(b + 1) === e;
+          return e && b++, e;
         }, v = function (e) {
           var t = _(e),
             t = "@" === e ? 14 : "!" === e ? 20 : "y" === e && t ? 4 : "o" === e ? 3 : 2,
             t = new RegExp("^\\d{" + ("y" === e ? t : 1) + "," + t + "}"),
-            t = a.substring(r).match(t);
-          if (!t) throw "Missing number at position " + r;
-          return r += t[0].length, parseInt(t[0], 10);
+            t = n.substring(o).match(t);
+          if (!t) throw "Missing number at position " + o;
+          return o += t[0].length, parseInt(t[0], 10);
         }, y = function (e, t, i) {
           var s = -1,
             t = G.map(_(e) ? i : t, function (e, t) {
@@ -1463,18 +1644,18 @@
             });
           if (G.each(t, function (e, t) {
             var i = t[1];
-            if (a.substr(r, i.length).toLowerCase() === i.toLowerCase()) return s = t[0], r += i.length, !1;
+            if (n.substr(o, i.length).toLowerCase() === i.toLowerCase()) return s = t[0], o += i.length, !1;
           }), -1 !== s) return s + 1;
-          throw "Unknown name at position " + r;
+          throw "Unknown name at position " + o;
         }, k = function () {
-          if (a.charAt(r) !== t.charAt(D)) throw "Unexpected literal at position " + r;
-          r++;
-        }, D = 0; D < t.length; D++) if (m) "'" !== t.charAt(D) || _("'") ? k() : m = !1;else switch (t.charAt(D)) {
+          if (n.charAt(o) !== t.charAt(b)) throw "Unexpected literal at position " + o;
+          o++;
+        }, b = 0; b < t.length; b++) if (g) "'" !== t.charAt(b) || _("'") ? k() : g = !1;else switch (t.charAt(b)) {
         case "d":
-          g = v("d");
+          m = v("d");
           break;
         case "D":
-          y("D", l, u);
+          y("D", u, l);
           break;
         case "o":
           f = v("o");
@@ -1489,24 +1670,24 @@
           d = v("y");
           break;
         case "@":
-          d = (n = new Date(v("@"))).getFullYear(), p = n.getMonth() + 1, g = n.getDate();
+          d = (a = new Date(v("@"))).getFullYear(), p = a.getMonth() + 1, m = a.getDate();
           break;
         case "!":
-          d = (n = new Date((v("!") - this._ticksTo1970) / 1e4)).getFullYear(), p = n.getMonth() + 1, g = n.getDate();
+          d = (a = new Date((v("!") - this._ticksTo1970) / 1e4)).getFullYear(), p = a.getMonth() + 1, m = a.getDate();
           break;
         case "'":
-          _("'") ? k() : m = !0;
+          _("'") ? k() : g = !0;
           break;
         default:
           k();
       }
-      if (r < a.length && (s = a.substr(r), !/^\s+/.test(s))) throw "Extra/unparsed characters found in date: " + s;
-      if (-1 === d ? d = new Date().getFullYear() : d < 100 && (d += new Date().getFullYear() - new Date().getFullYear() % 100 + (d <= o ? 0 : -100)), -1 < f) for (p = 1, g = f;;) {
-        if (g <= (i = this._getDaysInMonth(d, p - 1))) break;
-        p++, g -= i;
+      if (o < n.length && (s = n.substr(o), !/^\s+/.test(s))) throw "Extra/unparsed characters found in date: " + s;
+      if (-1 === d ? d = new Date().getFullYear() : d < 100 && (d += new Date().getFullYear() - new Date().getFullYear() % 100 + (d <= r ? 0 : -100)), -1 < f) for (p = 1, m = f;;) {
+        if (m <= (i = this._getDaysInMonth(d, p - 1))) break;
+        p++, m -= i;
       }
-      if ((n = this._daylightSavingAdjust(new Date(d, p - 1, g))).getFullYear() !== d || n.getMonth() + 1 !== p || n.getDate() !== g) throw "Invalid date";
-      return n;
+      if ((a = this._daylightSavingAdjust(new Date(d, p - 1, m))).getFullYear() !== d || a.getMonth() + 1 !== p || a.getDate() !== m) throw "Invalid date";
+      return a;
     },
     ATOM: "yy-mm-dd",
     COOKIE: "D, dd M yy",
@@ -1528,26 +1709,26 @@
         if (h(e)) for (; s.length < i;) s = "0" + s;
         return s;
       }
-      function a(e, t, i, s) {
+      function n(e, t, i, s) {
         return (h(e) ? s : i)[t];
       }
-      var n,
-        r = (i ? i.dayNamesShort : null) || this._defaults.dayNamesShort,
-        o = (i ? i.dayNames : null) || this._defaults.dayNames,
-        l = (i ? i.monthNamesShort : null) || this._defaults.monthNamesShort,
-        u = (i ? i.monthNames : null) || this._defaults.monthNames,
+      var a,
+        o = (i ? i.dayNamesShort : null) || this._defaults.dayNamesShort,
+        r = (i ? i.dayNames : null) || this._defaults.dayNames,
+        u = (i ? i.monthNamesShort : null) || this._defaults.monthNamesShort,
+        l = (i ? i.monthNames : null) || this._defaults.monthNames,
         h = function (e) {
-          e = n + 1 < t.length && t.charAt(n + 1) === e;
-          return e && n++, e;
+          e = a + 1 < t.length && t.charAt(a + 1) === e;
+          return e && a++, e;
         },
         c = "",
         d = !1;
-      if (e) for (n = 0; n < t.length; n++) if (d) "'" !== t.charAt(n) || h("'") ? c += t.charAt(n) : d = !1;else switch (t.charAt(n)) {
+      if (e) for (a = 0; a < t.length; a++) if (d) "'" !== t.charAt(a) || h("'") ? c += t.charAt(a) : d = !1;else switch (t.charAt(a)) {
         case "d":
           c += s("d", e.getDate(), 2);
           break;
         case "D":
-          c += a("D", e.getDay(), r, o);
+          c += n("D", e.getDay(), o, r);
           break;
         case "o":
           c += s("o", Math.round((new Date(e.getFullYear(), e.getMonth(), e.getDate()).getTime() - new Date(e.getFullYear(), 0, 0).getTime()) / 864e5), 3);
@@ -1556,7 +1737,7 @@
           c += s("m", e.getMonth() + 1, 2);
           break;
         case "M":
-          c += a("M", e.getMonth(), l, u);
+          c += n("M", e.getMonth(), u, l);
           break;
         case "y":
           c += h("y") ? e.getFullYear() : (e.getFullYear() % 100 < 10 ? "0" : "") + e.getFullYear() % 100;
@@ -1571,15 +1752,15 @@
           h("'") ? c += "'" : d = !0;
           break;
         default:
-          c += t.charAt(n);
+          c += t.charAt(a);
       }
       return c;
     },
     _possibleChars: function (t) {
       for (var e = "", i = !1, s = function (e) {
-          e = a + 1 < t.length && t.charAt(a + 1) === e;
-          return e && a++, e;
-        }, a = 0; a < t.length; a++) if (i) "'" !== t.charAt(a) || s("'") ? e += t.charAt(a) : i = !1;else switch (t.charAt(a)) {
+          e = n + 1 < t.length && t.charAt(n + 1) === e;
+          return e && n++, e;
+        }, n = 0; n < t.length; n++) if (i) "'" !== t.charAt(n) || s("'") ? e += t.charAt(n) : i = !1;else switch (t.charAt(n)) {
         case "d":
         case "m":
         case "y":
@@ -1593,7 +1774,7 @@
           s("'") ? e += "'" : i = !0;
           break;
         default:
-          e += t.charAt(a);
+          e += t.charAt(n);
       }
       return e;
     },
@@ -1604,48 +1785,48 @@
       if (e.input.val() !== e.lastVal) {
         var i = this._get(e, "dateFormat"),
           s = e.lastVal = e.input ? e.input.val() : null,
-          a = this._getDefaultDate(e),
-          n = a,
-          r = this._getFormatConfig(e);
+          n = this._getDefaultDate(e),
+          a = n,
+          o = this._getFormatConfig(e);
         try {
-          n = this.parseDate(i, s, r) || a;
+          a = this.parseDate(i, s, o) || n;
         } catch (e) {
           s = t ? "" : s;
         }
-        e.selectedDay = n.getDate(), e.drawMonth = e.selectedMonth = n.getMonth(), e.drawYear = e.selectedYear = n.getFullYear(), e.currentDay = s ? n.getDate() : 0, e.currentMonth = s ? n.getMonth() : 0, e.currentYear = s ? n.getFullYear() : 0, this._adjustInstDate(e);
+        e.selectedDay = a.getDate(), e.drawMonth = e.selectedMonth = a.getMonth(), e.drawYear = e.selectedYear = a.getFullYear(), e.currentDay = s ? a.getDate() : 0, e.currentMonth = s ? a.getMonth() : 0, e.currentYear = s ? a.getFullYear() : 0, this._adjustInstDate(e);
       }
     },
     _getDefaultDate: function (e) {
       return this._restrictMinMax(e, this._determineDate(e, this._get(e, "defaultDate"), new Date()));
     },
-    _determineDate: function (o, e, t) {
+    _determineDate: function (r, e, t) {
       var i,
         s,
         e = null == e || "" === e ? t : "string" == typeof e ? function (e) {
           try {
-            return G.datepicker.parseDate(G.datepicker._get(o, "dateFormat"), e, G.datepicker._getFormatConfig(o));
+            return G.datepicker.parseDate(G.datepicker._get(r, "dateFormat"), e, G.datepicker._getFormatConfig(r));
           } catch (e) {}
-          for (var t = (e.toLowerCase().match(/^c/) ? G.datepicker._getDate(o) : null) || new Date(), i = t.getFullYear(), s = t.getMonth(), a = t.getDate(), n = /([+\-]?[0-9]+)\s*(d|D|w|W|m|M|y|Y)?/g, r = n.exec(e); r;) {
-            switch (r[2] || "d") {
+          for (var t = (e.toLowerCase().match(/^c/) ? G.datepicker._getDate(r) : null) || new Date(), i = t.getFullYear(), s = t.getMonth(), n = t.getDate(), a = /([+\-]?[0-9]+)\s*(d|D|w|W|m|M|y|Y)?/g, o = a.exec(e); o;) {
+            switch (o[2] || "d") {
               case "d":
               case "D":
-                a += parseInt(r[1], 10);
+                n += parseInt(o[1], 10);
                 break;
               case "w":
               case "W":
-                a += 7 * parseInt(r[1], 10);
+                n += 7 * parseInt(o[1], 10);
                 break;
               case "m":
               case "M":
-                s += parseInt(r[1], 10), a = Math.min(a, G.datepicker._getDaysInMonth(i, s));
+                s += parseInt(o[1], 10), n = Math.min(n, G.datepicker._getDaysInMonth(i, s));
                 break;
               case "y":
               case "Y":
-                i += parseInt(r[1], 10), a = Math.min(a, G.datepicker._getDaysInMonth(i, s));
+                i += parseInt(o[1], 10), n = Math.min(n, G.datepicker._getDaysInMonth(i, s));
             }
-            r = n.exec(e);
+            o = a.exec(e);
           }
-          return new Date(i, s, a);
+          return new Date(i, s, n);
         }(e) : "number" == typeof e ? isNaN(e) ? t : (i = e, (s = new Date()).setDate(s.getDate() + i), s) : new Date(e.getTime());
       return (e = e && "Invalid Date" === e.toString() ? t : e) && (e.setHours(0), e.setMinutes(0), e.setSeconds(0), e.setMilliseconds(0)), this._daylightSavingAdjust(e);
     },
@@ -1654,10 +1835,10 @@
     },
     _setDate: function (e, t, i) {
       var s = !t,
-        a = e.selectedMonth,
-        n = e.selectedYear,
+        n = e.selectedMonth,
+        a = e.selectedYear,
         t = this._restrictMinMax(e, this._determineDate(e, t, new Date()));
-      e.selectedDay = e.currentDay = t.getDate(), e.drawMonth = e.selectedMonth = e.currentMonth = t.getMonth(), e.drawYear = e.selectedYear = e.currentYear = t.getFullYear(), a === e.selectedMonth && n === e.selectedYear || i || this._notifyChange(e), this._adjustInstDate(e), e.input && e.input.val(s ? "" : this._formatDate(e));
+      e.selectedDay = e.currentDay = t.getDate(), e.drawMonth = e.selectedMonth = e.currentMonth = t.getMonth(), e.drawYear = e.selectedYear = e.currentYear = t.getFullYear(), n === e.selectedMonth && a === e.selectedYear || i || this._notifyChange(e), this._adjustInstDate(e), e.input && e.input.val(s ? "" : this._formatDate(e));
     },
     _getDate: function (e) {
       return !e.currentYear || e.input && "" === e.input.val() ? null : this._daylightSavingAdjust(new Date(e.currentYear, e.currentMonth, e.currentDay));
@@ -1696,135 +1877,135 @@
       var t,
         i,
         s,
-        a,
         n,
-        r,
+        a,
         o,
-        l,
+        r,
         u,
+        l,
         h,
         c,
         d,
         p,
-        g,
-        f,
         m,
+        f,
+        g,
         _,
         v,
         y,
         k,
-        D,
         b,
+        D,
         w,
         M,
-        C,
         x,
+        C,
         I,
         T,
+        S,
         A,
         N,
-        S,
-        F,
-        E = new Date(),
-        Y = this._daylightSavingAdjust(new Date(E.getFullYear(), E.getMonth(), E.getDate())),
-        O = this._get(e, "isRTL"),
+        E,
+        F = new Date(),
+        O = this._daylightSavingAdjust(new Date(F.getFullYear(), F.getMonth(), F.getDate())),
+        Y = this._get(e, "isRTL"),
         W = this._get(e, "showButtonPanel"),
         P = this._get(e, "hideIfNoPrevNext"),
         L = this._get(e, "navigationAsDateFormat"),
         H = this._getNumberOfMonths(e),
-        j = this._get(e, "showCurrentAtPos"),
-        E = this._get(e, "stepMonths"),
-        K = 1 !== H[0] || 1 !== H[1],
-        R = this._daylightSavingAdjust(e.currentDay ? new Date(e.currentYear, e.currentMonth, e.currentDay) : new Date(9999, 9, 9)),
+        R = this._get(e, "showCurrentAtPos"),
+        F = this._get(e, "stepMonths"),
+        j = 1 !== H[0] || 1 !== H[1],
+        K = this._daylightSavingAdjust(e.currentDay ? new Date(e.currentYear, e.currentMonth, e.currentDay) : new Date(9999, 9, 9)),
         U = this._getMinMaxDate(e, "min"),
-        z = this._getMinMaxDate(e, "max"),
-        q = e.drawMonth - j,
+        q = this._getMinMaxDate(e, "max"),
+        z = e.drawMonth - R,
         B = e.drawYear;
-      if (q < 0 && (q += 12, B--), z) for (t = this._daylightSavingAdjust(new Date(z.getFullYear(), z.getMonth() - H[0] * H[1] + 1, z.getDate())), t = U && t < U ? U : t; this._daylightSavingAdjust(new Date(B, q, 1)) > t;) --q < 0 && (q = 11, B--);
-      for (e.drawMonth = q, e.drawYear = B, j = this._get(e, "prevText"), j = L ? this.formatDate(j, this._daylightSavingAdjust(new Date(B, q - E, 1)), this._getFormatConfig(e)) : j, i = this._canAdjustMonth(e, -1, B, q) ? G("<a>").attr({
+      if (z < 0 && (z += 12, B--), q) for (t = this._daylightSavingAdjust(new Date(q.getFullYear(), q.getMonth() - H[0] * H[1] + 1, q.getDate())), t = U && t < U ? U : t; this._daylightSavingAdjust(new Date(B, z, 1)) > t;) --z < 0 && (z = 11, B--);
+      for (e.drawMonth = z, e.drawYear = B, R = this._get(e, "prevText"), R = L ? this.formatDate(R, this._daylightSavingAdjust(new Date(B, z - F, 1)), this._getFormatConfig(e)) : R, i = this._canAdjustMonth(e, -1, B, z) ? G("<a>").attr({
         class: "ui-datepicker-prev ui-corner-all",
         "data-handler": "prev",
         "data-event": "click",
-        title: j
-      }).append(G("<span>").addClass("ui-icon ui-icon-circle-triangle-" + (O ? "e" : "w")).text(j))[0].outerHTML : P ? "" : G("<a>").attr({
+        title: R
+      }).append(G("<span>").addClass("ui-icon ui-icon-circle-triangle-" + (Y ? "e" : "w")).text(R))[0].outerHTML : P ? "" : G("<a>").attr({
         class: "ui-datepicker-prev ui-corner-all ui-state-disabled",
-        title: j
-      }).append(G("<span>").addClass("ui-icon ui-icon-circle-triangle-" + (O ? "e" : "w")).text(j))[0].outerHTML, j = this._get(e, "nextText"), j = L ? this.formatDate(j, this._daylightSavingAdjust(new Date(B, q + E, 1)), this._getFormatConfig(e)) : j, s = this._canAdjustMonth(e, 1, B, q) ? G("<a>").attr({
+        title: R
+      }).append(G("<span>").addClass("ui-icon ui-icon-circle-triangle-" + (Y ? "e" : "w")).text(R))[0].outerHTML, R = this._get(e, "nextText"), R = L ? this.formatDate(R, this._daylightSavingAdjust(new Date(B, z + F, 1)), this._getFormatConfig(e)) : R, s = this._canAdjustMonth(e, 1, B, z) ? G("<a>").attr({
         class: "ui-datepicker-next ui-corner-all",
         "data-handler": "next",
         "data-event": "click",
-        title: j
-      }).append(G("<span>").addClass("ui-icon ui-icon-circle-triangle-" + (O ? "w" : "e")).text(j))[0].outerHTML : P ? "" : G("<a>").attr({
+        title: R
+      }).append(G("<span>").addClass("ui-icon ui-icon-circle-triangle-" + (Y ? "w" : "e")).text(R))[0].outerHTML : P ? "" : G("<a>").attr({
         class: "ui-datepicker-next ui-corner-all ui-state-disabled",
-        title: j
-      }).append(G("<span>").attr("class", "ui-icon ui-icon-circle-triangle-" + (O ? "w" : "e")).text(j))[0].outerHTML, E = this._get(e, "currentText"), P = this._get(e, "gotoCurrent") && e.currentDay ? R : Y, E = L ? this.formatDate(E, P, this._getFormatConfig(e)) : E, j = "", e.inline || (j = G("<button>").attr({
+        title: R
+      }).append(G("<span>").attr("class", "ui-icon ui-icon-circle-triangle-" + (Y ? "w" : "e")).text(R))[0].outerHTML, F = this._get(e, "currentText"), P = this._get(e, "gotoCurrent") && e.currentDay ? K : O, F = L ? this.formatDate(F, P, this._getFormatConfig(e)) : F, R = "", e.inline || (R = G("<button>").attr({
         type: "button",
         class: "ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all",
         "data-handler": "hide",
         "data-event": "click"
-      }).text(this._get(e, "closeText"))[0].outerHTML), L = "", W && (L = G("<div class='ui-datepicker-buttonpane ui-widget-content'>").append(O ? j : "").append(this._isInRange(e, P) ? G("<button>").attr({
+      }).text(this._get(e, "closeText"))[0].outerHTML), L = "", W && (L = G("<div class='ui-datepicker-buttonpane ui-widget-content'>").append(Y ? R : "").append(this._isInRange(e, P) ? G("<button>").attr({
         type: "button",
         class: "ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all",
         "data-handler": "today",
         "data-event": "click"
-      }).text(E) : "").append(O ? "" : j)[0].outerHTML), a = parseInt(this._get(e, "firstDay"), 10), a = isNaN(a) ? 0 : a, n = this._get(e, "showWeek"), r = this._get(e, "dayNames"), o = this._get(e, "dayNamesMin"), l = this._get(e, "monthNames"), u = this._get(e, "monthNamesShort"), h = this._get(e, "beforeShowDay"), c = this._get(e, "showOtherMonths"), d = this._get(e, "selectOtherMonths"), p = this._getDefaultDate(e), g = "", m = 0; m < H[0]; m++) {
+      }).text(F) : "").append(Y ? "" : R)[0].outerHTML), n = parseInt(this._get(e, "firstDay"), 10), n = isNaN(n) ? 0 : n, a = this._get(e, "showWeek"), o = this._get(e, "dayNames"), r = this._get(e, "dayNamesMin"), u = this._get(e, "monthNames"), l = this._get(e, "monthNamesShort"), h = this._get(e, "beforeShowDay"), c = this._get(e, "showOtherMonths"), d = this._get(e, "selectOtherMonths"), p = this._getDefaultDate(e), m = "", g = 0; g < H[0]; g++) {
         for (_ = "", this.maxRows = 4, v = 0; v < H[1]; v++) {
-          if (y = this._daylightSavingAdjust(new Date(B, q, e.selectedDay)), k = " ui-corner-all", D = "", K) {
-            if (D += "<div class='ui-datepicker-group", 1 < H[1]) switch (v) {
+          if (y = this._daylightSavingAdjust(new Date(B, z, e.selectedDay)), k = " ui-corner-all", b = "", j) {
+            if (b += "<div class='ui-datepicker-group", 1 < H[1]) switch (v) {
               case 0:
-                D += " ui-datepicker-group-first", k = " ui-corner-" + (O ? "right" : "left");
+                b += " ui-datepicker-group-first", k = " ui-corner-" + (Y ? "right" : "left");
                 break;
               case H[1] - 1:
-                D += " ui-datepicker-group-last", k = " ui-corner-" + (O ? "left" : "right");
+                b += " ui-datepicker-group-last", k = " ui-corner-" + (Y ? "left" : "right");
                 break;
               default:
-                D += " ui-datepicker-group-middle", k = "";
+                b += " ui-datepicker-group-middle", k = "";
             }
-            D += "'>";
+            b += "'>";
           }
-          for (D += "<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix" + k + "'>" + (/all|left/.test(k) && 0 === m ? O ? s : i : "") + (/all|right/.test(k) && 0 === m ? O ? i : s : "") + this._generateMonthYearHeader(e, q, B, U, z, 0 < m || 0 < v, l, u) + "</div><table class='ui-datepicker-calendar'><thead><tr>", b = n ? "<th class='ui-datepicker-week-col'>" + this._get(e, "weekHeader") + "</th>" : "", f = 0; f < 7; f++) b += "<th scope='col'" + (5 <= (f + a + 6) % 7 ? " class='ui-datepicker-week-end'" : "") + "><span title='" + r[w = (f + a) % 7] + "'>" + o[w] + "</span></th>";
-          for (D += b + "</tr></thead><tbody>", C = this._getDaysInMonth(B, q), B === e.selectedYear && q === e.selectedMonth && (e.selectedDay = Math.min(e.selectedDay, C)), M = (this._getFirstDayOfMonth(B, q) - a + 7) % 7, C = Math.ceil((M + C) / 7), x = K && this.maxRows > C ? this.maxRows : C, this.maxRows = x, I = this._daylightSavingAdjust(new Date(B, q, 1 - M)), T = 0; T < x; T++) {
-            for (D += "<tr>", A = n ? "<td class='ui-datepicker-week-col'>" + this._get(e, "calculateWeek")(I) + "</td>" : "", f = 0; f < 7; f++) N = h ? h.apply(e.input ? e.input[0] : null, [I]) : [!0, ""], F = (S = I.getMonth() !== q) && !d || !N[0] || U && I < U || z && z < I, A += "<td class='" + (5 <= (f + a + 6) % 7 ? " ui-datepicker-week-end" : "") + (S ? " ui-datepicker-other-month" : "") + (I.getTime() === y.getTime() && q === e.selectedMonth && e._keyEvent || p.getTime() === I.getTime() && p.getTime() === y.getTime() ? " " + this._dayOverClass : "") + (F ? " " + this._unselectableClass + " ui-state-disabled" : "") + (S && !c ? "" : " " + N[1] + (I.getTime() === R.getTime() ? " " + this._currentClass : "") + (I.getTime() === Y.getTime() ? " ui-datepicker-today" : "")) + "'" + (S && !c || !N[2] ? "" : " title='" + N[2].replace(/'/g, "&#39;") + "'") + (F ? "" : " data-handler='selectDay' data-event='click' data-month='" + I.getMonth() + "' data-year='" + I.getFullYear() + "'") + ">" + (S && !c ? "&#xa0;" : F ? "<span class='ui-state-default'>" + I.getDate() + "</span>" : "<a class='ui-state-default" + (I.getTime() === Y.getTime() ? " ui-state-highlight" : "") + (I.getTime() === R.getTime() ? " ui-state-active" : "") + (S ? " ui-priority-secondary" : "") + "' href='#' aria-current='" + (I.getTime() === R.getTime() ? "true" : "false") + "' data-date='" + I.getDate() + "'>" + I.getDate() + "</a>") + "</td>", I.setDate(I.getDate() + 1), I = this._daylightSavingAdjust(I);
-            D += A + "</tr>";
+          for (b += "<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix" + k + "'>" + (/all|left/.test(k) && 0 === g ? Y ? s : i : "") + (/all|right/.test(k) && 0 === g ? Y ? i : s : "") + this._generateMonthYearHeader(e, z, B, U, q, 0 < g || 0 < v, u, l) + "</div><table class='ui-datepicker-calendar'><thead><tr>", D = a ? "<th class='ui-datepicker-week-col'>" + this._get(e, "weekHeader") + "</th>" : "", f = 0; f < 7; f++) D += "<th scope='col'" + (5 <= (f + n + 6) % 7 ? " class='ui-datepicker-week-end'" : "") + "><span title='" + o[w = (f + n) % 7] + "'>" + r[w] + "</span></th>";
+          for (b += D + "</tr></thead><tbody>", x = this._getDaysInMonth(B, z), B === e.selectedYear && z === e.selectedMonth && (e.selectedDay = Math.min(e.selectedDay, x)), M = (this._getFirstDayOfMonth(B, z) - n + 7) % 7, x = Math.ceil((M + x) / 7), C = j && this.maxRows > x ? this.maxRows : x, this.maxRows = C, I = this._daylightSavingAdjust(new Date(B, z, 1 - M)), T = 0; T < C; T++) {
+            for (b += "<tr>", S = a ? "<td class='ui-datepicker-week-col'>" + this._get(e, "calculateWeek")(I) + "</td>" : "", f = 0; f < 7; f++) A = h ? h.apply(e.input ? e.input[0] : null, [I]) : [!0, ""], E = (N = I.getMonth() !== z) && !d || !A[0] || U && I < U || q && q < I, S += "<td class='" + (5 <= (f + n + 6) % 7 ? " ui-datepicker-week-end" : "") + (N ? " ui-datepicker-other-month" : "") + (I.getTime() === y.getTime() && z === e.selectedMonth && e._keyEvent || p.getTime() === I.getTime() && p.getTime() === y.getTime() ? " " + this._dayOverClass : "") + (E ? " " + this._unselectableClass + " ui-state-disabled" : "") + (N && !c ? "" : " " + A[1] + (I.getTime() === K.getTime() ? " " + this._currentClass : "") + (I.getTime() === O.getTime() ? " ui-datepicker-today" : "")) + "'" + (N && !c || !A[2] ? "" : " title='" + A[2].replace(/'/g, "&#39;") + "'") + (E ? "" : " data-handler='selectDay' data-event='click' data-month='" + I.getMonth() + "' data-year='" + I.getFullYear() + "'") + ">" + (N && !c ? "&#xa0;" : E ? "<span class='ui-state-default'>" + I.getDate() + "</span>" : "<a class='ui-state-default" + (I.getTime() === O.getTime() ? " ui-state-highlight" : "") + (I.getTime() === K.getTime() ? " ui-state-active" : "") + (N ? " ui-priority-secondary" : "") + "' href='#' aria-current='" + (I.getTime() === K.getTime() ? "true" : "false") + "' data-date='" + I.getDate() + "'>" + I.getDate() + "</a>") + "</td>", I.setDate(I.getDate() + 1), I = this._daylightSavingAdjust(I);
+            b += S + "</tr>";
           }
-          11 < ++q && (q = 0, B++), _ += D += "</tbody></table>" + (K ? "</div>" + (0 < H[0] && v === H[1] - 1 ? "<div class='ui-datepicker-row-break'></div>" : "") : "");
+          11 < ++z && (z = 0, B++), _ += b += "</tbody></table>" + (j ? "</div>" + (0 < H[0] && v === H[1] - 1 ? "<div class='ui-datepicker-row-break'></div>" : "") : "");
         }
-        g += _;
+        m += _;
       }
-      return g += L, e._keyEvent = !1, g;
+      return m += L, e._keyEvent = !1, m;
     },
-    _generateMonthYearHeader: function (e, t, i, s, a, n, r, o) {
-      var l,
-        u,
+    _generateMonthYearHeader: function (e, t, i, s, n, a, o, r) {
+      var u,
+        l,
         h,
         c,
         d,
         p,
-        g = this._get(e, "changeMonth"),
+        m = this._get(e, "changeMonth"),
         f = this._get(e, "changeYear"),
-        m = this._get(e, "showMonthAfterYear"),
+        g = this._get(e, "showMonthAfterYear"),
         _ = this._get(e, "selectMonthLabel"),
         v = this._get(e, "selectYearLabel"),
         y = "<div class='ui-datepicker-title'>",
         k = "";
-      if (n || !g) k += "<span class='ui-datepicker-month'>" + r[t] + "</span>";else {
-        for (l = s && s.getFullYear() === i, u = a && a.getFullYear() === i, k += "<select class='ui-datepicker-month' aria-label='" + _ + "' data-handler='selectMonth' data-event='change'>", h = 0; h < 12; h++) (!l || h >= s.getMonth()) && (!u || h <= a.getMonth()) && (k += "<option value='" + h + "'" + (h === t ? " selected='selected'" : "") + ">" + o[h] + "</option>");
+      if (a || !m) k += "<span class='ui-datepicker-month'>" + o[t] + "</span>";else {
+        for (u = s && s.getFullYear() === i, l = n && n.getFullYear() === i, k += "<select class='ui-datepicker-month' aria-label='" + _ + "' data-handler='selectMonth' data-event='change'>", h = 0; h < 12; h++) (!u || h >= s.getMonth()) && (!l || h <= n.getMonth()) && (k += "<option value='" + h + "'" + (h === t ? " selected='selected'" : "") + ">" + r[h] + "</option>");
         k += "</select>";
       }
-      if (m || (y += k + (!n && g && f ? "" : "&#xa0;")), !e.yearshtml) if (e.yearshtml = "", n || !f) y += "<span class='ui-datepicker-year'>" + i + "</span>";else {
-        for (r = this._get(e, "yearRange").split(":"), c = new Date().getFullYear(), d = (_ = function (e) {
+      if (g || (y += k + (!a && m && f ? "" : "&#xa0;")), !e.yearshtml) if (e.yearshtml = "", a || !f) y += "<span class='ui-datepicker-year'>" + i + "</span>";else {
+        for (o = this._get(e, "yearRange").split(":"), c = new Date().getFullYear(), d = (_ = function (e) {
           e = e.match(/c[+\-].*/) ? i + parseInt(e.substring(1), 10) : e.match(/[+\-].*/) ? c + parseInt(e, 10) : parseInt(e, 10);
           return isNaN(e) ? c : e;
-        })(r[0]), p = Math.max(d, _(r[1] || "")), d = s ? Math.max(d, s.getFullYear()) : d, p = a ? Math.min(p, a.getFullYear()) : p, e.yearshtml += "<select class='ui-datepicker-year' aria-label='" + v + "' data-handler='selectYear' data-event='change'>"; d <= p; d++) e.yearshtml += "<option value='" + d + "'" + (d === i ? " selected='selected'" : "") + ">" + d + "</option>";
+        })(o[0]), p = Math.max(d, _(o[1] || "")), d = s ? Math.max(d, s.getFullYear()) : d, p = n ? Math.min(p, n.getFullYear()) : p, e.yearshtml += "<select class='ui-datepicker-year' aria-label='" + v + "' data-handler='selectYear' data-event='change'>"; d <= p; d++) e.yearshtml += "<option value='" + d + "'" + (d === i ? " selected='selected'" : "") + ">" + d + "</option>";
         e.yearshtml += "</select>", y += e.yearshtml, e.yearshtml = null;
       }
-      return y += this._get(e, "yearSuffix"), m && (y += (!n && g && f ? "" : "&#xa0;") + k), y += "</div>";
+      return y += this._get(e, "yearSuffix"), g && (y += (!a && m && f ? "" : "&#xa0;") + k), y += "</div>";
     },
     _adjustInstDate: function (e, t, i) {
       var s = e.selectedYear + ("Y" === i ? t : 0),
-        a = e.selectedMonth + ("M" === i ? t : 0),
-        t = Math.min(e.selectedDay, this._getDaysInMonth(s, a)) + ("D" === i ? t : 0),
-        t = this._restrictMinMax(e, this._daylightSavingAdjust(new Date(s, a, t)));
+        n = e.selectedMonth + ("M" === i ? t : 0),
+        t = Math.min(e.selectedDay, this._getDaysInMonth(s, n)) + ("D" === i ? t : 0),
+        t = this._restrictMinMax(e, this._daylightSavingAdjust(new Date(s, n, t)));
       e.selectedDay = t.getDate(), e.drawMonth = e.selectedMonth = t.getMonth(), e.drawYear = e.selectedYear = t.getFullYear(), "M" !== i && "Y" !== i || this._notifyChange(e);
     },
     _restrictMinMax: function (e, t) {
@@ -1851,17 +2032,17 @@
       return new Date(e, t, 1).getDay();
     },
     _canAdjustMonth: function (e, t, i, s) {
-      var a = this._getNumberOfMonths(e),
-        a = this._daylightSavingAdjust(new Date(i, s + (t < 0 ? t : a[0] * a[1]), 1));
-      return t < 0 && a.setDate(this._getDaysInMonth(a.getFullYear(), a.getMonth())), this._isInRange(e, a);
+      var n = this._getNumberOfMonths(e),
+        n = this._daylightSavingAdjust(new Date(i, s + (t < 0 ? t : n[0] * n[1]), 1));
+      return t < 0 && n.setDate(this._getDaysInMonth(n.getFullYear(), n.getMonth())), this._isInRange(e, n);
     },
     _isInRange: function (e, t) {
       var i = this._getMinMaxDate(e, "min"),
         s = this._getMinMaxDate(e, "max"),
-        a = null,
         n = null,
-        r = this._get(e, "yearRange");
-      return r && (e = r.split(":"), r = new Date().getFullYear(), a = parseInt(e[0], 10), n = parseInt(e[1], 10), e[0].match(/[+\-].*/) && (a += r), e[1].match(/[+\-].*/) && (n += r)), (!i || t.getTime() >= i.getTime()) && (!s || t.getTime() <= s.getTime()) && (!a || t.getFullYear() >= a) && (!n || t.getFullYear() <= n);
+        a = null,
+        o = this._get(e, "yearRange");
+      return o && (e = o.split(":"), o = new Date().getFullYear(), n = parseInt(e[0], 10), a = parseInt(e[1], 10), e[0].match(/[+\-].*/) && (n += o), e[1].match(/[+\-].*/) && (a += o)), (!i || t.getTime() >= i.getTime()) && (!s || t.getTime() <= s.getTime()) && (!n || t.getFullYear() >= n) && (!a || t.getFullYear() <= a);
     },
     _getFormatConfig: function (e) {
       var t = this._get(e, "shortYearCutoff");
@@ -1885,8 +2066,806 @@
     return "string" == typeof e && ("isDisabled" === e || "getDate" === e || "widget" === e) || "option" === e && 2 === arguments.length && "string" == typeof arguments[1] ? G.datepicker["_" + e + "Datepicker"].apply(G.datepicker, [this[0]].concat(t)) : this.each(function () {
       "string" == typeof e ? G.datepicker["_" + e + "Datepicker"].apply(G.datepicker, [this].concat(t)) : G.datepicker._attachDatepicker(this, e);
     });
-  }, G.datepicker = new t(), G.datepicker.initialized = !1, G.datepicker.uuid = new Date().getTime(), G.datepicker.version = "1.13.2";
-  G.datepicker;
+  }, G.datepicker = new f(), G.datepicker.initialized = !1, G.datepicker.uuid = new Date().getTime(), G.datepicker.version = "1.13.2";
+  G.datepicker, G.ui.ie = !!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase());
+  var y = !1;
+  G(document).on("mouseup", function () {
+    y = !1;
+  });
+  G.widget("ui.mouse", {
+    version: "1.13.2",
+    options: {
+      cancel: "input, textarea, button, select, option",
+      distance: 1,
+      delay: 0
+    },
+    _mouseInit: function () {
+      var t = this;
+      this.element.on("mousedown." + this.widgetName, function (e) {
+        return t._mouseDown(e);
+      }).on("click." + this.widgetName, function (e) {
+        if (!0 === G.data(e.target, t.widgetName + ".preventClickEvent")) return G.removeData(e.target, t.widgetName + ".preventClickEvent"), e.stopImmediatePropagation(), !1;
+      }), this.started = !1;
+    },
+    _mouseDestroy: function () {
+      this.element.off("." + this.widgetName), this._mouseMoveDelegate && this.document.off("mousemove." + this.widgetName, this._mouseMoveDelegate).off("mouseup." + this.widgetName, this._mouseUpDelegate);
+    },
+    _mouseDown: function (e) {
+      if (!y) {
+        this._mouseMoved = !1, this._mouseStarted && this._mouseUp(e), this._mouseDownEvent = e;
+        var t = this,
+          i = 1 === e.which,
+          s = !("string" != typeof this.options.cancel || !e.target.nodeName) && G(e.target).closest(this.options.cancel).length;
+        return i && !s && this._mouseCapture(e) ? (this.mouseDelayMet = !this.options.delay, this.mouseDelayMet || (this._mouseDelayTimer = setTimeout(function () {
+          t.mouseDelayMet = !0;
+        }, this.options.delay)), this._mouseDistanceMet(e) && this._mouseDelayMet(e) && (this._mouseStarted = !1 !== this._mouseStart(e), !this._mouseStarted) ? (e.preventDefault(), !0) : (!0 === G.data(e.target, this.widgetName + ".preventClickEvent") && G.removeData(e.target, this.widgetName + ".preventClickEvent"), this._mouseMoveDelegate = function (e) {
+          return t._mouseMove(e);
+        }, this._mouseUpDelegate = function (e) {
+          return t._mouseUp(e);
+        }, this.document.on("mousemove." + this.widgetName, this._mouseMoveDelegate).on("mouseup." + this.widgetName, this._mouseUpDelegate), e.preventDefault(), y = !0)) : !0;
+      }
+    },
+    _mouseMove: function (e) {
+      if (this._mouseMoved) {
+        if (G.ui.ie && (!document.documentMode || document.documentMode < 9) && !e.button) return this._mouseUp(e);
+        if (!e.which) if (e.originalEvent.altKey || e.originalEvent.ctrlKey || e.originalEvent.metaKey || e.originalEvent.shiftKey) this.ignoreMissingWhich = !0;else if (!this.ignoreMissingWhich) return this._mouseUp(e);
+      }
+      return (e.which || e.button) && (this._mouseMoved = !0), this._mouseStarted ? (this._mouseDrag(e), e.preventDefault()) : (this._mouseDistanceMet(e) && this._mouseDelayMet(e) && (this._mouseStarted = !1 !== this._mouseStart(this._mouseDownEvent, e), this._mouseStarted ? this._mouseDrag(e) : this._mouseUp(e)), !this._mouseStarted);
+    },
+    _mouseUp: function (e) {
+      this.document.off("mousemove." + this.widgetName, this._mouseMoveDelegate).off("mouseup." + this.widgetName, this._mouseUpDelegate), this._mouseStarted && (this._mouseStarted = !1, e.target === this._mouseDownEvent.target && G.data(e.target, this.widgetName + ".preventClickEvent", !0), this._mouseStop(e)), this._mouseDelayTimer && (clearTimeout(this._mouseDelayTimer), delete this._mouseDelayTimer), this.ignoreMissingWhich = !1, y = !1, e.preventDefault();
+    },
+    _mouseDistanceMet: function (e) {
+      return Math.max(Math.abs(this._mouseDownEvent.pageX - e.pageX), Math.abs(this._mouseDownEvent.pageY - e.pageY)) >= this.options.distance;
+    },
+    _mouseDelayMet: function () {
+      return this.mouseDelayMet;
+    },
+    _mouseStart: function () {},
+    _mouseDrag: function () {},
+    _mouseStop: function () {},
+    _mouseCapture: function () {
+      return !0;
+    }
+  }), G.widget("ui.selectmenu", [G.ui.formResetMixin, {
+    version: "1.13.2",
+    defaultElement: "<select>",
+    options: {
+      appendTo: null,
+      classes: {
+        "ui-selectmenu-button-open": "ui-corner-top",
+        "ui-selectmenu-button-closed": "ui-corner-all"
+      },
+      disabled: null,
+      icons: {
+        button: "ui-icon-triangle-1-s"
+      },
+      position: {
+        my: "left top",
+        at: "left bottom",
+        collision: "none"
+      },
+      width: !1,
+      change: null,
+      close: null,
+      focus: null,
+      open: null,
+      select: null
+    },
+    _create: function () {
+      var e = this.element.uniqueId().attr("id");
+      this.ids = {
+        element: e,
+        button: e + "-button",
+        menu: e + "-menu"
+      }, this._drawButton(), this._drawMenu(), this._bindFormResetHandler(), this._rendered = !1, this.menuItems = G();
+    },
+    _drawButton: function () {
+      var e,
+        t = this,
+        i = this._parseOption(this.element.find("option:selected"), this.element[0].selectedIndex);
+      this.labels = this.element.labels().attr("for", this.ids.button), this._on(this.labels, {
+        click: function (e) {
+          this.button.trigger("focus"), e.preventDefault();
+        }
+      }), this.element.hide(), this.button = G("<span>", {
+        tabindex: this.options.disabled ? -1 : 0,
+        id: this.ids.button,
+        role: "combobox",
+        "aria-expanded": "false",
+        "aria-autocomplete": "list",
+        "aria-owns": this.ids.menu,
+        "aria-haspopup": "true",
+        title: this.element.attr("title")
+      }).insertAfter(this.element), this._addClass(this.button, "ui-selectmenu-button ui-selectmenu-button-closed", "ui-button ui-widget"), e = G("<span>").appendTo(this.button), this._addClass(e, "ui-selectmenu-icon", "ui-icon " + this.options.icons.button), this.buttonItem = this._renderButtonItem(i).appendTo(this.button), !1 !== this.options.width && this._resizeButton(), this._on(this.button, this._buttonEvents), this.button.one("focusin", function () {
+        t._rendered || t._refreshMenu();
+      });
+    },
+    _drawMenu: function () {
+      var i = this;
+      this.menu = G("<ul>", {
+        "aria-hidden": "true",
+        "aria-labelledby": this.ids.button,
+        id: this.ids.menu
+      }), this.menuWrap = G("<div>").append(this.menu), this._addClass(this.menuWrap, "ui-selectmenu-menu", "ui-front"), this.menuWrap.appendTo(this._appendTo()), this.menuInstance = this.menu.menu({
+        classes: {
+          "ui-menu": "ui-corner-bottom"
+        },
+        role: "listbox",
+        select: function (e, t) {
+          e.preventDefault(), i._setSelection(), i._select(t.item.data("ui-selectmenu-item"), e);
+        },
+        focus: function (e, t) {
+          t = t.item.data("ui-selectmenu-item");
+          null != i.focusIndex && t.index !== i.focusIndex && (i._trigger("focus", e, {
+            item: t
+          }), i.isOpen || i._select(t, e)), i.focusIndex = t.index, i.button.attr("aria-activedescendant", i.menuItems.eq(t.index).attr("id"));
+        }
+      }).menu("instance"), this.menuInstance._off(this.menu, "mouseleave"), this.menuInstance._closeOnDocumentClick = function () {
+        return !1;
+      }, this.menuInstance._isDivider = function () {
+        return !1;
+      };
+    },
+    refresh: function () {
+      this._refreshMenu(), this.buttonItem.replaceWith(this.buttonItem = this._renderButtonItem(this._getSelectedItem().data("ui-selectmenu-item") || {})), null === this.options.width && this._resizeButton();
+    },
+    _refreshMenu: function () {
+      var e = this.element.find("option");
+      this.menu.empty(), this._parseOptions(e), this._renderMenu(this.menu, this.items), this.menuInstance.refresh(), this.menuItems = this.menu.find("li").not(".ui-selectmenu-optgroup").find(".ui-menu-item-wrapper"), this._rendered = !0, e.length && (e = this._getSelectedItem(), this.menuInstance.focus(null, e), this._setAria(e.data("ui-selectmenu-item")), this._setOption("disabled", this.element.prop("disabled")));
+    },
+    open: function (e) {
+      this.options.disabled || (this._rendered ? (this._removeClass(this.menu.find(".ui-state-active"), null, "ui-state-active"), this.menuInstance.focus(null, this._getSelectedItem())) : this._refreshMenu(), this.menuItems.length && (this.isOpen = !0, this._toggleAttr(), this._resizeMenu(), this._position(), this._on(this.document, this._documentClick), this._trigger("open", e)));
+    },
+    _position: function () {
+      this.menuWrap.position(G.extend({
+        of: this.button
+      }, this.options.position));
+    },
+    close: function (e) {
+      this.isOpen && (this.isOpen = !1, this._toggleAttr(), this.range = null, this._off(this.document), this._trigger("close", e));
+    },
+    widget: function () {
+      return this.button;
+    },
+    menuWidget: function () {
+      return this.menu;
+    },
+    _renderButtonItem: function (e) {
+      var t = G("<span>");
+      return this._setText(t, e.label), this._addClass(t, "ui-selectmenu-text"), t;
+    },
+    _renderMenu: function (s, e) {
+      var n = this,
+        a = "";
+      G.each(e, function (e, t) {
+        var i;
+        t.optgroup !== a && (i = G("<li>", {
+          text: t.optgroup
+        }), n._addClass(i, "ui-selectmenu-optgroup", "ui-menu-divider" + (t.element.parent("optgroup").prop("disabled") ? " ui-state-disabled" : "")), i.appendTo(s), a = t.optgroup), n._renderItemData(s, t);
+      });
+    },
+    _renderItemData: function (e, t) {
+      return this._renderItem(e, t).data("ui-selectmenu-item", t);
+    },
+    _renderItem: function (e, t) {
+      var i = G("<li>"),
+        s = G("<div>", {
+          title: t.element.attr("title")
+        });
+      return t.disabled && this._addClass(i, null, "ui-state-disabled"), this._setText(s, t.label), i.append(s).appendTo(e);
+    },
+    _setText: function (e, t) {
+      t ? e.text(t) : e.html("&#160;");
+    },
+    _move: function (e, t) {
+      var i,
+        s = ".ui-menu-item";
+      this.isOpen ? i = this.menuItems.eq(this.focusIndex).parent("li") : (i = this.menuItems.eq(this.element[0].selectedIndex).parent("li"), s += ":not(.ui-state-disabled)"), (s = "first" === e || "last" === e ? i["first" === e ? "prevAll" : "nextAll"](s).eq(-1) : i[e + "All"](s).eq(0)).length && this.menuInstance.focus(t, s);
+    },
+    _getSelectedItem: function () {
+      return this.menuItems.eq(this.element[0].selectedIndex).parent("li");
+    },
+    _toggle: function (e) {
+      this[this.isOpen ? "close" : "open"](e);
+    },
+    _setSelection: function () {
+      var e;
+      this.range && (window.getSelection ? ((e = window.getSelection()).removeAllRanges(), e.addRange(this.range)) : this.range.select(), this.button.trigger("focus"));
+    },
+    _documentClick: {
+      mousedown: function (e) {
+        this.isOpen && (G(e.target).closest(".ui-selectmenu-menu, #" + G.escapeSelector(this.ids.button)).length || this.close(e));
+      }
+    },
+    _buttonEvents: {
+      mousedown: function () {
+        var e;
+        window.getSelection ? (e = window.getSelection()).rangeCount && (this.range = e.getRangeAt(0)) : this.range = document.selection.createRange();
+      },
+      click: function (e) {
+        this._setSelection(), this._toggle(e);
+      },
+      keydown: function (e) {
+        var t = !0;
+        switch (e.keyCode) {
+          case G.ui.keyCode.TAB:
+          case G.ui.keyCode.ESCAPE:
+            this.close(e), t = !1;
+            break;
+          case G.ui.keyCode.ENTER:
+            this.isOpen && this._selectFocusedItem(e);
+            break;
+          case G.ui.keyCode.UP:
+            e.altKey ? this._toggle(e) : this._move("prev", e);
+            break;
+          case G.ui.keyCode.DOWN:
+            e.altKey ? this._toggle(e) : this._move("next", e);
+            break;
+          case G.ui.keyCode.SPACE:
+            this.isOpen ? this._selectFocusedItem(e) : this._toggle(e);
+            break;
+          case G.ui.keyCode.LEFT:
+            this._move("prev", e);
+            break;
+          case G.ui.keyCode.RIGHT:
+            this._move("next", e);
+            break;
+          case G.ui.keyCode.HOME:
+          case G.ui.keyCode.PAGE_UP:
+            this._move("first", e);
+            break;
+          case G.ui.keyCode.END:
+          case G.ui.keyCode.PAGE_DOWN:
+            this._move("last", e);
+            break;
+          default:
+            this.menu.trigger(e), t = !1;
+        }
+        t && e.preventDefault();
+      }
+    },
+    _selectFocusedItem: function (e) {
+      var t = this.menuItems.eq(this.focusIndex).parent("li");
+      t.hasClass("ui-state-disabled") || this._select(t.data("ui-selectmenu-item"), e);
+    },
+    _select: function (e, t) {
+      var i = this.element[0].selectedIndex;
+      this.element[0].selectedIndex = e.index, this.buttonItem.replaceWith(this.buttonItem = this._renderButtonItem(e)), this._setAria(e), this._trigger("select", t, {
+        item: e
+      }), e.index !== i && this._trigger("change", t, {
+        item: e
+      }), this.close(t);
+    },
+    _setAria: function (e) {
+      e = this.menuItems.eq(e.index).attr("id");
+      this.button.attr({
+        "aria-labelledby": e,
+        "aria-activedescendant": e
+      }), this.menu.attr("aria-activedescendant", e);
+    },
+    _setOption: function (e, t) {
+      var i;
+      "icons" === e && (i = this.button.find("span.ui-icon"), this._removeClass(i, null, this.options.icons.button)._addClass(i, null, t.button)), this._super(e, t), "appendTo" === e && this.menuWrap.appendTo(this._appendTo()), "width" === e && this._resizeButton();
+    },
+    _setOptionDisabled: function (e) {
+      this._super(e), this.menuInstance.option("disabled", e), this.button.attr("aria-disabled", e), this._toggleClass(this.button, null, "ui-state-disabled", e), this.element.prop("disabled", e), e ? (this.button.attr("tabindex", -1), this.close()) : this.button.attr("tabindex", 0);
+    },
+    _appendTo: function () {
+      var e = this.options.appendTo;
+      return e = !(e = !(e = e && (e.jquery || e.nodeType ? G(e) : this.document.find(e).eq(0))) || !e[0] ? this.element.closest(".ui-front, dialog") : e).length ? this.document[0].body : e;
+    },
+    _toggleAttr: function () {
+      this.button.attr("aria-expanded", this.isOpen), this._removeClass(this.button, "ui-selectmenu-button-" + (this.isOpen ? "closed" : "open"))._addClass(this.button, "ui-selectmenu-button-" + (this.isOpen ? "open" : "closed"))._toggleClass(this.menuWrap, "ui-selectmenu-open", null, this.isOpen), this.menu.attr("aria-hidden", !this.isOpen);
+    },
+    _resizeButton: function () {
+      var e = this.options.width;
+      !1 !== e ? (null === e && (e = this.element.show().outerWidth(), this.element.hide()), this.button.outerWidth(e)) : this.button.css("width", "");
+    },
+    _resizeMenu: function () {
+      this.menu.outerWidth(Math.max(this.button.outerWidth(), this.menu.width("").outerWidth() + 1));
+    },
+    _getCreateOptions: function () {
+      var e = this._super();
+      return e.disabled = this.element.prop("disabled"), e;
+    },
+    _parseOptions: function (e) {
+      var i = this,
+        s = [];
+      e.each(function (e, t) {
+        t.hidden || s.push(i._parseOption(G(t), e));
+      }), this.items = s;
+    },
+    _parseOption: function (e, t) {
+      var i = e.parent("optgroup");
+      return {
+        element: e,
+        index: t,
+        value: e.val(),
+        label: e.text(),
+        optgroup: i.attr("label") || "",
+        disabled: i.prop("disabled") || e.prop("disabled")
+      };
+    },
+    _destroy: function () {
+      this._unbindFormResetHandler(), this.menuWrap.remove(), this.button.remove(), this.element.show(), this.element.removeUniqueId(), this.labels.attr("for", this.ids.element);
+    }
+  }]);
+});
+; /*
+  * MultiDatesPicker v1.6.6
+  * https://dubrox.github.io/Multiple-Dates-Picker-for-jQuery-UI
+  * 
+  * Copyright 2017, Luca Lauretta
+  * Dual licensed under the MIT or GPL version 2 licenses.
+  */
+
+(function (factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["jquery", "jquery-ui-dist"], factory);
+  } else {
+    factory(jQuery);
+  }
+})(function ($) {
+  $.extend($.ui, {
+    multiDatesPicker: {
+      version: "1.6.6"
+    }
+  });
+  $.fn.multiDatesPicker = function (method) {
+    var mdp_arguments = arguments;
+    var ret = this;
+    var today_date = new Date();
+    var day_zero = new Date(0);
+    var mdp_events = {};
+    function removeDate(date, type) {
+      if (!type) type = 'picked';
+      date = dateConvert.call(this, date);
+      for (var i = 0; i < this.multiDatesPicker.dates[type].length; i++) if (!methods.compareDates(this.multiDatesPicker.dates[type][i], date)) return this.multiDatesPicker.dates[type].splice(i, 1).pop();
+    }
+    function removeIndex(index, type) {
+      if (!type) type = 'picked';
+      return this.multiDatesPicker.dates[type].splice(index, 1).pop();
+    }
+    function addDate(date, type, no_sort) {
+      if (!type) type = 'picked';
+      date = dateConvert.call(this, date);
+
+      // @todo: use jQuery UI datepicker method instead
+      date.setHours(0);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      if (methods.gotDate.call(this, date, type) === false) {
+        this.multiDatesPicker.dates[type].push(date);
+        if (!no_sort) this.multiDatesPicker.dates[type].sort(methods.compareDates);
+      }
+    }
+    function sortDates(type) {
+      if (!type) type = 'picked';
+      this.multiDatesPicker.dates[type].sort(methods.compareDates);
+    }
+    function dateConvert(date, desired_type, date_format) {
+      if (!desired_type) desired_type = 'object'; /*
+                                                  if(!date_format && (typeof date == 'string')) {
+                                                  date_format = $(this).datepicker('option', 'dateFormat');
+                                                  if(!date_format) date_format = $.datepicker._defaults.dateFormat;
+                                                  }
+                                                  */
+      return methods.dateConvert.call(this, date, desired_type, date_format);
+    }
+    var methods = {
+      init: function (options) {
+        var $this = $(this);
+        this.multiDatesPicker.changed = false;
+        var mdp_events = {
+          beforeShow: function (input, inst) {
+            this.multiDatesPicker.changed = false;
+            if (this.multiDatesPicker.originalBeforeShow) this.multiDatesPicker.originalBeforeShow.call(this, input, inst);
+          },
+          onSelect: function (dateText, inst) {
+            var $this = $(this);
+            this.multiDatesPicker.changed = true;
+            if (dateText) {
+              $this.multiDatesPicker('toggleDate', dateText);
+              this.multiDatesPicker.changed = true;
+              // @todo: this will be optimized when I'll move methods to the singleton.
+            }
+
+            if (this.multiDatesPicker.mode == 'normal' && this.multiDatesPicker.pickableRange) {
+              if (this.multiDatesPicker.dates.picked.length > 0) {
+                var min_date = this.multiDatesPicker.dates.picked[0],
+                  max_date = new Date(min_date.getTime());
+                methods.sumDays(max_date, this.multiDatesPicker.pickableRange - 1);
+
+                // counts the number of disabled dates in the range
+                if (this.multiDatesPicker.adjustRangeToDisabled) {
+                  var c_disabled,
+                    disabled = this.multiDatesPicker.dates.disabled.slice(0);
+                  do {
+                    c_disabled = 0;
+                    for (var i = 0; i < disabled.length; i++) {
+                      if (disabled[i].getTime() <= max_date.getTime()) {
+                        if (min_date.getTime() <= disabled[i].getTime() && disabled[i].getTime() <= max_date.getTime()) {
+                          c_disabled++;
+                        }
+                        disabled.splice(i, 1);
+                        i--;
+                      }
+                    }
+                    max_date.setDate(max_date.getDate() + c_disabled);
+                  } while (c_disabled != 0);
+                }
+                if (this.multiDatesPicker.maxDate && max_date > this.multiDatesPicker.maxDate) max_date = this.multiDatesPicker.maxDate;
+                $this.datepicker("option", "minDate", min_date).datepicker("option", "maxDate", max_date);
+              } else {
+                $this.datepicker("option", "minDate", this.multiDatesPicker.minDate).datepicker("option", "maxDate", this.multiDatesPicker.maxDate);
+              }
+            }
+            if (this.multiDatesPicker.originalOnSelect && dateText) this.multiDatesPicker.originalOnSelect.call(this, dateText, inst);
+          },
+          beforeShowDay: function (date) {
+            var $this = $(this),
+              gotThisDate = $this.multiDatesPicker('gotDate', date) !== false,
+              isDisabledCalendar = $this.datepicker('option', 'disabled'),
+              isDisabledDate = $this.multiDatesPicker('gotDate', date, 'disabled') !== false,
+              areAllSelected = this.multiDatesPicker.maxPicks <= this.multiDatesPicker.dates.picked.length;
+            var bsdReturn = [true, '', null];
+            if (this.multiDatesPicker.originalBeforeShowDay) bsdReturn = this.multiDatesPicker.originalBeforeShowDay.call(this, date);
+            bsdReturn[1] = gotThisDate ? 'ui-state-highlight ' + bsdReturn[1] : bsdReturn[1];
+            bsdReturn[0] = bsdReturn[0] && !(isDisabledCalendar || isDisabledDate || areAllSelected && !bsdReturn[1]);
+            return bsdReturn;
+          }
+        };
+
+        // value have to be extracted before datepicker is initiated
+        if ($this.val()) var inputDates = $this.val();
+        if (options) {
+          // value have to be extracted before datepicker is initiated
+          //if(options.altField) var inputDates = $(options.altField).val();
+          if (options.separator) this.multiDatesPicker.separator = options.separator;
+          if (!this.multiDatesPicker.separator) this.multiDatesPicker.separator = ', ';
+          this.multiDatesPicker.originalBeforeShow = options.beforeShow;
+          this.multiDatesPicker.originalOnSelect = options.onSelect;
+          this.multiDatesPicker.originalBeforeShowDay = options.beforeShowDay;
+          this.multiDatesPicker.originalOnClose = options.onClose;
+
+          // datepicker init
+          $this.datepicker(options);
+          this.multiDatesPicker.minDate = $.datepicker._determineDate(this, options.minDate, null);
+          this.multiDatesPicker.maxDate = $.datepicker._determineDate(this, options.maxDate, null);
+          if (options.addDates) methods.addDates.call(this, options.addDates);
+          if (options.addDisabledDates) methods.addDates.call(this, options.addDisabledDates, 'disabled');
+          methods.setMode.call(this, options);
+        } else {
+          $this.datepicker();
+        }
+        $this.datepicker('option', mdp_events);
+
+        // adds any dates found in the input or alt field
+        if (inputDates) $this.multiDatesPicker('value', inputDates);
+
+        // generates the new string of added dates
+        var inputs_values = $this.multiDatesPicker('value');
+
+        // fills the input field back with all the dates in the calendar
+        $this.val(inputs_values);
+
+        // Fixes the altField filled with defaultDate by default
+        var altFieldOption = $this.datepicker('option', 'altField');
+        if (altFieldOption) $(altFieldOption).val(inputs_values);
+
+        // Updates the calendar view
+        $this.datepicker('refresh');
+      },
+      compareDates: function (date1, date2) {
+        date1 = dateConvert.call(this, date1);
+        date2 = dateConvert.call(this, date2);
+        // return > 0 means date1 is later than date2 
+        // return == 0 means date1 is the same day as date2 
+        // return < 0 means date1 is earlier than date2 
+        var diff = date1.getFullYear() - date2.getFullYear();
+        if (!diff) {
+          diff = date1.getMonth() - date2.getMonth();
+          if (!diff) diff = date1.getDate() - date2.getDate();
+        }
+        return diff;
+      },
+      sumDays: function (date, n_days) {
+        var origDateType = typeof date;
+        obj_date = dateConvert.call(this, date);
+        obj_date.setDate(obj_date.getDate() + n_days);
+        return dateConvert.call(this, obj_date, origDateType);
+      },
+      dateConvert: function (date, desired_format, dateFormat) {
+        var from_format = typeof date;
+        var $this = $(this);
+        if (from_format == desired_format) {
+          if (from_format == 'object') {
+            try {
+              date.getTime();
+            } catch (e) {
+              $.error('Received date is in a non supported format!');
+              return false;
+            }
+          }
+          return date;
+        }
+        if (typeof date == 'undefined') date = new Date(0);
+        if (desired_format != 'string' && desired_format != 'object' && desired_format != 'number') $.error('Date format "' + desired_format + '" not supported!');
+        if (!dateFormat) {
+          // thanks to bibendus83 -> http://sourceforge.net/tracker/index.php?func=detail&aid=3213174&group_id=358205&atid=1495382
+          var dp_dateFormat = $this.datepicker('option', 'dateFormat');
+          if (dp_dateFormat) {
+            dateFormat = dp_dateFormat;
+          } else {
+            dateFormat = $.datepicker._defaults.dateFormat;
+          }
+        }
+
+        // converts to object as a neutral format
+        switch (from_format) {
+          case 'object':
+            break;
+          case 'string':
+            date = $.datepicker.parseDate(dateFormat, date);
+            break;
+          case 'number':
+            date = new Date(date);
+            break;
+          default:
+            $.error('Conversion from "' + from_format + '" format not allowed on jQuery.multiDatesPicker');
+        }
+        // then converts to the desired format
+        switch (desired_format) {
+          case 'object':
+            return date;
+          case 'string':
+            return $.datepicker.formatDate(dateFormat, date);
+          case 'number':
+            return date.getTime();
+          default:
+            $.error('Conversion to "' + desired_format + '" format not allowed on jQuery.multiDatesPicker');
+        }
+        return false;
+      },
+      gotDate: function (date, type) {
+        if (!type) type = 'picked';
+        for (var i = 0; i < this.multiDatesPicker.dates[type].length; i++) {
+          if (methods.compareDates.call(this, this.multiDatesPicker.dates[type][i], date) === 0) {
+            return i;
+          }
+        }
+        return false;
+      },
+      value: function (value) {
+        if (value && typeof value == 'string') {
+          methods.addDates.call(this, value.split(this.multiDatesPicker.separator));
+        } else {
+          var dates = methods.getDates.call(this, 'string');
+          return dates.length ? dates.join(this.multiDatesPicker.separator) : "";
+        }
+      },
+      getDates: function (format, type) {
+        if (!format) format = 'string';
+        if (!type) type = 'picked';
+        switch (format) {
+          case 'object':
+            return this.multiDatesPicker.dates[type];
+          case 'string':
+          case 'number':
+            var o_dates = [];
+            for (var i = 0; i < this.multiDatesPicker.dates[type].length; i++) o_dates.push(dateConvert.call(this, this.multiDatesPicker.dates[type][i], format));
+            return o_dates;
+          default:
+            $.error('Format "' + format + '" not supported!');
+        }
+      },
+      addDates: function (dates, type) {
+        if (dates.length > 0) {
+          if (!type) type = 'picked';
+          switch (typeof dates) {
+            case 'object':
+            case 'array':
+              if (dates.length) {
+                for (var i = 0; i < dates.length; i++) addDate.call(this, dates[i], type, true);
+                sortDates.call(this, type);
+                break;
+              }
+            // else does the same as 'string'
+            case 'string':
+            case 'number':
+              addDate.call(this, dates, type);
+              break;
+            default:
+              $.error('Date format "' + typeof dates + '" not allowed on jQuery.multiDatesPicker');
+          }
+          //$(this).datepicker('refresh');
+        } else {
+          $.error('Empty array of dates received.');
+        }
+      },
+      removeDates: function (dates, type) {
+        if (!type) type = 'picked';
+        var removed = [];
+        if (Object.prototype.toString.call(dates) === '[object Array]') {
+          dates.sort(function (a, b) {
+            return b - a;
+          });
+          for (var i = 0; i < dates.length; i++) {
+            removed.push(removeDate.call(this, dates[i], type));
+          }
+        } else {
+          removed.push(removeDate.call(this, dates, type));
+        }
+        return removed;
+      },
+      removeIndexes: function (indexes, type) {
+        if (!type) type = 'picked';
+        var removed = [];
+        if (Object.prototype.toString.call(indexes) === '[object Array]') {
+          indexes.sort(function (a, b) {
+            return b - a;
+          });
+          for (var i = 0; i < indexes.length; i++) {
+            removed.push(removeIndex.call(this, indexes[i], type));
+          }
+        } else {
+          removed.push(removeIndex.call(this, indexes, type));
+        }
+        return removed;
+      },
+      resetDates: function (type) {
+        if (!type) type = 'picked';
+        this.multiDatesPicker.dates[type] = [];
+      },
+      toggleDate: function (date, type) {
+        if (!type) type = 'picked';
+        switch (this.multiDatesPicker.mode) {
+          case 'daysRange':
+            this.multiDatesPicker.dates[type] = []; // deletes all picked/disabled dates
+            var end = this.multiDatesPicker.autoselectRange[1];
+            var begin = this.multiDatesPicker.autoselectRange[0];
+            if (end < begin) {
+              // switch
+              end = this.multiDatesPicker.autoselectRange[0];
+              begin = this.multiDatesPicker.autoselectRange[1];
+            }
+            for (var i = begin; i < end; i++) methods.addDates.call(this, methods.sumDays.call(this, date, i), type);
+            break;
+          default:
+            if (methods.gotDate.call(this, date) === false)
+              // adds dates
+              methods.addDates.call(this, date, type);else
+              // removes dates
+              methods.removeDates.call(this, date, type);
+            break;
+        }
+      },
+      setMode: function (options) {
+        var $this = $(this);
+        if (options.mode) this.multiDatesPicker.mode = options.mode;
+        switch (this.multiDatesPicker.mode) {
+          case 'normal':
+            for (var option in options) switch (option) {
+              case 'maxPicks':
+              case 'minPicks':
+              case 'pickableRange':
+              case 'adjustRangeToDisabled':
+                this.multiDatesPicker[option] = options[option];
+                break;
+              //default: $.error('Option ' + option + ' ignored for mode "'.options.mode.'".');
+            }
+
+            break;
+          case 'daysRange':
+          case 'weeksRange':
+            var mandatory = 1;
+            for (option in options) switch (option) {
+              case 'autoselectRange':
+                mandatory--;
+              case 'pickableRange':
+              case 'adjustRangeToDisabled':
+                this.multiDatesPicker[option] = options[option];
+                break;
+              //default: $.error('Option ' + option + ' does not exist for setMode on jQuery.multiDatesPicker');
+            }
+
+            if (mandatory > 0) $.error('Some mandatory options not specified!');
+            break;
+        }
+
+        /*
+        if(options.pickableRange) {
+        	$this.datepicker("option", "maxDate", options.pickableRange);
+        	$this.datepicker("option", "minDate", this.multiDatesPicker.minDate);
+        }
+        */
+
+        if (mdp_events.onSelect) mdp_events.onSelect();
+      },
+      destroy: function () {
+        this.multiDatesPicker = null;
+        $(this).datepicker('destroy');
+      }
+    };
+    this.each(function () {
+      var $this = $(this);
+      if (!this.multiDatesPicker) {
+        this.multiDatesPicker = {
+          dates: {
+            picked: [],
+            disabled: []
+          },
+          mode: 'normal',
+          adjustRangeToDisabled: true
+        };
+      }
+      if (methods[method]) {
+        var exec_result = methods[method].apply(this, Array.prototype.slice.call(mdp_arguments, 1));
+        switch (method) {
+          case 'removeDates':
+          case 'removeIndexes':
+          case 'resetDates':
+          case 'toggleDate':
+          case 'addDates':
+            var altField = $this.datepicker('option', 'altField');
+            // @todo: should use altFormat for altField
+            var dates_string = methods.value.call(this);
+            if (altField !== undefined && altField != "") {
+              $(altField).val(dates_string);
+            }
+            $this.val(dates_string);
+            $.datepicker._refreshDatepicker(this);
+        }
+        switch (method) {
+          case 'removeDates':
+          case 'getDates':
+          case 'gotDate':
+          case 'sumDays':
+          case 'compareDates':
+          case 'dateConvert':
+          case 'value':
+            ret = exec_result;
+        }
+        return exec_result;
+      } else if (typeof method === 'object' || !method) {
+        return methods.init.apply(this, mdp_arguments);
+      } else {
+        $.error('Method ' + method + ' does not exist on jQuery.multiDatesPicker');
+      }
+      return false;
+    });
+    return ret;
+  };
+  var PROP_NAME = 'multiDatesPicker';
+  var dpuuid = new Date().getTime();
+  var instActive;
+  $.multiDatesPicker = {
+    version: false
+  };
+  //$.multiDatesPicker = new MultiDatesPicker(); // singleton instance
+  $.multiDatesPicker.initialized = false;
+  $.multiDatesPicker.uuid = new Date().getTime();
+  $.multiDatesPicker.version = $.ui.multiDatesPicker.version;
+
+  // allows MDP not to hide everytime a date is picked
+  $.multiDatesPicker._hideDatepicker = $.datepicker._hideDatepicker;
+  $.datepicker._hideDatepicker = function () {
+    var target = this._curInst.input[0];
+    var mdp = target.multiDatesPicker;
+    if (!mdp || this._curInst.inline === false && !mdp.changed) {
+      return $.multiDatesPicker._hideDatepicker.apply(this, arguments);
+    } else {
+      mdp.changed = false;
+      $.datepicker._refreshDatepicker(target);
+      return;
+    }
+  };
+
+  // Workaround for #4055
+  // Add another global to avoid noConflict issues with inline event handlers
+  window['DP_jQuery_' + dpuuid] = $;
 });
 ; // ==================================================
 // fancyBox v3.5.7
@@ -6552,6 +7531,1134 @@ jQuery.event.special.mousewheel = {
   var u = a.require("jquery.select2");
   return t.fn.select2.amd = a, u;
 });
+; /*! tooltipster v4.2.8 */
+!function (a, b) {
+  "function" == typeof define && define.amd ? define(["jquery"], function (a) {
+    return b(a);
+  }) : "object" == typeof exports ? module.exports = b(require("jquery")) : b(jQuery);
+}(void 0, function (a) {
+  function b(a) {
+    this.$container, this.constraints = null, this.__$tooltip, this.__init(a);
+  }
+  function c(b, c) {
+    var d = !0;
+    return a.each(b, function (a, e) {
+      return void 0 === c[a] || b[a] !== c[a] ? (d = !1, !1) : void 0;
+    }), d;
+  }
+  function d(b) {
+    var c = b.attr("id"),
+      d = c ? h.window.document.getElementById(c) : null;
+    return d ? d === b[0] : a.contains(h.window.document.body, b[0]);
+  }
+  function e() {
+    if (!g) return !1;
+    var a = g.document.body || g.document.documentElement,
+      b = a.style,
+      c = "transition",
+      d = ["Moz", "Webkit", "Khtml", "O", "ms"];
+    if ("string" == typeof b[c]) return !0;
+    c = c.charAt(0).toUpperCase() + c.substr(1);
+    for (var e = 0; e < d.length; e++) if ("string" == typeof b[d[e] + c]) return !0;
+    return !1;
+  }
+  var f = {
+      animation: "fade",
+      animationDuration: 350,
+      content: null,
+      contentAsHTML: !1,
+      contentCloning: !1,
+      debug: !0,
+      delay: 300,
+      delayTouch: [300, 500],
+      functionInit: null,
+      functionBefore: null,
+      functionReady: null,
+      functionAfter: null,
+      functionFormat: null,
+      IEmin: 6,
+      interactive: !1,
+      multiple: !1,
+      parent: null,
+      plugins: ["sideTip"],
+      repositionOnScroll: !1,
+      restoration: "none",
+      selfDestruction: !0,
+      theme: [],
+      timer: 0,
+      trackerInterval: 500,
+      trackOrigin: !1,
+      trackTooltip: !1,
+      trigger: "hover",
+      triggerClose: {
+        click: !1,
+        mouseleave: !1,
+        originClick: !1,
+        scroll: !1,
+        tap: !1,
+        touchleave: !1
+      },
+      triggerOpen: {
+        click: !1,
+        mouseenter: !1,
+        tap: !1,
+        touchstart: !1
+      },
+      updateAnimation: "rotate",
+      zIndex: 9999999
+    },
+    g = "undefined" != typeof window ? window : null,
+    h = {
+      hasTouchCapability: !(!g || !("ontouchstart" in g || g.DocumentTouch && g.document instanceof g.DocumentTouch || g.navigator.maxTouchPoints)),
+      hasTransitions: e(),
+      IE: !1,
+      semVer: "4.2.8",
+      window: g
+    },
+    i = function () {
+      this.__$emitterPrivate = a({}), this.__$emitterPublic = a({}), this.__instancesLatestArr = [], this.__plugins = {}, this._env = h;
+    };
+  i.prototype = {
+    __bridge: function (b, c, d) {
+      if (!c[d]) {
+        var e = function () {};
+        e.prototype = b;
+        var g = new e();
+        g.__init && g.__init(c), a.each(b, function (a, b) {
+          0 != a.indexOf("__") && (c[a] ? f.debug && console.log("The " + a + " method of the " + d + " plugin conflicts with another plugin or native methods") : (c[a] = function () {
+            return g[a].apply(g, Array.prototype.slice.apply(arguments));
+          }, c[a].bridged = g));
+        }), c[d] = g;
+      }
+      return this;
+    },
+    __setWindow: function (a) {
+      return h.window = a, this;
+    },
+    _getRuler: function (a) {
+      return new b(a);
+    },
+    _off: function () {
+      return this.__$emitterPrivate.off.apply(this.__$emitterPrivate, Array.prototype.slice.apply(arguments)), this;
+    },
+    _on: function () {
+      return this.__$emitterPrivate.on.apply(this.__$emitterPrivate, Array.prototype.slice.apply(arguments)), this;
+    },
+    _one: function () {
+      return this.__$emitterPrivate.one.apply(this.__$emitterPrivate, Array.prototype.slice.apply(arguments)), this;
+    },
+    _plugin: function (b) {
+      var c = this;
+      if ("string" == typeof b) {
+        var d = b,
+          e = null;
+        return d.indexOf(".") > 0 ? e = c.__plugins[d] : a.each(c.__plugins, function (a, b) {
+          return b.name.substring(b.name.length - d.length - 1) == "." + d ? (e = b, !1) : void 0;
+        }), e;
+      }
+      if (b.name.indexOf(".") < 0) throw new Error("Plugins must be namespaced");
+      return c.__plugins[b.name] = b, b.core && c.__bridge(b.core, c, b.name), this;
+    },
+    _trigger: function () {
+      var a = Array.prototype.slice.apply(arguments);
+      return "string" == typeof a[0] && (a[0] = {
+        type: a[0]
+      }), this.__$emitterPrivate.trigger.apply(this.__$emitterPrivate, a), this.__$emitterPublic.trigger.apply(this.__$emitterPublic, a), this;
+    },
+    instances: function (b) {
+      var c = [],
+        d = b || ".tooltipstered";
+      return a(d).each(function () {
+        var b = a(this),
+          d = b.data("tooltipster-ns");
+        d && a.each(d, function (a, d) {
+          c.push(b.data(d));
+        });
+      }), c;
+    },
+    instancesLatest: function () {
+      return this.__instancesLatestArr;
+    },
+    off: function () {
+      return this.__$emitterPublic.off.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    },
+    on: function () {
+      return this.__$emitterPublic.on.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    },
+    one: function () {
+      return this.__$emitterPublic.one.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    },
+    origins: function (b) {
+      var c = b ? b + " " : "";
+      return a(c + ".tooltipstered").toArray();
+    },
+    setDefaults: function (b) {
+      return a.extend(f, b), this;
+    },
+    triggerHandler: function () {
+      return this.__$emitterPublic.triggerHandler.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    }
+  }, a.tooltipster = new i(), a.Tooltipster = function (b, c) {
+    this.__callbacks = {
+      close: [],
+      open: []
+    }, this.__closingTime, this.__Content, this.__contentBcr, this.__destroyed = !1, this.__$emitterPrivate = a({}), this.__$emitterPublic = a({}), this.__enabled = !0, this.__garbageCollector, this.__Geometry, this.__lastPosition, this.__namespace = "tooltipster-" + Math.round(1e6 * Math.random()), this.__options, this.__$originParents, this.__pointerIsOverOrigin = !1, this.__previousThemes = [], this.__state = "closed", this.__timeouts = {
+      close: [],
+      open: null
+    }, this.__touchEvents = [], this.__tracker = null, this._$origin, this._$tooltip, this.__init(b, c);
+  }, a.Tooltipster.prototype = {
+    __init: function (b, c) {
+      var d = this;
+      if (d._$origin = a(b), d.__options = a.extend(!0, {}, f, c), d.__optionsFormat(), !h.IE || h.IE >= d.__options.IEmin) {
+        var e = null;
+        if (void 0 === d._$origin.data("tooltipster-initialTitle") && (e = d._$origin.attr("title"), void 0 === e && (e = null), d._$origin.data("tooltipster-initialTitle", e)), null !== d.__options.content) d.__contentSet(d.__options.content);else {
+          var g,
+            i = d._$origin.attr("data-tooltip-content");
+          i && (g = a(i)), g && g[0] ? d.__contentSet(g.first()) : d.__contentSet(e);
+        }
+        d._$origin.removeAttr("title").addClass("tooltipstered"), d.__prepareOrigin(), d.__prepareGC(), a.each(d.__options.plugins, function (a, b) {
+          d._plug(b);
+        }), h.hasTouchCapability && a(h.window.document.body).on("touchmove." + d.__namespace + "-triggerOpen", function (a) {
+          d._touchRecordEvent(a);
+        }), d._on("created", function () {
+          d.__prepareTooltip();
+        })._on("repositioned", function (a) {
+          d.__lastPosition = a.position;
+        });
+      } else d.__options.disabled = !0;
+    },
+    __contentInsert: function () {
+      var a = this,
+        b = a._$tooltip.find(".tooltipster-content"),
+        c = a.__Content,
+        d = function (a) {
+          c = a;
+        };
+      return a._trigger({
+        type: "format",
+        content: a.__Content,
+        format: d
+      }), a.__options.functionFormat && (c = a.__options.functionFormat.call(a, a, {
+        origin: a._$origin[0]
+      }, a.__Content)), "string" != typeof c || a.__options.contentAsHTML ? b.empty().append(c) : b.text(c), a;
+    },
+    __contentSet: function (b) {
+      return b instanceof a && this.__options.contentCloning && (b = b.clone(!0)), this.__Content = b, this._trigger({
+        type: "updated",
+        content: b
+      }), this;
+    },
+    __destroyError: function () {
+      throw new Error("This tooltip has been destroyed and cannot execute your method call.");
+    },
+    __geometry: function () {
+      var b = this,
+        c = b._$origin,
+        d = b._$origin.is("area");
+      if (d) {
+        var e = b._$origin.parent().attr("name");
+        c = a('img[usemap="#' + e + '"]');
+      }
+      var f = c[0].getBoundingClientRect(),
+        g = a(h.window.document),
+        i = a(h.window),
+        j = c,
+        k = {
+          available: {
+            document: null,
+            window: null
+          },
+          document: {
+            size: {
+              height: g.height(),
+              width: g.width()
+            }
+          },
+          window: {
+            scroll: {
+              left: h.window.scrollX || h.window.document.documentElement.scrollLeft,
+              top: h.window.scrollY || h.window.document.documentElement.scrollTop
+            },
+            size: {
+              height: i.height(),
+              width: i.width()
+            }
+          },
+          origin: {
+            fixedLineage: !1,
+            offset: {},
+            size: {
+              height: f.bottom - f.top,
+              width: f.right - f.left
+            },
+            usemapImage: d ? c[0] : null,
+            windowOffset: {
+              bottom: f.bottom,
+              left: f.left,
+              right: f.right,
+              top: f.top
+            }
+          }
+        };
+      if (d) {
+        var l = b._$origin.attr("shape"),
+          m = b._$origin.attr("coords");
+        if (m && (m = m.split(","), a.map(m, function (a, b) {
+          m[b] = parseInt(a);
+        })), "default" != l) switch (l) {
+          case "circle":
+            var n = m[0],
+              o = m[1],
+              p = m[2],
+              q = o - p,
+              r = n - p;
+            k.origin.size.height = 2 * p, k.origin.size.width = k.origin.size.height, k.origin.windowOffset.left += r, k.origin.windowOffset.top += q;
+            break;
+          case "rect":
+            var s = m[0],
+              t = m[1],
+              u = m[2],
+              v = m[3];
+            k.origin.size.height = v - t, k.origin.size.width = u - s, k.origin.windowOffset.left += s, k.origin.windowOffset.top += t;
+            break;
+          case "poly":
+            for (var w = 0, x = 0, y = 0, z = 0, A = "even", B = 0; B < m.length; B++) {
+              var C = m[B];
+              "even" == A ? (C > y && (y = C, 0 === B && (w = y)), w > C && (w = C), A = "odd") : (C > z && (z = C, 1 == B && (x = z)), x > C && (x = C), A = "even");
+            }
+            k.origin.size.height = z - x, k.origin.size.width = y - w, k.origin.windowOffset.left += w, k.origin.windowOffset.top += x;
+        }
+      }
+      var D = function (a) {
+        k.origin.size.height = a.height, k.origin.windowOffset.left = a.left, k.origin.windowOffset.top = a.top, k.origin.size.width = a.width;
+      };
+      for (b._trigger({
+        type: "geometry",
+        edit: D,
+        geometry: {
+          height: k.origin.size.height,
+          left: k.origin.windowOffset.left,
+          top: k.origin.windowOffset.top,
+          width: k.origin.size.width
+        }
+      }), k.origin.windowOffset.right = k.origin.windowOffset.left + k.origin.size.width, k.origin.windowOffset.bottom = k.origin.windowOffset.top + k.origin.size.height, k.origin.offset.left = k.origin.windowOffset.left + k.window.scroll.left, k.origin.offset.top = k.origin.windowOffset.top + k.window.scroll.top, k.origin.offset.bottom = k.origin.offset.top + k.origin.size.height, k.origin.offset.right = k.origin.offset.left + k.origin.size.width, k.available.document = {
+        bottom: {
+          height: k.document.size.height - k.origin.offset.bottom,
+          width: k.document.size.width
+        },
+        left: {
+          height: k.document.size.height,
+          width: k.origin.offset.left
+        },
+        right: {
+          height: k.document.size.height,
+          width: k.document.size.width - k.origin.offset.right
+        },
+        top: {
+          height: k.origin.offset.top,
+          width: k.document.size.width
+        }
+      }, k.available.window = {
+        bottom: {
+          height: Math.max(k.window.size.height - Math.max(k.origin.windowOffset.bottom, 0), 0),
+          width: k.window.size.width
+        },
+        left: {
+          height: k.window.size.height,
+          width: Math.max(k.origin.windowOffset.left, 0)
+        },
+        right: {
+          height: k.window.size.height,
+          width: Math.max(k.window.size.width - Math.max(k.origin.windowOffset.right, 0), 0)
+        },
+        top: {
+          height: Math.max(k.origin.windowOffset.top, 0),
+          width: k.window.size.width
+        }
+      }; "html" != j[0].tagName.toLowerCase();) {
+        if ("fixed" == j.css("position")) {
+          k.origin.fixedLineage = !0;
+          break;
+        }
+        j = j.parent();
+      }
+      return k;
+    },
+    __optionsFormat: function () {
+      return "number" == typeof this.__options.animationDuration && (this.__options.animationDuration = [this.__options.animationDuration, this.__options.animationDuration]), "number" == typeof this.__options.delay && (this.__options.delay = [this.__options.delay, this.__options.delay]), "number" == typeof this.__options.delayTouch && (this.__options.delayTouch = [this.__options.delayTouch, this.__options.delayTouch]), "string" == typeof this.__options.theme && (this.__options.theme = [this.__options.theme]), null === this.__options.parent ? this.__options.parent = a(h.window.document.body) : "string" == typeof this.__options.parent && (this.__options.parent = a(this.__options.parent)), "hover" == this.__options.trigger ? (this.__options.triggerOpen = {
+        mouseenter: !0,
+        touchstart: !0
+      }, this.__options.triggerClose = {
+        mouseleave: !0,
+        originClick: !0,
+        touchleave: !0
+      }) : "click" == this.__options.trigger && (this.__options.triggerOpen = {
+        click: !0,
+        tap: !0
+      }, this.__options.triggerClose = {
+        click: !0,
+        tap: !0
+      }), this._trigger("options"), this;
+    },
+    __prepareGC: function () {
+      var b = this;
+      return b.__options.selfDestruction ? b.__garbageCollector = setInterval(function () {
+        var c = new Date().getTime();
+        b.__touchEvents = a.grep(b.__touchEvents, function (a, b) {
+          return c - a.time > 6e4;
+        }), d(b._$origin) || b.close(function () {
+          b.destroy();
+        });
+      }, 2e4) : clearInterval(b.__garbageCollector), b;
+    },
+    __prepareOrigin: function () {
+      var a = this;
+      if (a._$origin.off("." + a.__namespace + "-triggerOpen"), h.hasTouchCapability && a._$origin.on("touchstart." + a.__namespace + "-triggerOpen touchend." + a.__namespace + "-triggerOpen touchcancel." + a.__namespace + "-triggerOpen", function (b) {
+        a._touchRecordEvent(b);
+      }), a.__options.triggerOpen.click || a.__options.triggerOpen.tap && h.hasTouchCapability) {
+        var b = "";
+        a.__options.triggerOpen.click && (b += "click." + a.__namespace + "-triggerOpen "), a.__options.triggerOpen.tap && h.hasTouchCapability && (b += "touchend." + a.__namespace + "-triggerOpen"), a._$origin.on(b, function (b) {
+          a._touchIsMeaningfulEvent(b) && a._open(b);
+        });
+      }
+      if (a.__options.triggerOpen.mouseenter || a.__options.triggerOpen.touchstart && h.hasTouchCapability) {
+        var b = "";
+        a.__options.triggerOpen.mouseenter && (b += "mouseenter." + a.__namespace + "-triggerOpen "), a.__options.triggerOpen.touchstart && h.hasTouchCapability && (b += "touchstart." + a.__namespace + "-triggerOpen"), a._$origin.on(b, function (b) {
+          !a._touchIsTouchEvent(b) && a._touchIsEmulatedEvent(b) || (a.__pointerIsOverOrigin = !0, a._openShortly(b));
+        });
+      }
+      if (a.__options.triggerClose.mouseleave || a.__options.triggerClose.touchleave && h.hasTouchCapability) {
+        var b = "";
+        a.__options.triggerClose.mouseleave && (b += "mouseleave." + a.__namespace + "-triggerOpen "), a.__options.triggerClose.touchleave && h.hasTouchCapability && (b += "touchend." + a.__namespace + "-triggerOpen touchcancel." + a.__namespace + "-triggerOpen"), a._$origin.on(b, function (b) {
+          a._touchIsMeaningfulEvent(b) && (a.__pointerIsOverOrigin = !1);
+        });
+      }
+      return a;
+    },
+    __prepareTooltip: function () {
+      var b = this,
+        c = b.__options.interactive ? "auto" : "";
+      return b._$tooltip.attr("id", b.__namespace).css({
+        "pointer-events": c,
+        zIndex: b.__options.zIndex
+      }), a.each(b.__previousThemes, function (a, c) {
+        b._$tooltip.removeClass(c);
+      }), a.each(b.__options.theme, function (a, c) {
+        b._$tooltip.addClass(c);
+      }), b.__previousThemes = a.merge([], b.__options.theme), b;
+    },
+    __scrollHandler: function (b) {
+      var c = this;
+      if (c.__options.triggerClose.scroll) c._close(b);else if (d(c._$origin) && d(c._$tooltip)) {
+        var e = null;
+        if (b.target === h.window.document) c.__Geometry.origin.fixedLineage || c.__options.repositionOnScroll && c.reposition(b);else {
+          e = c.__geometry();
+          var f = !1;
+          if ("fixed" != c._$origin.css("position") && c.__$originParents.each(function (b, c) {
+            var d = a(c),
+              g = d.css("overflow-x"),
+              h = d.css("overflow-y");
+            if ("visible" != g || "visible" != h) {
+              var i = c.getBoundingClientRect();
+              if ("visible" != g && (e.origin.windowOffset.left < i.left || e.origin.windowOffset.right > i.right)) return f = !0, !1;
+              if ("visible" != h && (e.origin.windowOffset.top < i.top || e.origin.windowOffset.bottom > i.bottom)) return f = !0, !1;
+            }
+            return "fixed" == d.css("position") ? !1 : void 0;
+          }), f) c._$tooltip.css("visibility", "hidden");else if (c._$tooltip.css("visibility", "visible"), c.__options.repositionOnScroll) c.reposition(b);else {
+            var g = e.origin.offset.left - c.__Geometry.origin.offset.left,
+              i = e.origin.offset.top - c.__Geometry.origin.offset.top;
+            c._$tooltip.css({
+              left: c.__lastPosition.coord.left + g,
+              top: c.__lastPosition.coord.top + i
+            });
+          }
+        }
+        c._trigger({
+          type: "scroll",
+          event: b,
+          geo: e
+        });
+      }
+      return c;
+    },
+    __stateSet: function (a) {
+      return this.__state = a, this._trigger({
+        type: "state",
+        state: a
+      }), this;
+    },
+    __timeoutsClear: function () {
+      return clearTimeout(this.__timeouts.open), this.__timeouts.open = null, a.each(this.__timeouts.close, function (a, b) {
+        clearTimeout(b);
+      }), this.__timeouts.close = [], this;
+    },
+    __trackerStart: function () {
+      var a = this,
+        b = a._$tooltip.find(".tooltipster-content");
+      return a.__options.trackTooltip && (a.__contentBcr = b[0].getBoundingClientRect()), a.__tracker = setInterval(function () {
+        if (d(a._$origin) && d(a._$tooltip)) {
+          if (a.__options.trackOrigin) {
+            var e = a.__geometry(),
+              f = !1;
+            c(e.origin.size, a.__Geometry.origin.size) && (a.__Geometry.origin.fixedLineage ? c(e.origin.windowOffset, a.__Geometry.origin.windowOffset) && (f = !0) : c(e.origin.offset, a.__Geometry.origin.offset) && (f = !0)), f || (a.__options.triggerClose.mouseleave ? a._close() : a.reposition());
+          }
+          if (a.__options.trackTooltip) {
+            var g = b[0].getBoundingClientRect();
+            g.height === a.__contentBcr.height && g.width === a.__contentBcr.width || (a.reposition(), a.__contentBcr = g);
+          }
+        } else a._close();
+      }, a.__options.trackerInterval), a;
+    },
+    _close: function (b, c, d) {
+      var e = this,
+        f = !0;
+      if (e._trigger({
+        type: "close",
+        event: b,
+        stop: function () {
+          f = !1;
+        }
+      }), f || d) {
+        c && e.__callbacks.close.push(c), e.__callbacks.open = [], e.__timeoutsClear();
+        var g = function () {
+          a.each(e.__callbacks.close, function (a, c) {
+            c.call(e, e, {
+              event: b,
+              origin: e._$origin[0]
+            });
+          }), e.__callbacks.close = [];
+        };
+        if ("closed" != e.__state) {
+          var i = !0,
+            j = new Date(),
+            k = j.getTime(),
+            l = k + e.__options.animationDuration[1];
+          if ("disappearing" == e.__state && l > e.__closingTime && e.__options.animationDuration[1] > 0 && (i = !1), i) {
+            e.__closingTime = l, "disappearing" != e.__state && e.__stateSet("disappearing");
+            var m = function () {
+              clearInterval(e.__tracker), e._trigger({
+                type: "closing",
+                event: b
+              }), e._$tooltip.off("." + e.__namespace + "-triggerClose").removeClass("tooltipster-dying"), a(h.window).off("." + e.__namespace + "-triggerClose"), e.__$originParents.each(function (b, c) {
+                a(c).off("scroll." + e.__namespace + "-triggerClose");
+              }), e.__$originParents = null, a(h.window.document.body).off("." + e.__namespace + "-triggerClose"), e._$origin.off("." + e.__namespace + "-triggerClose"), e._off("dismissable"), e.__stateSet("closed"), e._trigger({
+                type: "after",
+                event: b
+              }), e.__options.functionAfter && e.__options.functionAfter.call(e, e, {
+                event: b,
+                origin: e._$origin[0]
+              }), g();
+            };
+            h.hasTransitions ? (e._$tooltip.css({
+              "-moz-animation-duration": e.__options.animationDuration[1] + "ms",
+              "-ms-animation-duration": e.__options.animationDuration[1] + "ms",
+              "-o-animation-duration": e.__options.animationDuration[1] + "ms",
+              "-webkit-animation-duration": e.__options.animationDuration[1] + "ms",
+              "animation-duration": e.__options.animationDuration[1] + "ms",
+              "transition-duration": e.__options.animationDuration[1] + "ms"
+            }), e._$tooltip.clearQueue().removeClass("tooltipster-show").addClass("tooltipster-dying"), e.__options.animationDuration[1] > 0 && e._$tooltip.delay(e.__options.animationDuration[1]), e._$tooltip.queue(m)) : e._$tooltip.stop().fadeOut(e.__options.animationDuration[1], m);
+          }
+        } else g();
+      }
+      return e;
+    },
+    _off: function () {
+      return this.__$emitterPrivate.off.apply(this.__$emitterPrivate, Array.prototype.slice.apply(arguments)), this;
+    },
+    _on: function () {
+      return this.__$emitterPrivate.on.apply(this.__$emitterPrivate, Array.prototype.slice.apply(arguments)), this;
+    },
+    _one: function () {
+      return this.__$emitterPrivate.one.apply(this.__$emitterPrivate, Array.prototype.slice.apply(arguments)), this;
+    },
+    _open: function (b, c) {
+      var e = this;
+      if (!e.__destroying && d(e._$origin) && e.__enabled) {
+        var f = !0;
+        if ("closed" == e.__state && (e._trigger({
+          type: "before",
+          event: b,
+          stop: function () {
+            f = !1;
+          }
+        }), f && e.__options.functionBefore && (f = e.__options.functionBefore.call(e, e, {
+          event: b,
+          origin: e._$origin[0]
+        }))), f !== !1 && null !== e.__Content) {
+          c && e.__callbacks.open.push(c), e.__callbacks.close = [], e.__timeoutsClear();
+          var g,
+            i = function () {
+              "stable" != e.__state && e.__stateSet("stable"), a.each(e.__callbacks.open, function (a, b) {
+                b.call(e, e, {
+                  origin: e._$origin[0],
+                  tooltip: e._$tooltip[0]
+                });
+              }), e.__callbacks.open = [];
+            };
+          if ("closed" !== e.__state) g = 0, "disappearing" === e.__state ? (e.__stateSet("appearing"), h.hasTransitions ? (e._$tooltip.clearQueue().removeClass("tooltipster-dying").addClass("tooltipster-show"), e.__options.animationDuration[0] > 0 && e._$tooltip.delay(e.__options.animationDuration[0]), e._$tooltip.queue(i)) : e._$tooltip.stop().fadeIn(i)) : "stable" == e.__state && i();else {
+            if (e.__stateSet("appearing"), g = e.__options.animationDuration[0], e.__contentInsert(), e.reposition(b, !0), h.hasTransitions ? (e._$tooltip.addClass("tooltipster-" + e.__options.animation).addClass("tooltipster-initial").css({
+              "-moz-animation-duration": e.__options.animationDuration[0] + "ms",
+              "-ms-animation-duration": e.__options.animationDuration[0] + "ms",
+              "-o-animation-duration": e.__options.animationDuration[0] + "ms",
+              "-webkit-animation-duration": e.__options.animationDuration[0] + "ms",
+              "animation-duration": e.__options.animationDuration[0] + "ms",
+              "transition-duration": e.__options.animationDuration[0] + "ms"
+            }), setTimeout(function () {
+              "closed" != e.__state && (e._$tooltip.addClass("tooltipster-show").removeClass("tooltipster-initial"), e.__options.animationDuration[0] > 0 && e._$tooltip.delay(e.__options.animationDuration[0]), e._$tooltip.queue(i));
+            }, 0)) : e._$tooltip.css("display", "none").fadeIn(e.__options.animationDuration[0], i), e.__trackerStart(), a(h.window).on("resize." + e.__namespace + "-triggerClose", function (b) {
+              var c = a(document.activeElement);
+              (c.is("input") || c.is("textarea")) && a.contains(e._$tooltip[0], c[0]) || e.reposition(b);
+            }).on("scroll." + e.__namespace + "-triggerClose", function (a) {
+              e.__scrollHandler(a);
+            }), e.__$originParents = e._$origin.parents(), e.__$originParents.each(function (b, c) {
+              a(c).on("scroll." + e.__namespace + "-triggerClose", function (a) {
+                e.__scrollHandler(a);
+              });
+            }), e.__options.triggerClose.mouseleave || e.__options.triggerClose.touchleave && h.hasTouchCapability) {
+              e._on("dismissable", function (a) {
+                a.dismissable ? a.delay ? (m = setTimeout(function () {
+                  e._close(a.event);
+                }, a.delay), e.__timeouts.close.push(m)) : e._close(a) : clearTimeout(m);
+              });
+              var j = e._$origin,
+                k = "",
+                l = "",
+                m = null;
+              e.__options.interactive && (j = j.add(e._$tooltip)), e.__options.triggerClose.mouseleave && (k += "mouseenter." + e.__namespace + "-triggerClose ", l += "mouseleave." + e.__namespace + "-triggerClose "), e.__options.triggerClose.touchleave && h.hasTouchCapability && (k += "touchstart." + e.__namespace + "-triggerClose", l += "touchend." + e.__namespace + "-triggerClose touchcancel." + e.__namespace + "-triggerClose"), j.on(l, function (a) {
+                if (e._touchIsTouchEvent(a) || !e._touchIsEmulatedEvent(a)) {
+                  var b = "mouseleave" == a.type ? e.__options.delay : e.__options.delayTouch;
+                  e._trigger({
+                    delay: b[1],
+                    dismissable: !0,
+                    event: a,
+                    type: "dismissable"
+                  });
+                }
+              }).on(k, function (a) {
+                !e._touchIsTouchEvent(a) && e._touchIsEmulatedEvent(a) || e._trigger({
+                  dismissable: !1,
+                  event: a,
+                  type: "dismissable"
+                });
+              });
+            }
+            e.__options.triggerClose.originClick && e._$origin.on("click." + e.__namespace + "-triggerClose", function (a) {
+              e._touchIsTouchEvent(a) || e._touchIsEmulatedEvent(a) || e._close(a);
+            }), (e.__options.triggerClose.click || e.__options.triggerClose.tap && h.hasTouchCapability) && setTimeout(function () {
+              if ("closed" != e.__state) {
+                var b = "",
+                  c = a(h.window.document.body);
+                e.__options.triggerClose.click && (b += "click." + e.__namespace + "-triggerClose "), e.__options.triggerClose.tap && h.hasTouchCapability && (b += "touchend." + e.__namespace + "-triggerClose"), c.on(b, function (b) {
+                  e._touchIsMeaningfulEvent(b) && (e._touchRecordEvent(b), e.__options.interactive && a.contains(e._$tooltip[0], b.target) || e._close(b));
+                }), e.__options.triggerClose.tap && h.hasTouchCapability && c.on("touchstart." + e.__namespace + "-triggerClose", function (a) {
+                  e._touchRecordEvent(a);
+                });
+              }
+            }, 0), e._trigger("ready"), e.__options.functionReady && e.__options.functionReady.call(e, e, {
+              origin: e._$origin[0],
+              tooltip: e._$tooltip[0]
+            });
+          }
+          if (e.__options.timer > 0) {
+            var m = setTimeout(function () {
+              e._close();
+            }, e.__options.timer + g);
+            e.__timeouts.close.push(m);
+          }
+        }
+      }
+      return e;
+    },
+    _openShortly: function (a) {
+      var b = this,
+        c = !0;
+      if ("stable" != b.__state && "appearing" != b.__state && !b.__timeouts.open && (b._trigger({
+        type: "start",
+        event: a,
+        stop: function () {
+          c = !1;
+        }
+      }), c)) {
+        var d = 0 == a.type.indexOf("touch") ? b.__options.delayTouch : b.__options.delay;
+        d[0] ? b.__timeouts.open = setTimeout(function () {
+          b.__timeouts.open = null, b.__pointerIsOverOrigin && b._touchIsMeaningfulEvent(a) ? (b._trigger("startend"), b._open(a)) : b._trigger("startcancel");
+        }, d[0]) : (b._trigger("startend"), b._open(a));
+      }
+      return b;
+    },
+    _optionsExtract: function (b, c) {
+      var d = this,
+        e = a.extend(!0, {}, c),
+        f = d.__options[b];
+      return f || (f = {}, a.each(c, function (a, b) {
+        var c = d.__options[a];
+        void 0 !== c && (f[a] = c);
+      })), a.each(e, function (b, c) {
+        void 0 !== f[b] && ("object" != typeof c || c instanceof Array || null == c || "object" != typeof f[b] || f[b] instanceof Array || null == f[b] ? e[b] = f[b] : a.extend(e[b], f[b]));
+      }), e;
+    },
+    _plug: function (b) {
+      var c = a.tooltipster._plugin(b);
+      if (!c) throw new Error('The "' + b + '" plugin is not defined');
+      return c.instance && a.tooltipster.__bridge(c.instance, this, c.name), this;
+    },
+    _touchIsEmulatedEvent: function (a) {
+      for (var b = !1, c = new Date().getTime(), d = this.__touchEvents.length - 1; d >= 0; d--) {
+        var e = this.__touchEvents[d];
+        if (!(c - e.time < 500)) break;
+        e.target === a.target && (b = !0);
+      }
+      return b;
+    },
+    _touchIsMeaningfulEvent: function (a) {
+      return this._touchIsTouchEvent(a) && !this._touchSwiped(a.target) || !this._touchIsTouchEvent(a) && !this._touchIsEmulatedEvent(a);
+    },
+    _touchIsTouchEvent: function (a) {
+      return 0 == a.type.indexOf("touch");
+    },
+    _touchRecordEvent: function (a) {
+      return this._touchIsTouchEvent(a) && (a.time = new Date().getTime(), this.__touchEvents.push(a)), this;
+    },
+    _touchSwiped: function (a) {
+      for (var b = !1, c = this.__touchEvents.length - 1; c >= 0; c--) {
+        var d = this.__touchEvents[c];
+        if ("touchmove" == d.type) {
+          b = !0;
+          break;
+        }
+        if ("touchstart" == d.type && a === d.target) break;
+      }
+      return b;
+    },
+    _trigger: function () {
+      var b = Array.prototype.slice.apply(arguments);
+      return "string" == typeof b[0] && (b[0] = {
+        type: b[0]
+      }), b[0].instance = this, b[0].origin = this._$origin ? this._$origin[0] : null, b[0].tooltip = this._$tooltip ? this._$tooltip[0] : null, this.__$emitterPrivate.trigger.apply(this.__$emitterPrivate, b), a.tooltipster._trigger.apply(a.tooltipster, b), this.__$emitterPublic.trigger.apply(this.__$emitterPublic, b), this;
+    },
+    _unplug: function (b) {
+      var c = this;
+      if (c[b]) {
+        var d = a.tooltipster._plugin(b);
+        d.instance && a.each(d.instance, function (a, d) {
+          c[a] && c[a].bridged === c[b] && delete c[a];
+        }), c[b].__destroy && c[b].__destroy(), delete c[b];
+      }
+      return c;
+    },
+    close: function (a) {
+      return this.__destroyed ? this.__destroyError() : this._close(null, a), this;
+    },
+    content: function (a) {
+      var b = this;
+      if (void 0 === a) return b.__Content;
+      if (b.__destroyed) b.__destroyError();else if (b.__contentSet(a), null !== b.__Content) {
+        if ("closed" !== b.__state && (b.__contentInsert(), b.reposition(), b.__options.updateAnimation)) if (h.hasTransitions) {
+          var c = b.__options.updateAnimation;
+          b._$tooltip.addClass("tooltipster-update-" + c), setTimeout(function () {
+            "closed" != b.__state && b._$tooltip.removeClass("tooltipster-update-" + c);
+          }, 1e3);
+        } else b._$tooltip.fadeTo(200, .5, function () {
+          "closed" != b.__state && b._$tooltip.fadeTo(200, 1);
+        });
+      } else b._close();
+      return b;
+    },
+    destroy: function () {
+      var b = this;
+      if (b.__destroyed) b.__destroyError();else {
+        "closed" != b.__state ? b.option("animationDuration", 0)._close(null, null, !0) : b.__timeoutsClear(), b._trigger("destroy"), b.__destroyed = !0, b._$origin.removeData(b.__namespace).off("." + b.__namespace + "-triggerOpen"), a(h.window.document.body).off("." + b.__namespace + "-triggerOpen");
+        var c = b._$origin.data("tooltipster-ns");
+        if (c) if (1 === c.length) {
+          var d = null;
+          "previous" == b.__options.restoration ? d = b._$origin.data("tooltipster-initialTitle") : "current" == b.__options.restoration && (d = "string" == typeof b.__Content ? b.__Content : a("<div></div>").append(b.__Content).html()), d && b._$origin.attr("title", d), b._$origin.removeClass("tooltipstered"), b._$origin.removeData("tooltipster-ns").removeData("tooltipster-initialTitle");
+        } else c = a.grep(c, function (a, c) {
+          return a !== b.__namespace;
+        }), b._$origin.data("tooltipster-ns", c);
+        b._trigger("destroyed"), b._off(), b.off(), b.__Content = null, b.__$emitterPrivate = null, b.__$emitterPublic = null, b.__options.parent = null, b._$origin = null, b._$tooltip = null, a.tooltipster.__instancesLatestArr = a.grep(a.tooltipster.__instancesLatestArr, function (a, c) {
+          return b !== a;
+        }), clearInterval(b.__garbageCollector);
+      }
+      return b;
+    },
+    disable: function () {
+      return this.__destroyed ? (this.__destroyError(), this) : (this._close(), this.__enabled = !1, this);
+    },
+    elementOrigin: function () {
+      return this.__destroyed ? void this.__destroyError() : this._$origin[0];
+    },
+    elementTooltip: function () {
+      return this._$tooltip ? this._$tooltip[0] : null;
+    },
+    enable: function () {
+      return this.__enabled = !0, this;
+    },
+    hide: function (a) {
+      return this.close(a);
+    },
+    instance: function () {
+      return this;
+    },
+    off: function () {
+      return this.__destroyed || this.__$emitterPublic.off.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    },
+    on: function () {
+      return this.__destroyed ? this.__destroyError() : this.__$emitterPublic.on.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    },
+    one: function () {
+      return this.__destroyed ? this.__destroyError() : this.__$emitterPublic.one.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    },
+    open: function (a) {
+      return this.__destroyed ? this.__destroyError() : this._open(null, a), this;
+    },
+    option: function (b, c) {
+      return void 0 === c ? this.__options[b] : (this.__destroyed ? this.__destroyError() : (this.__options[b] = c, this.__optionsFormat(), a.inArray(b, ["trigger", "triggerClose", "triggerOpen"]) >= 0 && this.__prepareOrigin(), "selfDestruction" === b && this.__prepareGC()), this);
+    },
+    reposition: function (a, b) {
+      var c = this;
+      return c.__destroyed ? c.__destroyError() : "closed" != c.__state && d(c._$origin) && (b || d(c._$tooltip)) && (b || c._$tooltip.detach(), c.__Geometry = c.__geometry(), c._trigger({
+        type: "reposition",
+        event: a,
+        helper: {
+          geo: c.__Geometry
+        }
+      })), c;
+    },
+    show: function (a) {
+      return this.open(a);
+    },
+    status: function () {
+      return {
+        destroyed: this.__destroyed,
+        enabled: this.__enabled,
+        open: "closed" !== this.__state,
+        state: this.__state
+      };
+    },
+    triggerHandler: function () {
+      return this.__destroyed ? this.__destroyError() : this.__$emitterPublic.triggerHandler.apply(this.__$emitterPublic, Array.prototype.slice.apply(arguments)), this;
+    }
+  }, a.fn.tooltipster = function () {
+    var b = Array.prototype.slice.apply(arguments),
+      c = "You are using a single HTML element as content for several tooltips. You probably want to set the contentCloning option to TRUE.";
+    if (0 === this.length) return this;
+    if ("string" == typeof b[0]) {
+      var d = "#*$~&";
+      return this.each(function () {
+        var e = a(this).data("tooltipster-ns"),
+          f = e ? a(this).data(e[0]) : null;
+        if (!f) throw new Error("You called Tooltipster's \"" + b[0] + '" method on an uninitialized element');
+        if ("function" != typeof f[b[0]]) throw new Error('Unknown method "' + b[0] + '"');
+        this.length > 1 && "content" == b[0] && (b[1] instanceof a || "object" == typeof b[1] && null != b[1] && b[1].tagName) && !f.__options.contentCloning && f.__options.debug && console.log(c);
+        var g = f[b[0]](b[1], b[2]);
+        return g !== f || "instance" === b[0] ? (d = g, !1) : void 0;
+      }), "#*$~&" !== d ? d : this;
+    }
+    a.tooltipster.__instancesLatestArr = [];
+    var e = b[0] && void 0 !== b[0].multiple,
+      g = e && b[0].multiple || !e && f.multiple,
+      h = b[0] && void 0 !== b[0].content,
+      i = h && b[0].content || !h && f.content,
+      j = b[0] && void 0 !== b[0].contentCloning,
+      k = j && b[0].contentCloning || !j && f.contentCloning,
+      l = b[0] && void 0 !== b[0].debug,
+      m = l && b[0].debug || !l && f.debug;
+    return this.length > 1 && (i instanceof a || "object" == typeof i && null != i && i.tagName) && !k && m && console.log(c), this.each(function () {
+      var c = !1,
+        d = a(this),
+        e = d.data("tooltipster-ns"),
+        f = null;
+      e ? g ? c = !0 : m && (console.log("Tooltipster: one or more tooltips are already attached to the element below. Ignoring."), console.log(this)) : c = !0, c && (f = new a.Tooltipster(this, b[0]), e || (e = []), e.push(f.__namespace), d.data("tooltipster-ns", e), d.data(f.__namespace, f), f.__options.functionInit && f.__options.functionInit.call(f, f, {
+        origin: this
+      }), f._trigger("init")), a.tooltipster.__instancesLatestArr.push(f);
+    }), this;
+  }, b.prototype = {
+    __init: function (b) {
+      this.__$tooltip = b, this.__$tooltip.css({
+        left: 0,
+        overflow: "hidden",
+        position: "absolute",
+        top: 0
+      }).find(".tooltipster-content").css("overflow", "auto"), this.$container = a('<div class="tooltipster-ruler"></div>').append(this.__$tooltip).appendTo(h.window.document.body);
+    },
+    __forceRedraw: function () {
+      var a = this.__$tooltip.parent();
+      this.__$tooltip.detach(), this.__$tooltip.appendTo(a);
+    },
+    constrain: function (a, b) {
+      return this.constraints = {
+        width: a,
+        height: b
+      }, this.__$tooltip.css({
+        display: "block",
+        height: "",
+        overflow: "auto",
+        width: a
+      }), this;
+    },
+    destroy: function () {
+      this.__$tooltip.detach().find(".tooltipster-content").css({
+        display: "",
+        overflow: ""
+      }), this.$container.remove();
+    },
+    free: function () {
+      return this.constraints = null, this.__$tooltip.css({
+        display: "",
+        height: "",
+        overflow: "visible",
+        width: ""
+      }), this;
+    },
+    measure: function () {
+      this.__forceRedraw();
+      var a = this.__$tooltip[0].getBoundingClientRect(),
+        b = {
+          size: {
+            height: a.height || a.bottom - a.top,
+            width: a.width || a.right - a.left
+          }
+        };
+      if (this.constraints) {
+        var c = this.__$tooltip.find(".tooltipster-content"),
+          d = this.__$tooltip.outerHeight(),
+          e = c[0].getBoundingClientRect(),
+          f = {
+            height: d <= this.constraints.height,
+            width: a.width <= this.constraints.width && e.width >= c[0].scrollWidth - 1
+          };
+        b.fits = f.height && f.width;
+      }
+      return h.IE && h.IE <= 11 && b.size.width !== h.window.document.documentElement.clientWidth && (b.size.width = Math.ceil(b.size.width) + 1), b;
+    }
+  };
+  var j = navigator.userAgent.toLowerCase();
+  -1 != j.indexOf("msie") ? h.IE = parseInt(j.split("msie")[1]) : -1 !== j.toLowerCase().indexOf("trident") && -1 !== j.indexOf(" rv:11") ? h.IE = 11 : -1 != j.toLowerCase().indexOf("edge/") && (h.IE = parseInt(j.toLowerCase().split("edge/")[1]));
+  var k = "tooltipster.sideTip";
+  return a.tooltipster._plugin({
+    name: k,
+    instance: {
+      __defaults: function () {
+        return {
+          arrow: !0,
+          distance: 6,
+          functionPosition: null,
+          maxWidth: null,
+          minIntersection: 16,
+          minWidth: 0,
+          position: null,
+          side: "top",
+          viewportAware: !0
+        };
+      },
+      __init: function (a) {
+        var b = this;
+        b.__instance = a, b.__namespace = "tooltipster-sideTip-" + Math.round(1e6 * Math.random()), b.__previousState = "closed", b.__options, b.__optionsFormat(), b.__instance._on("state." + b.__namespace, function (a) {
+          "closed" == a.state ? b.__close() : "appearing" == a.state && "closed" == b.__previousState && b.__create(), b.__previousState = a.state;
+        }), b.__instance._on("options." + b.__namespace, function () {
+          b.__optionsFormat();
+        }), b.__instance._on("reposition." + b.__namespace, function (a) {
+          b.__reposition(a.event, a.helper);
+        });
+      },
+      __close: function () {
+        this.__instance.content() instanceof a && this.__instance.content().detach(), this.__instance._$tooltip.remove(), this.__instance._$tooltip = null;
+      },
+      __create: function () {
+        var b = a('<div class="tooltipster-base tooltipster-sidetip"><div class="tooltipster-box"><div class="tooltipster-content"></div></div><div class="tooltipster-arrow"><div class="tooltipster-arrow-uncropped"><div class="tooltipster-arrow-border"></div><div class="tooltipster-arrow-background"></div></div></div></div>');
+        this.__options.arrow || b.find(".tooltipster-box").css("margin", 0).end().find(".tooltipster-arrow").hide(), this.__options.minWidth && b.css("min-width", this.__options.minWidth + "px"), this.__options.maxWidth && b.css("max-width", this.__options.maxWidth + "px"), this.__instance._$tooltip = b, this.__instance._trigger("created");
+      },
+      __destroy: function () {
+        this.__instance._off("." + self.__namespace);
+      },
+      __optionsFormat: function () {
+        var b = this;
+        if (b.__options = b.__instance._optionsExtract(k, b.__defaults()), b.__options.position && (b.__options.side = b.__options.position), "object" != typeof b.__options.distance && (b.__options.distance = [b.__options.distance]), b.__options.distance.length < 4 && (void 0 === b.__options.distance[1] && (b.__options.distance[1] = b.__options.distance[0]), void 0 === b.__options.distance[2] && (b.__options.distance[2] = b.__options.distance[0]), void 0 === b.__options.distance[3] && (b.__options.distance[3] = b.__options.distance[1])), b.__options.distance = {
+          top: b.__options.distance[0],
+          right: b.__options.distance[1],
+          bottom: b.__options.distance[2],
+          left: b.__options.distance[3]
+        }, "string" == typeof b.__options.side) {
+          var c = {
+            top: "bottom",
+            right: "left",
+            bottom: "top",
+            left: "right"
+          };
+          b.__options.side = [b.__options.side, c[b.__options.side]], "left" == b.__options.side[0] || "right" == b.__options.side[0] ? b.__options.side.push("top", "bottom") : b.__options.side.push("right", "left");
+        }
+        6 === a.tooltipster._env.IE && b.__options.arrow !== !0 && (b.__options.arrow = !1);
+      },
+      __reposition: function (b, c) {
+        var d,
+          e = this,
+          f = e.__targetFind(c),
+          g = [];
+        e.__instance._$tooltip.detach();
+        var h = e.__instance._$tooltip.clone(),
+          i = a.tooltipster._getRuler(h),
+          j = !1,
+          k = e.__instance.option("animation");
+        switch (k && h.removeClass("tooltipster-" + k), a.each(["window", "document"], function (d, k) {
+          var l = null;
+          if (e.__instance._trigger({
+            container: k,
+            helper: c,
+            satisfied: j,
+            takeTest: function (a) {
+              l = a;
+            },
+            results: g,
+            type: "positionTest"
+          }), 1 == l || 0 != l && 0 == j && ("window" != k || e.__options.viewportAware)) for (var d = 0; d < e.__options.side.length; d++) {
+            var m = {
+                horizontal: 0,
+                vertical: 0
+              },
+              n = e.__options.side[d];
+            "top" == n || "bottom" == n ? m.vertical = e.__options.distance[n] : m.horizontal = e.__options.distance[n], e.__sideChange(h, n), a.each(["natural", "constrained"], function (a, d) {
+              if (l = null, e.__instance._trigger({
+                container: k,
+                event: b,
+                helper: c,
+                mode: d,
+                results: g,
+                satisfied: j,
+                side: n,
+                takeTest: function (a) {
+                  l = a;
+                },
+                type: "positionTest"
+              }), 1 == l || 0 != l && 0 == j) {
+                var h = {
+                    container: k,
+                    distance: m,
+                    fits: null,
+                    mode: d,
+                    outerSize: null,
+                    side: n,
+                    size: null,
+                    target: f[n],
+                    whole: null
+                  },
+                  o = "natural" == d ? i.free() : i.constrain(c.geo.available[k][n].width - m.horizontal, c.geo.available[k][n].height - m.vertical),
+                  p = o.measure();
+                if (h.size = p.size, h.outerSize = {
+                  height: p.size.height + m.vertical,
+                  width: p.size.width + m.horizontal
+                }, "natural" == d ? c.geo.available[k][n].width >= h.outerSize.width && c.geo.available[k][n].height >= h.outerSize.height ? h.fits = !0 : h.fits = !1 : h.fits = p.fits, "window" == k && (h.fits ? "top" == n || "bottom" == n ? h.whole = c.geo.origin.windowOffset.right >= e.__options.minIntersection && c.geo.window.size.width - c.geo.origin.windowOffset.left >= e.__options.minIntersection : h.whole = c.geo.origin.windowOffset.bottom >= e.__options.minIntersection && c.geo.window.size.height - c.geo.origin.windowOffset.top >= e.__options.minIntersection : h.whole = !1), g.push(h), h.whole) j = !0;else if ("natural" == h.mode && (h.fits || h.size.width <= c.geo.available[k][n].width)) return !1;
+              }
+            });
+          }
+        }), e.__instance._trigger({
+          edit: function (a) {
+            g = a;
+          },
+          event: b,
+          helper: c,
+          results: g,
+          type: "positionTested"
+        }), g.sort(function (a, b) {
+          if (a.whole && !b.whole) return -1;
+          if (!a.whole && b.whole) return 1;
+          if (a.whole && b.whole) {
+            var c = e.__options.side.indexOf(a.side),
+              d = e.__options.side.indexOf(b.side);
+            return d > c ? -1 : c > d ? 1 : "natural" == a.mode ? -1 : 1;
+          }
+          if (a.fits && !b.fits) return -1;
+          if (!a.fits && b.fits) return 1;
+          if (a.fits && b.fits) {
+            var c = e.__options.side.indexOf(a.side),
+              d = e.__options.side.indexOf(b.side);
+            return d > c ? -1 : c > d ? 1 : "natural" == a.mode ? -1 : 1;
+          }
+          return "document" == a.container && "bottom" == a.side && "natural" == a.mode ? -1 : 1;
+        }), d = g[0], d.coord = {}, d.side) {
+          case "left":
+          case "right":
+            d.coord.top = Math.floor(d.target - d.size.height / 2);
+            break;
+          case "bottom":
+          case "top":
+            d.coord.left = Math.floor(d.target - d.size.width / 2);
+        }
+        switch (d.side) {
+          case "left":
+            d.coord.left = c.geo.origin.windowOffset.left - d.outerSize.width;
+            break;
+          case "right":
+            d.coord.left = c.geo.origin.windowOffset.right + d.distance.horizontal;
+            break;
+          case "top":
+            d.coord.top = c.geo.origin.windowOffset.top - d.outerSize.height;
+            break;
+          case "bottom":
+            d.coord.top = c.geo.origin.windowOffset.bottom + d.distance.vertical;
+        }
+        "window" == d.container ? "top" == d.side || "bottom" == d.side ? d.coord.left < 0 ? c.geo.origin.windowOffset.right - this.__options.minIntersection >= 0 ? d.coord.left = 0 : d.coord.left = c.geo.origin.windowOffset.right - this.__options.minIntersection - 1 : d.coord.left > c.geo.window.size.width - d.size.width && (c.geo.origin.windowOffset.left + this.__options.minIntersection <= c.geo.window.size.width ? d.coord.left = c.geo.window.size.width - d.size.width : d.coord.left = c.geo.origin.windowOffset.left + this.__options.minIntersection + 1 - d.size.width) : d.coord.top < 0 ? c.geo.origin.windowOffset.bottom - this.__options.minIntersection >= 0 ? d.coord.top = 0 : d.coord.top = c.geo.origin.windowOffset.bottom - this.__options.minIntersection - 1 : d.coord.top > c.geo.window.size.height - d.size.height && (c.geo.origin.windowOffset.top + this.__options.minIntersection <= c.geo.window.size.height ? d.coord.top = c.geo.window.size.height - d.size.height : d.coord.top = c.geo.origin.windowOffset.top + this.__options.minIntersection + 1 - d.size.height) : (d.coord.left > c.geo.window.size.width - d.size.width && (d.coord.left = c.geo.window.size.width - d.size.width), d.coord.left < 0 && (d.coord.left = 0)), e.__sideChange(h, d.side), c.tooltipClone = h[0], c.tooltipParent = e.__instance.option("parent").parent[0], c.mode = d.mode, c.whole = d.whole, c.origin = e.__instance._$origin[0], c.tooltip = e.__instance._$tooltip[0], delete d.container, delete d.fits, delete d.mode, delete d.outerSize, delete d.whole, d.distance = d.distance.horizontal || d.distance.vertical;
+        var l = a.extend(!0, {}, d);
+        if (e.__instance._trigger({
+          edit: function (a) {
+            d = a;
+          },
+          event: b,
+          helper: c,
+          position: l,
+          type: "position"
+        }), e.__options.functionPosition) {
+          var m = e.__options.functionPosition.call(e, e.__instance, c, l);
+          m && (d = m);
+        }
+        i.destroy();
+        var n, o;
+        "top" == d.side || "bottom" == d.side ? (n = {
+          prop: "left",
+          val: d.target - d.coord.left
+        }, o = d.size.width - this.__options.minIntersection) : (n = {
+          prop: "top",
+          val: d.target - d.coord.top
+        }, o = d.size.height - this.__options.minIntersection), n.val < this.__options.minIntersection ? n.val = this.__options.minIntersection : n.val > o && (n.val = o);
+        var p;
+        p = c.geo.origin.fixedLineage ? c.geo.origin.windowOffset : {
+          left: c.geo.origin.windowOffset.left + c.geo.window.scroll.left,
+          top: c.geo.origin.windowOffset.top + c.geo.window.scroll.top
+        }, d.coord = {
+          left: p.left + (d.coord.left - c.geo.origin.windowOffset.left),
+          top: p.top + (d.coord.top - c.geo.origin.windowOffset.top)
+        }, e.__sideChange(e.__instance._$tooltip, d.side), c.geo.origin.fixedLineage ? e.__instance._$tooltip.css("position", "fixed") : e.__instance._$tooltip.css("position", ""), e.__instance._$tooltip.css({
+          left: d.coord.left,
+          top: d.coord.top,
+          height: d.size.height,
+          width: d.size.width
+        }).find(".tooltipster-arrow").css({
+          left: "",
+          top: ""
+        }).css(n.prop, n.val), e.__instance._$tooltip.appendTo(e.__instance.option("parent")), e.__instance._trigger({
+          type: "repositioned",
+          event: b,
+          position: d
+        });
+      },
+      __sideChange: function (a, b) {
+        a.removeClass("tooltipster-bottom").removeClass("tooltipster-left").removeClass("tooltipster-right").removeClass("tooltipster-top").addClass("tooltipster-" + b);
+      },
+      __targetFind: function (a) {
+        var b = {},
+          c = this.__instance._$origin[0].getClientRects();
+        if (c.length > 1) {
+          var d = this.__instance._$origin.css("opacity");
+          1 == d && (this.__instance._$origin.css("opacity", .99), c = this.__instance._$origin[0].getClientRects(), this.__instance._$origin.css("opacity", 1));
+        }
+        if (c.length < 2) b.top = Math.floor(a.geo.origin.windowOffset.left + a.geo.origin.size.width / 2), b.bottom = b.top, b.left = Math.floor(a.geo.origin.windowOffset.top + a.geo.origin.size.height / 2), b.right = b.left;else {
+          var e = c[0];
+          b.top = Math.floor(e.left + (e.right - e.left) / 2), e = c.length > 2 ? c[Math.ceil(c.length / 2) - 1] : c[0], b.right = Math.floor(e.top + (e.bottom - e.top) / 2), e = c[c.length - 1], b.bottom = Math.floor(e.left + (e.right - e.left) / 2), e = c.length > 2 ? c[Math.ceil((c.length + 1) / 2) - 1] : c[c.length - 1], b.left = Math.floor(e.top + (e.bottom - e.top) / 2);
+        }
+        return b;
+      }
+    }
+  }), a;
+});
 ; // Authors: %Author Name%
 
 $(function () {
@@ -6561,6 +8668,8 @@ $(function () {
   // initTab();
   asideControl();
   stickyClass();
+  tableBtnMore();
+  initTooltip();
 });
 $(window).on('resize', function () {});
 $(window).on('load', function () {});
@@ -6569,7 +8678,6 @@ function initSelectPlugin() {
     let placeholderValue = $(this).data('placeholder');
     $(this).select2({
       placeholder: placeholderValue,
-      minimumResultsForSearch: -1,
       dropdownAutoWidth: true,
       width: '100%'
     });
@@ -6620,11 +8728,26 @@ function asideControl() {
   }
 }
 function stickyClass() {
-  let stickyOffset = $('.js-sticky').offset();
-  let $window = $(window);
-  $window.scroll(function () {
-    if ($window.scrollTop() >= stickyOffset.top) {
-      $('.js-sticky').addClass('scrolled');
-    }
+  if ($('.js-sticky').length > 0) {
+    let stickyOffset = $('.js-sticky').offset();
+    let $window = $(window);
+    $window.scroll(function () {
+      if ($window.scrollTop() >= stickyOffset.top) {
+        $('.js-sticky').addClass('scrolled');
+      }
+    });
+  }
+}
+function tableBtnMore() {
+  $('.js-orderList-orderType-more').on('click', function () {
+    $(this).toggleClass('state_open');
+  });
+}
+function initTooltip(context) {
+  $('.js-tooltip', context).tooltipster({
+    maxWidth: 300,
+    trigger: 'click',
+    contentAsHTML: true,
+    interactive: true
   });
 }

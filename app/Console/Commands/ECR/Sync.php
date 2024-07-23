@@ -124,7 +124,7 @@ class Sync extends Command
 			}
 			
 			$s = $name;
-			if (!class_exists($name)) $name = Scheme::EntityFQN($name);
+			if (!str_contains($name, NS_SLASH.'Entity_')) $name = Scheme::EntityFQN($name);
 			if ($name == '')
 			{
 				$this->error("Given class '$s' cannot be resolved.");

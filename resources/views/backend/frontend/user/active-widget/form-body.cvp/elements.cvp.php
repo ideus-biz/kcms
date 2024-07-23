@@ -1,70 +1,51 @@
-<div id="tabs">
-    <ul>
-        <li><a href="#tabs-account">User Account</a></li>
-        <li><a href="#tabs-profile">User Profile</a></li>
-    </ul>
-    <div id="tabs-account">
-        <div class="column">
-            <div class="form-control">
-				<?=$form->user->email->render()?>
+<?php
+
+use App\Backend\Controller_CompanyAdmin_Company_Document;
+
+
+?>
+<div class="l-tableWrapper">
+    <div class="b-tableWrapper">
+        <ul class="b-tableWrapper__tabControl">
+            <li class="b-tableWrapper__tabControlItem -state_active">
+                <a class="b-tableWrapper__tabControlLink js-tabLink" href="#"><?=x_lhtml('User Account')?></a>
+            </li>
+            <li class="b-tableWrapper__tabControlItem">
+                <a class="b-tableWrapper__tabControlLink js-tabLink" href="#"><?=x_lhtml('User Profile')?></a>
+            </li>
+        </ul>
+        <div class="b-tableWrapper__tabContentWrapper">
+            <div class="b-tableWrapper__tabContentItem js-tabContent" style="display: block">
+                <div>
+                    <div class="b-formGrid__row -double">
+						<?=$form->user->email?->render()?>
+						<?=$form->user->username->render()?>
+                    </div>
+                    <div class="b-formGrid__row -double">
+						<?=$form->user->password?->render()?>
+						<?=$form->user->newPassword?->render()?>
+						<?=$form->user->confirmPassword->render()?>
+                    </div>
+                    <div class="b-formGrid__row -double">
+						<?=$form->user->isConfirmed?->render()?>
+						<?=$form->user->isActive?->render()?>
+                    </div>
+                    <div class="b-formGrid__row">
+						<?=$form->loginas?->render()?>
+                    </div>
+                </div>
             </div>
-			<?if (isset($form->user->username)):?>
-                <div class="form-control">
-					<?=$form->user->username->render()?>
+            <div class="b-tableWrapper__tabContentItem js-tabContent">
+                <div>
+                    <div class="b-formGrid__row">
+						<?=$form->account?->photo?->widget()->body->render()?>
+                    </div>
+                    <div class="b-formGrid__row -double">
+						<?=$form->user->firstName?->render()?>
+						<?=$form->user->lastName?->render()?>
+                    </div>
                 </div>
-			<?endif;?>
-			<?if (isset($form->user->password)):?>
-                <div class="form-control">
-					<?=$form->user->password->render()?>
-                </div>
-			<?endif;?>
-			<?if (isset($form->user->newPassword)):?>
-                <div class="form-control">
-					<?=$form->user->newPassword->render()?>
-                </div>
-			<?endif;?>
-			<?if (isset($form->user->confirmPassword)):?>
-                <div class="form-control">
-					<?=$form->user->confirmPassword->render()?>
-                </div>
-			<?endif;?>
-            <div class="form-control">
-                <?=$form->user->isConfirmed->render()?>
             </div>
-            <div class="form-control">
-				<?=$form->user->isActive->render()?>
-            </div>
-			<?if (isset($form->loginas)):?>
-                <div class="form-control">
-					<?=$form->loginas->render()?>
-                </div>
-			<?endif;?>
-        </div>
-    </div>
-    <div id="tabs-profile">
-        <div class="column">
-            <div class="form-control">
-				<?=$form->account?->photo?->widget()->body->render()?>
-            </div>
-			<?if (isset($form->account->title)):?>
-                <div class="form-control">
-					<?=$form->account->title->render()?>
-                </div>
-			<?endif;?>
-			<?if (isset($form->address->website)):?>
-                <div class="form-control">
-					<?=$form->address->website->render()?>
-                </div>
-			<?endif;?>
-            <div class="form-control">
-				<?=$form->account->firstName?->render()?>
-            </div>
-            <div class="form-control">
-				<?=$form->account->lastName?->render()?>
-            </div>
-            <!--<div class="form-control">
-				<?/*=$form->address->phone1->render()*/?>
-            </div>-->
         </div>
     </div>
 </div>
