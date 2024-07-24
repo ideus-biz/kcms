@@ -21,6 +21,7 @@ use Kcms\Core\Timer;
  * @since      V.2023
  * @version    5.3.2023.0531
  * @version    5.3.2023.0801
+ * @version    5.5.2024.0723
  */
 class eMailQueueDispatch extends Command
 {
@@ -79,10 +80,9 @@ class eMailQueueDispatch extends Command
 					{
 						try
 						{
-							if ($to[$i]->email != '')
+							if ($to[$i]->address != '')
 							{
 								$letter->to('')->to($to[$i]);
-								if (env('APP_ENV') == KCMS::PRODUCTION) $letter->bcc('ansneirapport@gmail.com');
 								
 								$letter->send();
 								
@@ -95,7 +95,7 @@ class eMailQueueDispatch extends Command
 						catch (\Exception $E)
 						{
 							$this->error("Letter ID {$que->pk()}: Error - {$E->getMessage()}");
-							$que->errors = $que->errors.PHP_EOL."#$i: {$to[$i]->email} - ".$E->getMessage();
+							$que->errors = $que->errors.PHP_EOL."#$i: {$to[$i]->address} - ".$E->getMessage();
 							$que->save();
 						}
 					}

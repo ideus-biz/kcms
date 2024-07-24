@@ -4,6 +4,7 @@ namespace App\Console\Commands\ECR;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Kcms\Core\ActiveArray;
 use Kcms\Core\Arr;
 use Kcms\Core\Date;
 use Kcms\Core\FS_File;
@@ -55,6 +56,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @version    5.3.2023.0808
  * @version    5.3.2023.1211 - support of `fulltext` index for `text` props w/o length is added
  * @version    5.5.2024.0620 - TypeBits added
+ * @version    5.5.2024.0722 - respect prop position on table alter
  */
 class Sync extends Command
 {
@@ -250,7 +252,7 @@ class Sync extends Command
 				$dbKeys = Database::Instance($this->_dbConn)->listIndexKeys($tableName);
 				$dbSchemeKeys = $this->_dbEntityKeys($dbKeys);
 				$dbProps = Database::Instance($this->_dbConn)->listColumns($tableName);
-				$dbScheme = [];
+				$dbScheme = ActiveArray::Instance();
 				foreach ($dbProps as $k => $v)
 				{
 					$desc = $this->_dbEntityProp($dbProps, $k);
@@ -258,7 +260,7 @@ class Sync extends Command
 				}
 				
 				$schemeKeys = [];
-				$scheme = [];
+				$scheme = ActiveArray::Instance();
 				$refClass = new \ReflectionClass($entity->scheme());
 				$refProps = [];
 				foreach ($refClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $vProp)
@@ -292,8 +294,27 @@ class Sync extends Command
 					isset($desc) && $scheme[$propName] = $desc;
 				}
 				
-				if (!empty($dbScheme) && !empty($scheme))
+				if (count($dbScheme) && count($scheme))
 				{
+					$arr = ActiveArray::Instance($scheme);
+					foreach ($scheme as $k => $v)
+					{
+						$pos1 = $arr->keyOffset($k);
+						if (isset($v->afterProp))
+						{
+							if (($v->afterProp == '' || $v->afterProp == ':first') && $pos1 > 0) $arr->move(0, $pos1);
+							elseif ($v->afterProp == ':last' && $pos1 < count($scheme)-1) $arr->move(count($scheme)-1, $pos1);
+							else
+							{
+								$pos2 = $arr->keyOffset($v->afterProp);
+								if ($pos2 !== false) $arr->move($pos2, $pos1);
+							}
+						}
+					}
+					$scheme = $arr->toArray();
+					$dbScheme = $dbScheme->toArray();
+					unset($arr);
+					
 					// Modify
 					$add = $change = $modify = $delete = [];
 					$prev = 0;
@@ -527,6 +548,14 @@ class Sync extends Command
 				}
 				else $desc->default("\x0");
 			}
+		}
+		
+		if (isset($attrs[SourceProperty::class]))
+		{
+			$after = $attrs[SourceProperty::class]['afterProperty']??$attrs[TypeString::class][0]??null;
+			if (isset($after)) $desc->afterProp = $after;
+			$s = $attrs[SourceProperty::class]['comment']??$attrs[TypeString::class][1]??null;
+			if (isset($s)) $desc->comment = $s;
 		}
 		
 		return $desc;

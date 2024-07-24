@@ -21,32 +21,8 @@ return array(
 	 * Type: array of ISO 639-1 standard language codes
 	 */
 	'I18n' => array(
-		'da',
 		'en'
 	),
-	
-	'da' => [
-		'DK' => [
-			'language' => 'Danish',
-			'region' => 'Denmark',
-			
-			'formats' => [
-				'date' => 'd.m.Y',
-				'dateLong' => 'F, d Y',
-				'time' => 'H:i',
-				'timeLong' => 'H:i:s',
-				'datetime' => 'd.m.Y H:i',
-				'datetimeLong' => 'F, d Y, H:i',
-				'dayname-month' => 'D, M d',
-				'dayname-month-time' => 'D, M d, H:i',
-				/**
-				 * Currency code - three chars string accordingly to ISO-4217
-				 * Mandatory config
-				 */
-				'currency' => 'DKK',
-			],
-		]
-	],
 	
 	/**
 	 * Список доступных локализаций.
@@ -60,27 +36,6 @@ return array(
 	 * Value: array of country localization config
 	 */
 	'en' => array(
-		'DK' => [
-			'language' => 'English',
-			'region' => 'Denmark',
-			
-			'formats' => [
-				'date' => 'd.m.Y',
-				'dateLong' => 'F, d Y',
-				'time' => 'H:i',
-				'timeLong' => 'H:i:s',
-				'datetime' => 'd.m.Y H:i',
-				'datetimeLong' => 'F, d Y, H:i',
-				'dayname-month' => 'D, M d',
-				'dayname-month-time' => 'D, M d, H:i',
-				/**
-				 * Currency code - three chars string accordingly to ISO-4217
-				 * Mandatory config
-				 */
-				'currency' => 'DKK',
-			],
-		],
-		
 		'US' => array(
 			'language' => 'English',
 			'region' => 'USA',
