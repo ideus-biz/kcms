@@ -1,4 +1,4 @@
-# KCMS Core library
+# KCMS Application
 
-KCMS Core
+KCMS Application
 
