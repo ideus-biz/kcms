@@ -57,6 +57,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @version    5.3.2023.1211 - support of `fulltext` index for `text` props w/o length is added
  * @version    5.5.2024.0620 - TypeBits added
  * @version    5.5.2024.0722 - respect prop position on table alter
+ * @version    5.5.2024.0725
  */
 class Sync extends Command
 {
@@ -105,13 +106,17 @@ class Sync extends Command
 			return;
 		}
 		
-		$cfgName = config('database.default');
-		$cfg = config("database.connections.{$cfgName}Super");
-		if (!empty($cfg)) $this->_dbConn = DB::connection("{$cfgName}Super");
+		$cfgName = DB::getDefaultConnection();
+		$cfgNameSuper = "{$cfgName}Super";
+		$cfg = config("database.connections.{$cfgNameSuper}");
+		if (!empty($cfg)) $this->_dbConn = DB::connection("{$cfgNameSuper}");
 		elseif (($s = env('DB_ADMIN_USERNAME')) != '')
 		{
-			$cfg = ['username' => $s, 'password' => env('DB_ADMIN_PASSWORD')] + (config("database.connections.{$cfgName}")?:[]);
-			$this->_dbConn = DB::connectUsing("{$cfgName}Super", $cfg);
+			$cfg = [
+				'username' => $s,
+				'password' => env('DB_ADMIN_PASSWORD'),
+				] + (config("database.connections.{$cfgName}") ?: []);
+			$this->_dbConn = DB::connectUsing("{$cfgNameSuper}", $cfg);
 		}
 		else $this->_dbConn = DB::connection($cfgName);
 		unset($s);

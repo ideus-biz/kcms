@@ -1,0 +1,1 @@
+<button kcms-type="reload" class="b-btn -small -radius bg-secondary-2 js-active-list-action" title="{'Reload'}"><span class="b-btn__text">{'Reload'}</span></button>

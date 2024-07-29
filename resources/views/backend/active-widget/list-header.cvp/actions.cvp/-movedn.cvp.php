@@ -1,0 +1,1 @@
+<button kcms-name="movedn" kcms-type="row-action" class="btn-icon btn-success btn-view js-active-list-action" kcms-option-resetSelection="true" alt="{'Move down'}" title="{'Move down'}"><i class="icon2-arrow-down"></i></button>

@@ -1,0 +1,1 @@
+<td class="js-active-list-cell" kcms-name="$name" style="$style" colspan="$colspan">$value</td>

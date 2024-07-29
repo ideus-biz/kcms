@@ -1,0 +1,1 @@
+<button class="b-btn -small -radius bg-primary js-open-filter $active" title="{'Filter'}" $disabled><span class="b-btn__text">{'Filter'}</span></button>

@@ -1,0 +1,1 @@
+<button class="b-btn -small -radius bg-secondary-1 js-active-list-action" kcms-name="add" kcms-target="$url" kcms-type="redirect" kcms-assoc-object=".js-active-list-add-form" title="$hint"><span class="b-btn__text">$title</span></button >

@@ -14,6 +14,7 @@
  * @version    3.2.2015.1207
  * @version    3.2.2018.0716 - 'hello' from config is added
  * @version    5.0.2021.1110 - `ssl` context configuration is added
+ * @version    5.5.2024.0724 - `Laravel` sender config becomes as a default
  */
 return [
 	/**
@@ -57,7 +58,7 @@ return [
 		 */
 		'phpmailer' => [
 			/**
-			 * Базовое имя класса-отправщика писем eMail_Sender_PHPMailer
+			 * Базовое имя класса-отправителя писем eMail_Sender_PHPMailer
 			 * 
 			 * Класс использует стороннее ПО PHPMailer, которое предоставляет расширенные возможности доставки почты
 			 * 

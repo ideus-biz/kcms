@@ -1,0 +1,1 @@
+<button kcms-name="moveup" kcms-type="row-action" class="btn-icon btn-success btn-view js-active-list-action" kcms-option-resetSelection="true" alt="{'Move up'}" title="{'Move up'}"><i class="icon2-arrow-up"></i></button>
