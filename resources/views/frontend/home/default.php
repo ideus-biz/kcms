@@ -1,9 +1,9 @@
 <h1><?=env('APP_NAME')?></h1>
 <h3>Welcome to the website under KCMS v5.5 for Laravel</h3>
 <p>
-	You successfully installed your new project ;)<br>
+	You've successfully installed your new project ;)<br>
     What's the next?
-    Please follow the next tips&instructions to start and create your great project driven by KCMS.
+    Please follow the next tips to start and create your great project driven by KCMS.
 </p>
 <ol>
     <li>
@@ -14,13 +14,13 @@
     <li>
         <strong>Database configuration</strong><br>
         The next important thing is a database. <br>
-        KCMS has a pool of internal entities (database models) which have to be impoerted into DB to be able to start administrative application as well as yours.
+        KCMS has a pool of internal entities (database models) which have to be impoerted into DB to be able to start administrative application as well as your future app.
         <br>
         At first you have to create a database and a credentials to access into it. <br>
-        If you have ones, or they're already created then let's set the database configuration. <br>
+        Then let's set the database configuration. <br>
         We assume you are going to use MySQL and standard Laravel configuration under <span class="refer">mysql</span> node in the <span class="refer">/config/database.php</span><br>
-        But as a database configuration is per hosting basis, it's a good idea to set the configuration in the <span class="refer">/.env</span> file. <br>
-        It is recommended to have two different credentials: one for readonly access and another with write permissions. <br>
+        Database configuration is per hosting basis, so it's a good idea to set the configuration in the <span class="refer">/.env</span> file. <br>
+        It is recommended to have two different credentials: one for general purposes access and another with extended administration permissions. <br>
         Otherwise, if you decide to use single database profile, you must grant it appropriate permissions to allow creating and alter the tables in the database.
         <br>
         Now open <span class="refer">/.env</span> file and change at least the next directives (for single or ordinal database user profile):
