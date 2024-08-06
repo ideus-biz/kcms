@@ -3,7 +3,7 @@
 ###
 
 ### Project files
-### Uncomment next lines after the first deploy
+### Uncomment next lines after the first deployment
 #.htaccess
 #.env
 #/storage
