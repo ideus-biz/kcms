@@ -11,11 +11,25 @@
       "email": "andrew@ideus.biz"
     }
   ],
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "kcms/package",
+        "version": "5.5",
+        "source": {
+          "type": "git",
+          "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_package.git",
+          "reference": "v5.5-stable"
+        }
+      }
+    }
+  ],
   "require": {
     "php": "^8.1",
     "ext-intl": "*",
     "laravel/framework": "^10.10",
-    "ideus-biz/kcms-corp": "^5.5"
+    "kcms/package": "^5.5"
   },
   "require-dev": {
   },
