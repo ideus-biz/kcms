@@ -18,6 +18,7 @@ class Task
 		$args = Arr::Implode($args, ' ');
 		
 		$cmd = 'php '.base_path('artisan').' '.$command.' '.$args.($suppressOutput ? ' > /dev/null':'').($async ? ' &' : '');
+		$wd = getcwd();
 		chdir(base_path());
 		try
 		{
@@ -25,7 +26,7 @@ class Task
 		}
 		finally
 		{
-			chdir(public_path());
+			chdir($wd);
 		}
 		
 		FS_FileLog::Instance('task-run')->writeln($cmd)->writeArray($res)->separate();

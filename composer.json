@@ -20,7 +20,7 @@
         "source": {
           "type": "git",
           "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_package.git",
-          "reference": "v5.5-stable"
+          "reference": "v5.5.2024.0809.1"
         }
       }
     }
@@ -29,8 +29,7 @@
     "php": "^8.1",
     "ext-intl": "*",
     "laravel/framework": "^10.10",
-    "kcms/package": "^5.5",
-    "ideus-biz/kcms-corp": "^5.5"
+    "kcms/package": "^5.5"
   },
   "require-dev": {
   },
