@@ -22,6 +22,7 @@ use Kcms\Core\Timer;
  * @version    5.3.2023.0531
  * @version    5.3.2023.0801
  * @version    5.5.2024.0723
+ * @version    5.5.2024.0813 - log sender errors
  */
 class eMailQueueDispatch extends Command
 {
@@ -84,9 +85,14 @@ class eMailQueueDispatch extends Command
 							{
 								$letter->to('')->to($to[$i]);
 								
-								$letter->send();
+								$sender = $letter->send();
 								
-								$this->info("Letter ID {$que->pk()}: Sent to address #$i");
+								if ($sender->error)
+								{
+									$this->error("Letter ID {$que->pk()}: error: {$sender->error}");
+									Log::error("Letter ID {$que->pk()}: error: {$sender->error}");
+								}
+								else $this->info("Letter ID {$que->pk()}: Sent to address #$i");
 								
 								$que->sentCount = $que->sentCount + 1;
 								$que->save();
