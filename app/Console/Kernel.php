@@ -3,8 +3,6 @@
 namespace App\Console;
 
 
-use App\Console\Commands\KCMS\eMailQueueDispatch;
-use App\Console\Commands\KCMS\SMSQueueDispatch;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -17,8 +15,6 @@ class Kernel extends ConsoleKernel
 	 * @var array
 	 */
 	protected $commands = [
-		eMailQueueDispatch::class,
-		SMSQueueDispatch::class,
 	];
 	
 	
@@ -35,8 +31,7 @@ class Kernel extends ConsoleKernel
 		 * #* * * * * cd /var/www/html; php artisan schedule:run >> /dev/null 2>&1
 		 */
 		
-		$schedule->command(eMailQueueDispatch::class)->everyMinute()->withoutOverlapping(false);
-		$schedule->command(SMSQueueDispatch::class)->everyMinute()->withoutOverlapping(false);
+		//$schedule->command(MyCommand::class)->everyMinute()->withoutOverlapping(false);
 	}
 	
 	
