@@ -41,7 +41,8 @@
     "classmap": [
       "app/Backend/",
       "app/Frontend/",
-      "app/Base"
+      "app/Base",
+      "app/Kcms"
     ]
   },
   "autoload-dev": {
