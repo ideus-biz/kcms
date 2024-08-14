@@ -58,6 +58,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @version    5.5.2024.0620 - TypeBits added
  * @version    5.5.2024.0722 - respect prop position on table alter
  * @version    5.5.2024.0725
+ * @version    5.5.2024.0813 - obj() replaces O()
  */
 class Sync extends Command
 {
@@ -413,7 +414,7 @@ class Sync extends Command
 		$desc = null;
 		if (isset($dbProps[$propName]))
 		{
-			$desc = O();
+			$desc = \obj();
 			$dbProp = $dbProps[$propName];
 			if ($dbProp['type'] == 'int')
 			{
@@ -488,7 +489,7 @@ class Sync extends Command
 	
 	private function _entityProp(\ReflectionProperty $prop, array $attrs)
 	{
-		$desc = O();
+		$desc = \obj();
 		
 		if ($prop->getType()->getName() == 'int')
 		{
