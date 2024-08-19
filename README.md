@@ -28,7 +28,7 @@ More info and auth options is here: https://getcomposer.org/doc/articles/authent
 
 Create a project using `composer` tool:
 
->composer create-project ideus-biz/KCMS ./my-app
+>composer create-project ideus-biz/kcms ./my-app
 
 It downloads and installs all required packages.
 
