@@ -62,8 +62,7 @@
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi",
-      "@php artisan vendor:publish --tag=kcms-install --force",
-      "@php artisan ecr:sync install"
+      "@php artisan vendor:publish --tag=kcms-install --force"
     ]
   },
   "extra": {
