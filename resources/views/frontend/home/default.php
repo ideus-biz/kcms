@@ -14,7 +14,7 @@
     <li>
         <strong>Database configuration</strong><br>
         The next important thing is a database. <br>
-        KCMS has a pool of internal entities (database models) which have to be impoerted into DB to be able to start administrative application as well as your future app.
+        KCMS has a pool of internal entities (database models) which have to be imported into DB to be able to start administrative application as well as your future app.
         <br>
         At first you have to create a database and a credentials to access into it. <br>
         Then let's set the database configuration. <br>

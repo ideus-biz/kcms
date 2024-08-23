@@ -32,10 +32,10 @@ Create a project using `composer` tool:
 
 It downloads and installs all required packages.
 
-and open a newly created document root folder of `my-app`,
+Open a newly created document root folder of `my-app`,
 and run PHP internal server:
 
-> cd my-app/public
+> cd ./my-app/public
 > php -S localhost:8080
 
 If everything done write you can see a page at http://localhost:8080/
