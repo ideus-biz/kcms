@@ -41,3 +41,15 @@ and run PHP internal server:
 If everything done write you can see a page at http://localhost:8080/
 
 Please read further instruction on the page.
+
+
+## KCM Package update
+
+To be up-to-date you need to update `kcms/package` either separately or alone with all vendors
+using `composer update` command.
+Before updating, you have to know the latest KCMS package version.
+One of the way to get the version is to search for the latest tag in the main branch of the corporate repository.
+The tag looks like `v5.5.yyyy.mmdd.n`.
+Copy such a string and fill it into the `reference` under `kcms/package` in the project's `composer.json`.
+
+Then run either `composer update kcms/package` or `composer update`.
