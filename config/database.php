@@ -94,17 +94,34 @@ return [
         ],
 
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Migration Repository Table
-    |--------------------------------------------------------------------------
-    |
-    | This table keeps track of all the migrations that have already run for
-    | your application. Using this information, we can determine which of
-    | the migrations on disk haven't actually been run in the database.
-    |
-    */
+	
+	
+	/**
+	 * If enabled, ECR database system uses Redis, if available, to cache some internal ECR SQL requests as well as caching entities data separately.
+	 *
+	 * ECR cache system requires separate Redis DB.
+	 * To enable cache mode set valid database number, or false|null to disable the mode.
+	 *
+	 * The cache duration is about a minute, and it is determined by the version internally.
+	 * Cached data in the selected DB persists until the timeout occurs or until a modification request is executed (insert/update/delete).
+	 *
+	 * See Redis configuration in .env file.
+	 */
+	'useCache' => [
+		'database' => env('REDIS_ECR_DB', false),
+	],
+	
+	
+	/*
+	|--------------------------------------------------------------------------
+	| Migration Repository Table
+	|--------------------------------------------------------------------------
+	|
+	| This table keeps track of all the migrations that have already run for
+	| your application. Using this information, we can determine which of
+	| the migrations on disk haven't actually been run in the database.
+	|
+	*/
 
     'migrations' => 'migrations',
 
