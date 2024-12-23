@@ -43,7 +43,7 @@ If everything done write you can see a page at http://localhost:8080/
 Please read further instruction on the page.
 
 
-## KCM Package update
+## KCMS Package update
 
 To be up-to-date you need to update `kcms/package` either separately or alone with all vendors
 using `composer update` command.

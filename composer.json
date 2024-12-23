@@ -20,7 +20,7 @@
         "source": {
           "type": "git",
           "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_package.git",
-          "reference": "v5.5.2024.1211.1"
+          "reference": "v5.5.2024.1223.1"
         }
       }
     }

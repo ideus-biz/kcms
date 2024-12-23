@@ -2,11 +2,14 @@
 
 namespace App\Frontend;
 
+use Kcms\Core\Locale;
 use Kcms\Core\Route;
 use Kcms\Core\Route_Group;
 
 
 Route::Setup('frontend', function(Route_Group $routes){
+	
+	$routes->withLang(count(Locale::Langs()) > 0);
 	
 	//$routes->enableCORS(/*['http://localhost:8080', 'http://localhost:3000', 'https://www.test-cors.org']*/true, ['GET', 'POST'], ['ajax','data','auth'], ['download']);
 	

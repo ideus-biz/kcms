@@ -1,0 +1,10 @@
+# Enable this file only if the project is located in the subfolder of host's document root.
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    RewriteRule ^ public/index.php [L]
+</IfModule>
