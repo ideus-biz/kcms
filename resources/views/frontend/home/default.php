@@ -55,7 +55,7 @@
         This imports structure of all built-in entities into your database. <br>
         Then import pre-defined data for imported entities and some special SQL command by running artisan seeder:
         <span class="code shell">
-            php db:seed KcmsInstall
+            php artisan db:seed KcmsInstall
         </span>
         <br>
         Please note printed root administration's login and password which has to be used for the first login into <a href="<?=Route::Url('backend:')?>" target="_blank">Administration Panel</a>.

@@ -6,5 +6,6 @@
 
     RewriteEngine On
 
-    RewriteRule ^ public/index.php [L]
+    RewriteCond %{REQUEST_URI} ^/([^/]+)(.*)(?<!/) [NC]
+    RewriteRule ^ public/%2 [L]
 </IfModule>

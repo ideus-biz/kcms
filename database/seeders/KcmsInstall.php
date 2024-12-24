@@ -19,6 +19,8 @@ class KcmsInstall extends Seeder
      */
     public function run(): void
     {
+		echo 'KCMS Install'.PHP_EOL;
+		echo 'Setting up authority system...'.PHP_EOL;
 		Entity_Access_Handler::Instance()->set_title('Entire backend app')->set_application('backend')->set_controller('')->set_action('')->set_route('')
 			->keepProperties()
 			->find()->where('application', 'backend')->where('controller', '')->where('action', '')->where('route', '')
@@ -31,6 +33,7 @@ class KcmsInstall extends Seeder
 			->self()->restoreProperties()
 			->save();
 		$role = Entity_Role::Instance()->set_application('backend')->set_name(Auth::ROLE_NAME_ROOT)->set_description('Root')->set_priority(Auth::ROLE_PRI_ROOT)
+			->set_allowPersonification(true)
 			->keepProperties()
 			->find()->where('application', 'backend')->and('name', Auth::ROLE_NAME_ROOT)
 			->self()->restoreProperties()
