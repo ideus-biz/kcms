@@ -6,10 +6,7 @@
 		<?=$formAuthProfile->user->firstName->render()?>
 		<?=$formAuthProfile->user->lastName->render()?>
 		<?=$formAuthProfile->user->email->render(fn($widget)=>$widget->data->icon('email'))?>
-		<?=$formAuthProfile->account->orderNotification->render()?>
 		<?=$formAuthProfile->address->phone1->render()?>
-		<?=$formAuthProfile->account->phones->render(fn($w)=>$w->data->hint('One phone per line'))?>
-		<?=$formAuthProfile->account->lang->render()?>
         <span></span>
 		<?=$formAuthProfile->user->newPassword->render(fn($widget)=>$widget->data->icon('pass')->hint('Change your password'))?>
 		<?=$formAuthProfile->user->confirmPassword->render(fn($widget)=>$widget->data->icon('pass'))?>
