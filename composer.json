@@ -1,6 +1,7 @@
 {
   "name": "ideus-biz/kcms",
   "type": "project",
+  "version": "5.6.x-dev",
   "description": "KCMS Project based on Laravel framework",
   "keywords": ["kcms"],
   "license": "MIT",
@@ -16,7 +17,7 @@
       "type": "package",
       "package": {
         "name": "kcms/package",
-        "version": "5.5",
+        "version": "5.6",
         "source": {
           "type": "git",
           "url":  "https://bitbucket.ideus.biz/scm/kcms/kcms_package.git",
