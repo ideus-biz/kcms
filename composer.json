@@ -1,7 +1,7 @@
 {
   "name": "ideus-biz/kcms",
   "type": "project",
-  "version": "5.6.x-dev",
+  "version": "5.6",
   "description": "KCMS Project based on Laravel framework",
   "keywords": ["kcms"],
   "license": "MIT",
