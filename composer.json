@@ -1,5 +1,6 @@
 {
   "name": "ideus-biz/kcms",
+  "version": "5.6",
   "type": "project",
   "description": "KCMS Project based on Laravel framework",
   "keywords": ["kcms"],
