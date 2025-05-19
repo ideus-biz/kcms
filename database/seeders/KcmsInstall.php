@@ -19,8 +19,35 @@ class KcmsInstall extends Seeder
      */
     public function run(): void
     {
-		echo 'KCMS Install'.PHP_EOL;
-		echo 'Setting up authority system...'.PHP_EOL;
+		$console = new ConsoleOutput();
+		$console->writeln('<info>Installing Kcms</info>');
+		
+		//
+		$dataFile = FS_File_Text::Instance('database/seeders/kcmsInstallData.sql', DOCROOT);
+		$console->writeln("Importing initial data from: {$dataFile->relativePath()}");
+		if ($dataFile->isFile())
+		{
+			$this->_mysqlExec('START TRANSACTION;');
+			$query = '';
+			foreach ($dataFile as $v)
+			{
+				$v = trim($v);
+				if ($v != '' && $v[0] != '#' && !str_starts_with($v, '-- '))
+				{
+					$query .= $v.PHP_EOL;
+					if (str_ends_with($v, ';'))
+					{
+						$console->writeln("Executing query: {$query}");
+						$this->_mysqlExec($query);
+						$query = '';
+					}
+				}
+			}
+			$this->_mysqlExec('COMMIT;');
+		}
+		
+		//
+		$console->writeln('<info>Setting up authority system...</info>');
 		Entity_Access_Handler::Instance()->set_title('Entire backend app')->set_application('backend')->set_controller('')->set_action('')->set_route('')
 			->keepProperties()
 			->find()->where('application', 'backend')->where('controller', '')->where('action', '')->where('route', '')
@@ -54,39 +81,15 @@ class KcmsInstall extends Seeder
 		{
 			$u = 'root@localhost';
 			$p = '1stEnter';
-			echo 'There is no `root` account for Administration application.'.PHP_EOL;
-			echo 'Creating: '.$u.':'.$p.PHP_EOL;
+			$console->writeln('There is no `root` account for Administration application.');
+			$console->writeln('Creating: <options=bold>'.$u.':'.$p.'</>');
 			$acc->user->role = $role;
 			$acc->user
 				->set_email($u)->set_username('root')->set_password($p)->set_isActive(true);
 			$acc->save();
-			echo 'Attention! Log into Administration application as `root` and change their email, password and personal data.'.PHP_EOL;
+			$console->writeln('<comment>Attention! Log into Administration application as `root` and change their email, password and personal data.</comment>');
 		}
-		
-		//
-		$dataFile = FS_File_Text::Instance('database/seeders/kcmsInstallData.sql', DOCROOT);
-		echo "Importing initial data from: {$dataFile->relativePath()}";
-		if ($dataFile->isFile())
-		{
-			$this->_mysqlExec('START TRANSACTION;');
-			$query = '';
-			foreach ($dataFile as $v)
-			{
-				$v = trim($v);
-				if ($v != '' && $v[0] != '#' && !str_starts_with($v, '-- '))
-				{
-					$query .= $v.PHP_EOL;
-					if (str_ends_with($v, ';'))
-					{
-						echo 'Execute: '.$query.PHP_EOL;
-						$this->_mysqlExec($query);
-						$query = '';
-					}
-				}
-			}
-			$this->_mysqlExec('COMMIT;');
-		}
-    }
+	}
 	
 	
 	private function _mysqlExec(string $query)
