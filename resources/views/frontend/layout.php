@@ -16,7 +16,7 @@
                 <img class="desktop-logo" src="<?=x_uri_res('assets/images/logo.png')?>" width="248" height="55" alt="<?=x_spc(env('APP_NAME'))?> logo">
                 <img class="mobile-logo" src="<?=x_uri_res('assets/images/logo.png')?>" width="79" height="40" alt="<?=x_spc(env('APP_NAME'))?> logo">
             </a>
-            <span class="label"><?=x_html(env('APP_NAME'))?> administration system</span>
+            <span class="label"><?=x_html(env('APP_NAME'))?></span>
         </div>
         <div class="header-nav">
 			<? include x_partview('layout-menu')?>
