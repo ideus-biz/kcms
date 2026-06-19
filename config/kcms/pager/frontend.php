@@ -3,7 +3,7 @@
 return [
 	// Default application's profile
 	'default' => array(
-		'itemsPerPage'   => 5,
+		'itemsPerPage'   => 10,
 		//'view'             => 'list-pager',
 		'isAutoHide'       => false,
 		'isFirstPageInUrl' => true,

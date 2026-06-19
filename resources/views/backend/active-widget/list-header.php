@@ -28,21 +28,21 @@ $renderer = function() {
     $this->renderIf('columns');
     
 	//
-	if (isset($LIST->widget()->addForm) && !empty($LIST->widget()->addForm->usePopup))
+	if (!empty($LIST->widget()->addForm?->data->usePopup))
 	{
 		if ($this->isTpl('popupAddForm'))
 		{
 			$this('popupAddForm')
-				->title(x_lhtml($LIST->widget()->addForm->title))
+				->title(x_lhtml($LIST->widget()->addForm->data->title))
 				->render();
 		}
 	}
-	if (isset($LIST->widget()->editForm) && !empty($LIST->widget()->editForm->usePopup))
+	if (!empty($LIST->widget()->editForm?->data->usePopup))
 	{
 		if ($this->isTpl('popupEditForm'))
 		{
 			$this('popupEditForm')
-				->title(x_lhtml($LIST->widget()->editForm->title))
+				->title(x_lhtml($LIST->widget()->editForm->data->title))
 				->render();
 		}
 	}

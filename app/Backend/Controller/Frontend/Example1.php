@@ -87,6 +87,9 @@ class Controller_Frontend_Example1 extends \App\Backend\Controller
 		if ($this->request->wantsHtml())
 		{
 			$this->eventOn('formCreated', function($self, $form) {
+				// Enable if form is edited in the popup
+				//$form->wrapper()->actionButton()->deleteKeyExcept('submit');
+				
 				// Enable to set form's breadcrumbs
 				/*Menu::Instance('breadcrumbs')
 					// First tail

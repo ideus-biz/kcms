@@ -10,7 +10,7 @@ use Kcms\Active\DOM;
 
 if ($DOM->disabled) $DOM->removeClass('js-active-list-action')->style('color', 'darkgray');
 $DOM->addClass('b-btn', '-small', '-radius', 'bg-secondary-1');
-$DOM->kcms('assoc-object', '.js-active-list-add-form');
+$DOM->kcms('assoc-object', '.js-active-list-add-form')->kcms('assoc-action', 'true');
 $DOM->html(DOM::span($DOM->html())->addClass('b-btn__text'));
 ?>
 <?=$DOM;

@@ -41,11 +41,11 @@
                                 <div class="b-headerProfile__status"><?=env('APP_NAME')?></div>
                             </div>
 
+                            <?if(kAuthUser()->photo->isFile()):?>
                             <div class="b-headerProfile__imgWrapper">
-								<?if(kAuthUser()->photo->isFile()):?>
                                     <img class="b-headerProfile__img" src="<?=Resource_Image::Url(Auth::Instance()->user()->photo->file, 'avatar_profile')?>" alt="">
-								<?endif;?>
                             </div>
+                            <?endif;?>
                         </div>
 						<? include x_partview('lang-menu')?>
                         <!--<a class="b-headerProfile__link" href="<?/*=\Kcms\Core\Route::Url(\App\Backend\Controller_Settings::RouteName())*/?>" aria-label="profile link"></a>-->

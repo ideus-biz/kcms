@@ -10,6 +10,6 @@ use Kcms\Active\DOM;
 
 if ($DOM->disabled) $DOM->removeClass('js-active-list-action')->style('color', 'darkgray');
 $DOM->tag('a')->href($widget->target())->addClass('b-table__manageLink','btn-view');
-$DOM->kcms('assoc-object', '.js-active-list-edit-form');
+$DOM->kcms('assoc-object', '.js-active-list-edit-form')->kcms('assoc-action', 'true');
 ?>
 <?=$DOM;

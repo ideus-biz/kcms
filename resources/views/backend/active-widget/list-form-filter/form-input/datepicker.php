@@ -7,23 +7,30 @@ $DOM->data('dateformat', $format);
 ?>
 <div class="b-formGroup">
 	<?if($DOMLabel->get(0)):?>
-    <div class="b-formGroup__labelWrapper">
-		<?=$DOMLabel->addClass('b-formGroup__label')?>
-        <?if(!empty($tooltip)):?>
-            <div class="b-tooltip js-tooltip t-right-top" title="<?=nl2br(htmlspecialchars($tooltip, ENT_COMPAT, \Kcms\Core\UTF8::CHARSET))?>"></div>
-        <?endif;?>
-    </div>
+		<?if(!empty($range)) $DOMLabel->append(' range (from : to)')?>
+
+        <div class="b-formGroup__labelWrapper">
+			<?=$DOMLabel->addClass('b-formGroup__label')?>
+			<?if(!empty($tooltip)):?>
+                <div class="b-tooltip js-tooltip t-right-top" title="<?=nl2br(htmlspecialchars($tooltip, ENT_COMPAT, \Kcms\Core\UTF8::CHARSET))?>"></div>
+			<?endif;?>
+        </div>
 	<?endif;?>
-    <?if(empty($range)):?>
+	<?if(empty($range)):?>
         <div class="b-formGroup__fieldWrapper -icon -icon-calendar <?=!empty($tooltip) ? 'l-tooltip':''?>">
-            <?=$DOM?>
+			<?=$DOM?>
         </div>
-    <?else:?>
-        <div class="b-formGroup__fieldWrapper -icon -icon-calendar">
-            <?=$DOM->attr('name', $widgetOwner->htmlName().'[0]')->id($widgetOwner->htmlName('_').'_0')?>
+	<?else:?>
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <div class="b-formGroup__fieldWrapper -icon -icon-calendar" style="margin-right: 7px;">
+				<?=$DOM->attr('name', $widgetOwner->htmlName().'[0]')->id($widgetOwner->htmlName('_').'_0')?>
+            </div>
+            <div style="margin-right: 7px;">
+                &nbsp;:&nbsp;
+            </div>
+            <div class="b-formGroup__fieldWrapper -icon -icon-calendar">
+				<?=$DOM->attr('name', $widgetOwner->htmlName().'[1]')->id($widgetOwner->htmlName('_').'_1')?>
+            </div>
         </div>
-        <div class="b-formGroup__fieldWrapper -icon -icon-calendar">
-			<?=$DOM->attr('name', $widgetOwner->htmlName().'[1]')->id($widgetOwner->htmlName('_').'_1')?>
-        </div>
-    <?endif;?>
+	<?endif;?>
 </div>

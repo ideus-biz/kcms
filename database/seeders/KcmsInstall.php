@@ -8,17 +8,23 @@ use Kcms\Auth\Auth;
 use Kcms\Auth\Entity_Access_Handler;
 use Kcms\Auth\Entity_Role;
 use Kcms\Core\FS_File_Text;
-use Kcms\Ecr\Database;
+use Kcms\Ecr\Console\Commands\TECRCommand;
 use Kcms\Ecr\DB;
+use Laravel\Prompts\Output\ConsoleOutput;
 
 
 class KcmsInstall extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
+	use TECRCommand;
+	
+	
+	/**
+	 * Seed the application's database.
+	 */
+	public function run(): void
+	{
+		$this->_initConnection();
+		
 		$console = new ConsoleOutput();
 		$console->writeln('<info>Installing Kcms</info>');
 		

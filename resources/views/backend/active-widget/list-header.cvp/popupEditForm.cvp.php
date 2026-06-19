@@ -1,4 +1,4 @@
-<div class="js-active-list-edit-form" kcms-role="active-popup" kcms-assoc-object="ActiveForm" kcms-option-auto-close="700" kcms-option-config="closeButton:false" style="display:none;">
+<div class="js-active-list-edit-form" kcms-role="active-popup" kcms-assoc-object="ActiveForm" kcms-assoc-action="true" kcms-option-auto-close="700" kcms-option-config="closeButton:false" style="display:none;">
 	<div class="js-active-popup-header d-flex justify-content-between">
 		<h5 class="modal-title text-uppercase">$title</h5>
 		<button type="button" class="js-active-popup-button-close close">
